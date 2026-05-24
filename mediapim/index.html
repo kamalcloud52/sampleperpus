@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Media PIM - Perpustakaan Mathali'ul Falah</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="../icon.jpg">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="w-full">
+
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-inner">
+            <a href="../index.html" class="navbar-brand">
+                <img src="../icon.jpg" alt="Logo PIM" class="navbar-logo-img">
+                <span class="navbar-name">Perpustakaan Digital PIM</span>
+            </a>
+            <ul class="nav-desktop">
+                <li><a href="../index.html">Beranda</a></li>
+                <li><a href="../arsippim/index.html">Arsip PIM</a></li>
+                <li><a href="index.html" class="active">Media PIM</a></li>
+                <li><a href="#">Karya Alumni</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">Lainnya <i class="fa-solid fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Arsip Foto PIM</a></li>
+                        <li><a href="#">Amanat Majalah PIM</a></li>
+                        <li><a href="#">Ukhuwwah Majalah PIM</a></li>
+                        <li><a href="#">SACRED Majalah PIM</a></li>
+                        <li><a href="#">QNS Majalah PIM</a></li>
+                        <li><a href="#">Buletin PIM</a></li>
+                        <li><a href="#">KTA PIM</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+        <div class="nav-mobile" id="mobileMenu">
+            <ul>
+                <li><a href="../index.html">Beranda</a></li>
+                <li><a href="../arsippim/index.html">Arsip PIM</a></li>
+                <li><a href="index.html">Media PIM</a></li>
+                <li><a href="#">Arsip Foto PIM</a></li>
+                <li><a href="#">Amanat Majalah PIM</a></li>
+                <li><a href="#">Ukhuwwah Majalah PIM</a></li>
+                <li><a href="#">SACRED Majalah PIM</a></li>
+                <li><a href="#">QNS Majalah PIM</a></li>
+                <li><a href="#">Buletin PIM</a></li>
+                <li><a href="#">Karya Alumni</a></li>
+                <li><a href="#">KTA PIM</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="page-content w-full min-h-full">
+
+        <!-- Header -->
+        <header class="header-floating bg-gradient-to-r from-green-600 to-green-700 text-white p-6 mb-8 mx-auto max-w-6xl">
+            <h1 class="text-3xl md:text-4xl font-bold text-center">
+                <i class="fa-solid fa-hashtag mr-3"></i>Media Sosial PIM
+            </h1>
+            <p class="text-center text-green-100 mt-2 text-sm md:text-base">Ikuti berbagai akun resmi Perguruan Islam Mathali'ul Falah</p>
+        </header>
+
+        <!-- Social Media Grid -->
+        <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6" id="social-grid">
+                
+                <!-- Card 1 -->
+                <a href="https://instagram.com/mathaliulfalahofficial" target="_blank" rel="noopener noreferrer" class="social-card fade-up">
+                    <div class="avatar-ring">
+                        <img src="https://placehold.co/150" alt="mathaliulfalahofficial" class="avatar-img">
+                    </div>
+                    <h3>mathaliulfalahofficial</h3>
+                    <p>Perguruan Islam Mathali'ul Falah</p>
+                </a>
+
+                <!-- Card 2 -->
+                <a href="https://instagram.com/hsmpim1965" target="_blank" rel="noopener noreferrer" class="social-card fade-up">
+                    <div class="avatar-ring">
+                        <img src="https://placehold.co/150" alt="hsmpim1965" class="avatar-img">
+                    </div>
+                    <h3>hsmpim1965</h3>
+                    <p>Himpunan Siswa Mathali'ul Falah</p>
+                </a>
+
+                <!-- Card 3 -->
+                <a href="https://instagram.com/hismawati.pim" target="_blank" rel="noopener noreferrer" class="social-card fade-up">
+                    <div class="avatar-ring">
+                        <img src="https://placehold.co/150" alt="hismawati.pim" class="avatar-img">
+                    </div>
+                    <h3>hismawati.pim</h3>
+                    <p>Himpunan Siswa Mathali'ul Falah Putri</p>
+                </a>
+
+                <!-- Card 4 -->
+                <a href="https://instagram.com/perpus_pim" target="_blank" rel="noopener noreferrer" class="social-card fade-up">
+                    <div class="avatar-ring">
+                        <img src="https://placehold.co/150" alt="perpus_pim" class="avatar-img">
+                    </div>
+                    <h3>perpus_pim</h3>
+                    <p>Perpustakaan Pim</p>
+                </a>
+
+                <!-- Card 5 -->
+                <a href="https://instagram.com/mbmpati" target="_blank" rel="noopener noreferrer" class="social-card fade-up">
+                    <div class="avatar-ring">
+                        <img src="https://placehold.co/150" alt="mbmpati" class="avatar-img">
+                    </div>
+                    <h3>mbmpati</h3>
+                    <p>Marching Band Mathali'ul Falah</p>
+                </a>
+
+                <!-- Card 6 -->
+                <a href="https://instagram.com/ambalan_pim" target="_blank" rel="noopener noreferrer" class="social-card fade-up">
+                    <div class="avatar-ring">
+                        <img src="https://placehold.co/150" alt="ambalan_pim" class="avatar-img">
+                    </div>
+                    <h3>ambalan_pim</h3>
+                    <p>Ambalan Syekh Ahmad Mutamakkin</p>
+                </a>
+
+                <!-- Card 7 -->
+                <a href="https://instagram.com/sacred.pim" target="_blank" rel="noopener noreferrer" class="social-card fade-up">
+                    <div class="avatar-ring">
+                        <img src="https://placehold.co/150" alt="sacred.pim" class="avatar-img">
+                    </div>
+                    <h3>sacred.pim</h3>
+                    <p>Student Activity Center of English Division</p>
+                </a>
+
+                <!-- Card 8 -->
+                <a href="https://instagram.com/qns_pimbanat" target="_blank" rel="noopener noreferrer" class="social-card fade-up">
+                    <div class="avatar-ring">
+                        <img src="https://placehold.co/150" alt="qns_pimbanat" class="avatar-img">
+                    </div>
+                    <h3>qns_pimbanat</h3>
+                    <p>قسم النشاط العربي لدى الطالبات</p>
+                </a>
+
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer-custom">
+            <p>© 2026 Perpustakaan Digital Mathali'ul Falah</p>
+        </footer>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+</body>
+</html>
