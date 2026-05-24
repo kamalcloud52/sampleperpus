@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Amanat Majalah PIM - Perpustakaan Mathali'ul Falah</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="../icon.jpg">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="w-full">
+
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-inner">
+            <a href="../index.html" class="navbar-brand">
+                <img src="../icon.jpg" alt="Logo PIM" class="navbar-logo-img">
+                <span class="navbar-name">Perpustakaan Digital PIM</span>
+            </a>
+            <ul class="nav-desktop">
+                <li><a href="../index.html">Beranda</a></li>
+                <li><a href="../arsippim/index.html">Arsip PIM</a></li>
+                <li><a href="../mediapim/index.html">Media PIM</a></li>
+                <li><a href="#">Karya Alumni</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle active">Lainnya <i class="fa-solid fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Arsip Foto PIM</a></li>
+                        <li><a href="index.html" class="active-dropdown">Amanat Majalah PIM</a></li>
+                        <li><a href="#">Ukhuwwah Majalah PIM</a></li>
+                        <li><a href="#">SACRED Majalah PIM</a></li>
+                        <li><a href="#">QNS Majalah PIM</a></li>
+                        <li><a href="#">Buletin PIM</a></li>
+                        <li><a href="#">KTA PIM</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+        <div class="nav-mobile" id="mobileMenu">
+            <ul>
+                <li><a href="../index.html">Beranda</a></li>
+                <li><a href="../arsippim/index.html">Arsip PIM</a></li>
+                <li><a href="../mediapim/index.html">Media PIM</a></li>
+                <li><a href="#">Arsip Foto PIM</a></li>
+                <li><a href="index.html">Amanat Majalah PIM</a></li>
+                <li><a href="#">Ukhuwwah Majalah PIM</a></li>
+                <li><a href="#">SACRED Majalah PIM</a></li>
+                <li><a href="#">QNS Majalah PIM</a></li>
+                <li><a href="#">Buletin PIM</a></li>
+                <li><a href="#">Karya Alumni</a></li>
+                <li><a href="#">KTA PIM</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="page-content w-full min-h-full">
+
+        <!-- Header -->
+        <header class="header-floating bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 text-white p-8 mb-10 mx-auto max-w-6xl">
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4 backdrop-blur-sm">
+                    <i class="fa-solid fa-newspaper text-3xl"></i>
+                </div>
+                <h1 class="text-3xl md:text-5xl font-black tracking-wide uppercase">Amanat Majalah PIM</h1>
+                <div class="w-20 h-1 bg-yellow-400 mx-auto rounded-full my-4"></div>
+                <p class="text-emerald-100 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
+                    Majalah resmi <strong>Himpunan Siswa Mathali'ul Falah (HSM)</strong> yang terbit sejak tahun 1991. 
+                    Menyajikan pemikiran kritis, kabar pesantren, dan aspirasi santri sepanjang masa.
+                </p>
+                <span class="inline-block mt-4 bg-yellow-400 text-emerald-800 font-bold px-4 py-1.5 rounded-full text-xs md:text-sm">
+                    <i class="fa-solid fa-layer-group mr-1"></i> 8 Edisi Tersedia
+                </span>
+            </div>
+        </header>
+
+        <!-- Magazine Grid -->
+        <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6" id="magazine-grid">
+                
+                <!-- Card 1 -->
+                <div class="magazine-card fade-up">
+                    <div class="magazine-cover">
+                        <img src="https://placehold.co/300x400" alt="Amanat Edisi 1" class="cover-img">
+                        <div class="cover-overlay">
+                            <a href="#" class="read-btn">
+                                <i class="fa-solid fa-book-open mr-2"></i>Baca Majalah
+                            </a>
+                        </div>
+                        <span class="edition-badge">Edisi I</span>
+                    </div>
+                    <div class="magazine-info">
+                        <h3>Amanat</h3>
+                        <p class="topic">Pendidikan, Bisnis?</p>
+                        <span class="meta">TH.VII / 1991-92 ed 07</span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="magazine-card fade-up">
+                    <div class="magazine-cover">
+                        <img src="https://placehold.co/300x400" alt="Amanat Edisi 2" class="cover-img">
+                        <div class="cover-overlay">
+                            <a href="#" class="read-btn">
+                                <i class="fa-solid fa-book-open mr-2"></i>Baca Majalah
+                            </a>
+                        </div>
+                        <span class="edition-badge">Edisi II</span>
+                    </div>
+                    <div class="magazine-info">
+                        <h3>Amanat</h3>
+                        <p class="topic">Missionarisme dan perbandingan agama</p>
+                        <span class="meta">TH.XI / 95-96</span>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="magazine-card fade-up">
+                    <div class="magazine-cover">
+                        <img src="https://placehold.co/300x400" alt="Amanat Edisi 3" class="cover-img">
+                        <div class="cover-overlay">
+                            <a href="#" class="read-btn">
+                                <i class="fa-solid fa-book-open mr-2"></i>Baca Majalah
+                            </a>
+                        </div>
+                        <span class="edition-badge">Edisi I</span>
+                    </div>
+                    <div class="magazine-info">
+                        <h3>Amanat</h3>
+                        <p class="topic">Pemahaman Khittah 26 NU</p>
+                        <span class="meta">TH.XVI / 1999</span>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="magazine-card fade-up">
+                    <div class="magazine-cover">
+                        <img src="https://placehold.co/300x400" alt="Amanat Edisi 4" class="cover-img">
+                        <div class="cover-overlay">
+                            <a href="#" class="read-btn">
+                                <i class="fa-solid fa-book-open mr-2"></i>Baca Majalah
+                            </a>
+                        </div>
+                        <span class="edition-badge">Edisi I</span>
+                    </div>
+                    <div class="magazine-info">
+                        <h3>Amanat</h3>
+                        <p class="topic">Islam dan Demokrasi</p>
+                        <span class="meta">TH.XVIII / 2000</span>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="magazine-card fade-up">
+                    <div class="magazine-cover">
+                        <img src="https://placehold.co/300x400" alt="Amanat Edisi 5" class="cover-img">
+                        <div class="cover-overlay">
+                            <a href="#" class="read-btn">
+                                <i class="fa-solid fa-book-open mr-2"></i>Baca Majalah
+                            </a>
+                        </div>
+                        <span class="edition-badge">Edisi I</span>
+                    </div>
+                    <div class="magazine-info">
+                        <h3>Amanat</h3>
+                        <p class="topic">Sejarah Awal HSM – Organisasi, Instrumen mendobrak kebekuan potret Mathali'ul Falah</p>
+                        <span class="meta">TH.XXII / '07 ed 22</span>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="magazine-card fade-up">
+                    <div class="magazine-cover">
+                        <img src="https://placehold.co/300x400" alt="Amanat Edisi 6" class="cover-img">
+                        <div class="cover-overlay">
+                            <a href="#" class="read-btn">
+                                <i class="fa-solid fa-book-open mr-2"></i>Baca Majalah
+                            </a>
+                        </div>
+                        <span class="edition-badge">Edisi I</span>
+                    </div>
+                    <div class="magazine-info">
+                        <h3>Amanat</h3>
+                        <p class="topic">Pesantren dan masa depan</p>
+                        <span class="meta">TH.XXV / 2011 ed 25</span>
+                    </div>
+                </div>
+
+                <!-- Card 7 -->
+                <div class="magazine-card fade-up">
+                    <div class="magazine-cover">
+                        <img src="https://placehold.co/300x400" alt="Amanat Edisi 7" class="cover-img">
+                        <div class="cover-overlay">
+                            <a href="#" class="read-btn">
+                                <i class="fa-solid fa-book-open mr-2"></i>Baca Majalah
+                            </a>
+                        </div>
+                        <span class="edition-badge">Edisi I</span>
+                    </div>
+                    <div class="magazine-info">
+                        <h3>Amanat</h3>
+                        <p class="topic">Islam dan Politik</p>
+                        <span class="meta">TH.XXVI / 2011 ed 26</span>
+                    </div>
+                </div>
+
+                <!-- Card 8 -->
+                <div class="magazine-card fade-up">
+                    <div class="magazine-cover">
+                        <img src="https://placehold.co/300x400" alt="Amanat Edisi 8" class="cover-img">
+                        <div class="cover-overlay">
+                            <a href="#" class="read-btn">
+                                <i class="fa-solid fa-book-open mr-2"></i>Baca Majalah
+                            </a>
+                        </div>
+                        <span class="edition-badge">Edisi I</span>
+                    </div>
+                    <div class="magazine-info">
+                        <h3>Amanat</h3>
+                        <p class="topic">Mathole' 100TH; Apa dan Bagaimana?</p>
+                        <span class="meta">TH.XXVII / 2012 ed 26</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer-custom">
+            <p>© 2026 Perpustakaan Digital Mathali'ul Falah</p>
+        </footer>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+</body>
+</html>
