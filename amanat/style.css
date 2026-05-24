@@ -249,38 +249,6 @@ body {
 .magazine-card:hover .cover-img {
     transform: scale(1.08);
 }
-.cover-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    padding: 20px 12px;
-    opacity: 0;
-    transition: opacity 0.35s ease;
-}
-.magazine-card:hover .cover-overlay {
-    opacity: 1;
-}
-.read-btn {
-    display: inline-flex;
-    align-items: center;
-    background: #047857;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 50px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.3s;
-    box-shadow: 0 4px 15px rgba(4,120,87,0.4);
-}
-.read-btn:hover {
-    background: #065f46;
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(4,120,87,0.5);
-}
 
 /* Edition Badge */
 .edition-badge {
@@ -299,7 +267,7 @@ body {
 
 /* Magazine Info */
 .magazine-info {
-    padding: 14px 16px;
+    padding: 14px 16px 8px 16px;
     border-top: 1px solid #f3f4f6;
     flex: 1;
     display: flex;
@@ -328,9 +296,34 @@ body {
 .magazine-info .meta {
     font-size: 0.7rem;
     color: #9ca3af;
-    margin-top: 10px;
-    padding-top: 10px;
+    margin-top: 8px;
+    padding-top: 8px;
     border-top: 1px solid #f3f4f6;
+}
+
+/* ==================== MAGAZINE ACTION ==================== */
+.magazine-action {
+    padding: 0 16px 16px 16px;
+}
+.read-btn-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background: #047857;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+    gap: 6px;
+}
+.read-btn-bottom:hover {
+    background: #065f46;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(4,120,87,0.4);
 }
 
 /* ==================== FOOTER ==================== */
