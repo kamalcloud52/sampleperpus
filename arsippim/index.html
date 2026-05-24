@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Arsip PIM - Perpustakaan Mathali'ul Falah</title>
+    <title>Arsip PIM - Perpustakaan Digital Mathali'ul Falah</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="icon.jpg">
+    <link rel="icon" type="image/jpeg" href="../icon.jpg">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -260,43 +260,33 @@
         .nav-mobile.open li:nth-child(1) {
             transition-delay: 0.00s;
         }
-
         .nav-mobile.open li:nth-child(2) {
             transition-delay: 0.10s;
         }
-
         .nav-mobile.open li:nth-child(3) {
             transition-delay: 0.20s;
         }
-
         .nav-mobile.open li:nth-child(4) {
             transition-delay: 0.30s;
         }
-
         .nav-mobile.open li:nth-child(5) {
             transition-delay: 0.40s;
         }
-
         .nav-mobile.open li:nth-child(6) {
             transition-delay: 0.50s;
         }
-
         .nav-mobile.open li:nth-child(7) {
             transition-delay: 0.60s;
         }
-
         .nav-mobile.open li:nth-child(8) {
             transition-delay: 0.70s;
         }
-
         .nav-mobile.open li:nth-child(9) {
             transition-delay: 0.80s;
         }
-
         .nav-mobile.open li:nth-child(10) {
             transition-delay: 0.90s;
         }
-
         .nav-mobile.open li:nth-child(11) {
             transition-delay: 1.00s;
         }
@@ -311,17 +301,22 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        /* Page content offset for fixed navbar */
+        /* ==================== PAGE CONTENT ==================== */
         .page-content {
-            padding-top: calc(var(--nav-height) + 16px);
+            padding-top: calc(var(--nav-height) + 32px);
+            padding-bottom: 32px;
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
         }
 
-        /* Table & grid styles */
+        /* ==================== HEADER ==================== */
         .header-floating {
             border-radius: 20px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
+        /* ==================== TABLE & GRID ==================== */
         .table-container {
             overflow-x: auto;
             border-radius: 12px;
@@ -417,15 +412,15 @@
     <nav class="navbar" id="navbar">
         <div class="navbar-inner">
             <!-- Logo & Nama -->
-            <a href="index.html" class="navbar-brand">
-                <img src="icon.jpg" alt="Logo PIM" class="navbar-logo-img">
+            <a href="../index.html" class="navbar-brand">
+                <img src="../icon.jpg" alt="Logo PIM" class="navbar-logo-img">
                 <span class="navbar-name">Perpustakaan Digital PIM</span>
             </a>
 
             <!-- Desktop Menu -->
             <ul class="nav-desktop">
-                <li><a href="index.html">Beranda</a></li>
-                <li><a href="arsip-pim.html" class="active">Arsip PIM</a></li>
+                <li><a href="../index.html">Beranda</a></li>
+                <li><a href="index.html" class="active">Arsip PIM</a></li>
                 <li><a href="#">Media PIM</a></li>
                 <li><a href="#">Karya Alumni</a></li>
                 <li class="dropdown">
@@ -453,8 +448,8 @@
         <!-- Mobile Menu -->
         <div class="nav-mobile" id="mobileMenu">
             <ul>
-                <li><a href="index.html">Beranda</a></li>
-                <li><a href="arsip-pim.html">Arsip PIM</a></li>
+                <li><a href="../index.html">Beranda</a></li>
+                <li><a href="index.html">Arsip PIM</a></li>
                 <li><a href="#">Media PIM</a></li>
                 <li><a href="#">Arsip Foto PIM</a></li>
                 <li><a href="#">Amanat Majalah PIM</a></li>
