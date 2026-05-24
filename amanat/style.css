@@ -267,7 +267,7 @@ body {
 
 /* Magazine Info */
 .magazine-info {
-    padding: 14px 16px 8px 16px;
+    padding: 12px 14px 6px 14px;
     border-top: 1px solid #f3f4f6;
     flex: 1;
     display: flex;
@@ -276,7 +276,7 @@ body {
 .magazine-info h3 {
     font-weight: 700;
     color: #1f2937;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     margin-bottom: 4px;
     transition: color 0.3s;
 }
@@ -284,7 +284,7 @@ body {
     color: #047857;
 }
 .magazine-info .topic {
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     color: #6b7280;
     line-height: 1.4;
     flex: 1;
@@ -294,7 +294,7 @@ body {
     overflow: hidden;
 }
 .magazine-info .meta {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     color: #9ca3af;
     margin-top: 8px;
     padding-top: 8px;
@@ -303,27 +303,33 @@ body {
 
 /* ==================== MAGAZINE ACTION ==================== */
 .magazine-action {
-    padding: 0 16px 16px 16px;
+    padding: 0 14px 14px 14px;
 }
 .read-btn-bottom {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 5px;
     width: 100%;
     background: #047857;
     color: white;
-    padding: 10px 16px;
-    border-radius: 10px;
-    font-size: 0.8rem;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.75rem;
     font-weight: 600;
     text-decoration: none;
     transition: all 0.3s;
-    gap: 6px;
+    text-align: center;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
 }
 .read-btn-bottom:hover {
     background: #065f46;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(4,120,87,0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 12px rgba(4,120,87,0.35);
+}
+.read-btn-bottom i {
+    font-size: 0.7rem;
 }
 
 /* ==================== FOOTER ==================== */
