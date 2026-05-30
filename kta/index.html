@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>KTA PIM - Perpustakaan Mathali'ul Falah</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="../icon.jpg">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <script src="/_sdk/element_sdk.js"></script>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+</head>
+<body class="w-full">
+
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-inner">
+            <a href="../index.html" class="navbar-brand">
+                <img src="../icon.jpg" alt="Logo PIM" class="navbar-logo-img">
+                <span class="navbar-name">Perpustakaan Digital PIM</span>
+            </a>
+            <ul class="nav-desktop">
+                <li><a href="../index.html">Beranda</a></li>
+                <li><a href="../arsippim/index.html">Arsip PIM</a></li>
+                <li><a href="../mediapim/index.html">Media PIM</a></li>
+                <li><a href="#">Karya Alumni</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle active">Lainnya <i class="fa-solid fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Arsip Foto PIM</a></li>
+                        <li><a href="../amanat/index.html">Amanat Majalah PIM</a></li>
+                        <li><a href="#">Ukhuwwah Majalah PIM</a></li>
+                        <li><a href="#">SACRED Majalah PIM</a></li>
+                        <li><a href="#">QNS Majalah PIM</a></li>
+                        <li><a href="#">Buletin PIM</a></li>
+                        <li><a href="index.html" class="active-dropdown">KTA PIM</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+        <div class="nav-mobile" id="mobileMenu">
+            <ul>
+                <li><a href="../index.html">Beranda</a></li>
+                <li><a href="../arsippim/index.html">Arsip PIM</a></li>
+                <li><a href="../mediapim/index.html">Media PIM</a></li>
+                <li><a href="#">Arsip Foto PIM</a></li>
+                <li><a href="../amanat/index.html">Amanat Majalah PIM</a></li>
+                <li><a href="#">Ukhuwwah Majalah PIM</a></li>
+                <li><a href="#">SACRED Majalah PIM</a></li>
+                <li><a href="#">QNS Majalah PIM</a></li>
+                <li><a href="#">Buletin PIM</a></li>
+                <li><a href="#">Karya Alumni</a></li>
+                <li><a href="index.html">KTA PIM</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ==================== PAGE CONTENT ==================== -->
+    <div class="page-content w-full min-h-full">
+
+        <!-- Header -->
+        <header class="header-floating bg-gradient-to-r from-green-600 to-green-700 text-white p-6 mb-6 mx-auto max-w-7xl">
+            <h1 id="site-title" class="text-3xl md:text-4xl font-bold text-center">Kumpulan Karya Tulis Arab (KTA)</h1>
+        </header>
+
+        <div class="max-w-7xl mx-auto">
+            <!-- Search and Controls -->
+            <div class="bg-white rounded-lg shadow-md p-3 md:p-6 mb-6">
+                <!-- Search Box -->
+                <div class="mb-3">
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Pencarian</label>
+                    <input type="text" id="search" placeholder="Cari judul, nama, kata kunci..." class="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+                <!-- Filters Row -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Filter Tahun Pelajaran</label>
+                        <select id="filter-jenis" class="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <option value="">Semua Tahun Pelajaran</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Filter Tema</label>
+                        <select id="filter-bahasa" class="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <option value="">Semua Tema</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button id="reset-btn" class="w-full px-4 py-2 bg-gray-500 text-white text-sm md:text-base rounded-lg hover:bg-gray-600 transition-colors">Reset Filter</button>
+                    </div>
+                </div>
+                <!-- Display Controls -->
+                <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 pb-3 border-b border-gray-200">
+                    <div class="flex items-center gap-2">
+                        <label for="items-per-page" class="text-sm font-medium text-gray-700 whitespace-nowrap">Tampilkan:</label>
+                        <select id="items-per-page" class="flex-1 sm:flex-none px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                            <option value="12" selected>12</option>
+                            <option value="24">24</option>
+                            <option value="48">48</option>
+                            <option value="96">96</option>
+                            <option value="all">Semua</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-end gap-2">
+                        <span class="text-sm text-gray-600">Tampilan:</span>
+                        <div class="flex gap-2 bg-gray-100 p-1 rounded-lg">
+                            <svg id="view-list" class="view-toggle w-7 h-7 md:w-8 md:h-8 text-gray-400 p-1 rounded" fill="currentColor" viewbox="0 0 24 24"><path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z"/></svg>
+                            <svg id="view-grid" class="view-toggle w-7 h-7 md:w-8 md:h-8 text-green-600 p-1 rounded" fill="currentColor" viewbox="0 0 24 24"><path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <!-- Results Info -->
+                <div class="mt-3 text-xs md:text-sm text-gray-600 text-center sm:text-left">
+                    Menampilkan <span id="showing-start" class="font-semibold text-green-600">0</span> - <span id="showing-end" class="font-semibold text-green-600">0</span> dari <span id="total-items" class="font-semibold text-green-600">0</span> data
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loading" class="text-center py-12">
+                <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+                <p class="mt-4 text-gray-600">Memuat data...</p>
+            </div>
+
+            <!-- Table View -->
+            <div id="table-view" class="bg-white rounded-lg shadow-md overflow-hidden mb-6 hidden">
+                <div class="table-container">
+                    <table class="w-full">
+                        <thead class="bg-green-600 text-white">
+                            <tr>
+                                <th class="px-4 py-3 text-left font-semibold">Cover</th>
+                                <th class="px-4 py-3 text-left font-semibold">Aksi</th>
+                                <th class="px-4 py-3 text-left font-semibold">Judul</th>
+                                <th class="px-4 py-3 text-left font-semibold">Tahun Pelajaran</th>
+                                <th class="px-4 py-3 text-left font-semibold">JK</th>
+                                <th class="px-4 py-3 text-left font-semibold">Nama</th>
+                                <th class="px-4 py-3 text-left font-semibold">Tema</th>
+                                <th class="px-4 py-3 text-left font-semibold">Kata Kunci</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body" class="divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Grid View -->
+            <div id="grid-view" class="grid grid-cols-2 md:grid-cols-6 gap-4 mb-6 hidden" style="min-height: 300px;"></div>
+
+            <!-- Pagination -->
+            <div id="pagination" class="bg-white rounded-lg shadow-md p-4 flex flex-col md:flex-row justify-between items-center gap-4 hidden">
+                <button id="prev-btn" class="pagination-btn px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed">Hal Awal</button>
+                <div class="flex items-center gap-3 flex-wrap justify-center">
+                    <div id="page-numbers" class="flex gap-2 flex-wrap justify-center"></div>
+                    <div class="flex items-center gap-2">
+                        <label for="go-to-page" class="text-sm text-gray-600 whitespace-nowrap">Ke hal:</label>
+                        <input type="number" id="go-to-page" min="1" placeholder="1" class="w-16 px-2 py-1 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        <button id="go-btn" class="px-3 py-1 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors">Go</button>
+                    </div>
+                </div>
+                <button id="next-btn" class="pagination-btn px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed">Hal Akhir</button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer-custom">
+            <p id="footer-text">© 2025 Perpustakaan Digital Mathali'ul Falah</p>
+            <button id="refresh-btn" class="mt-3 text-xs text-gray-400 hover:text-green-600 transition-colors flex items-center gap-1 mx-auto cursor-pointer">
+                <svg id="refresh-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                <span>Update Data</span>
+            </button>
+        </footer>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+</body>
+</html>
