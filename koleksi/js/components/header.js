@@ -1,4 +1,6 @@
 // ==================== HEADER COMPONENT ====================
+import { openModal } from '../components/modal.js';
+
 export function renderHeader() {
     const header = document.getElementById('appHeader');
     if (!header) return;
@@ -17,8 +19,12 @@ export function renderHeader() {
 export function initHeaderEvents() {
     const btnProfile = document.getElementById('btnProfile');
     if (btnProfile) {
-        btnProfile.addEventListener('click', () => {
-            window.location.hash = '#/profil';
+        // Hapus event listener lama (hindari double)
+        const newBtn = btnProfile.cloneNode(true);
+        btnProfile.parentNode.replaceChild(newBtn, btnProfile);
+        
+        newBtn.addEventListener('click', () => {
+            openModal('modalProfil');
         });
     }
 }
