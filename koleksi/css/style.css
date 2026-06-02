@@ -543,3 +543,96 @@ footer {
 
 .hidden { display: none !important; }
 .text-center { text-align: center; }
+
+/* ==================== ANIMASI HALAMAN ==================== */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-up {
+    opacity: 0;
+    animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.slide-up-delay-1 { animation-delay: 0.05s; }
+.slide-up-delay-2 { animation-delay: 0.10s; }
+.slide-up-delay-3 { animation-delay: 0.15s; }
+.slide-up-delay-4 { animation-delay: 0.20s; }
+.slide-up-delay-5 { animation-delay: 0.25s; }
+
+/* ==================== HAMBURGER & DROPDOWN PUTIH ==================== */
+.hamburger-white {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    z-index: 1002;
+}
+
+.hamburger-white span {
+    display: block;
+    width: 24px;
+    height: 2.5px;
+    background: #374151;
+    border-radius: 2px;
+    transition: all 0.35s ease;
+}
+
+.hamburger-white.open span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+.hamburger-white.open span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+.hamburger-white.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Hamburger Dropdown */
+.hamburger-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    min-width: 200px;
+    padding: 8px 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: all 0.25s ease;
+    z-index: 1001;
+}
+
+.hamburger-dropdown.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.hamburger-dropdown a {
+    display: block;
+    padding: 10px 16px;
+    color: #374151;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: background 0.15s;
+}
+
+.hamburger-dropdown a:hover {
+    background: #f0fdf4;
+    color: #047857;
+}
