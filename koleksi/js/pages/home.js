@@ -14,32 +14,32 @@ const booksData = [
 export function renderHome(main) {
     main.innerHTML = `
         <!-- Welcome Card -->
-        <div class="welcome-card">
+        <div class="welcome-card slide-up slide-up-delay-1">
             <span class="welcome-tag">👋 Halo, Pembaca Hebat!</span>
             <h1>Selamat Datang di Perpustakaan Digital PIM</h1>
             <p>Temukan ribuan referensi dalam satu genggaman.</p>
         </div>
 
         <!-- Stats -->
-        <div class="stats-grid">
+        <div class="stats-grid slide-up slide-up-delay-2">
             <div class="stat-item">
                 <div class="stat-icon-wrapper"><i class="fa-solid fa-book-bookmark"></i></div>
                 <div class="stat-info">
                     <span class="stat-label">Koleksi</span>
-                    <span class="stat-value">${booksData.length} Buku</span>
+                    <span class="stat-value" id="countKoleksi">0</span>
                 </div>
             </div>
             <div class="stat-item">
                 <div class="stat-icon-wrapper"><i class="fa-solid fa-tags"></i></div>
                 <div class="stat-info">
-                    <span class="stat-label">Kategori</span>
-                    <span class="stat-value">${new Set(booksData.map(b => b.kategori)).size} Grup</span>
+                    <span class="stat-label">Jenis</span>
+                    <span class="stat-value" id="countJenis">0</span>
                 </div>
             </div>
         </div>
 
         <!-- Search -->
-        <div class="search-row">
+        <div class="search-row slide-up slide-up-delay-3">
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" class="search-input" id="searchInput" placeholder="Cari judul, penulis...">
@@ -50,7 +50,7 @@ export function renderHome(main) {
         </div>
 
         <!-- Categories -->
-        <div class="categories-bar" id="categoryBar">
+        <div class="categories-bar slide-up slide-up-delay-4" id="categoryBar">
             <button class="category-chip active" data-kategori="">Semua</button>
             <button class="category-chip" data-kategori="Buku">Buku</button>
             <button class="category-chip" data-kategori="Kitab">Kitab</button>
@@ -58,7 +58,7 @@ export function renderHome(main) {
         </div>
 
         <!-- View Toggle -->
-        <div class="display-options">
+        <div class="display-options slide-up slide-up-delay-5">
             <div class="toggle-switch-group">
                 <button class="toggle-unit active" id="viewGrid"><i class="fa-solid fa-grip-vertical"></i></button>
                 <button class="toggle-unit" id="viewList"><i class="fa-solid fa-list"></i></button>
@@ -88,8 +88,34 @@ export function renderHome(main) {
         </div>
     `;
 
+    // Animasi counter
+    setTimeout(() => {
+        animateCounter('countKoleksi', booksData.length, 'Buku');
+        animateCounter('countJenis', new Set(booksData.map(b => b.kategori)).size, 'Jenis');
+    }, 300);
+
     // Init events
     initHomeEvents();
+}
+
+// Fungsi animasi counter
+function animateCounter(elementId, target, suffix) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    
+    let current = 0;
+    const duration = 600;
+    const step = Math.ceil(target / (duration / 16));
+    
+    const timer = setInterval(() => {
+        current += step;
+        if (current >= target) {
+            el.textContent = target + ' ' + suffix;
+            clearInterval(timer);
+        } else {
+            el.textContent = current + ' ' + suffix;
+        }
+    }, 16);
 }
 
 function renderGridCard(book) {
@@ -133,7 +159,7 @@ function renderListCard(book) {
 }
 
 function initHomeEvents() {
-    // Filter button — langsung buka modal
+    // Filter button
     const btnFilter = document.getElementById('btnFilterHome');
     if (btnFilter) {
         btnFilter.addEventListener('click', () => {
@@ -141,7 +167,7 @@ function initHomeEvents() {
         });
     }
 
-    // Detail triggers — langsung buka modal, tidak ubah hash
+    // Detail triggers
     document.querySelectorAll('.detail-trigger').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -150,7 +176,6 @@ function initHomeEvents() {
             const book = booksData.find(b => b.id === id);
             
             if (book) {
-                // Update modal content
                 const detailCover = document.getElementById('detailCover');
                 const detailTitle = document.getElementById('detailTitle');
                 const detailKategori = document.getElementById('detailKategori');
@@ -172,7 +197,7 @@ function initHomeEvents() {
         });
     });
 
-    // Klik card juga buka detail
+    // Klik card
     document.querySelectorAll('.card-item, .list-item').forEach(card => {
         card.addEventListener('click', (e) => {
             if (e.target.closest('button')) return;
