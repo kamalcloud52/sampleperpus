@@ -3,12 +3,12 @@ import { openModal } from '../components/modal.js';
 
 // Data dummy buku
 const booksData = [
-    { id: 1, title: 'Metodologi Riset Modern', penulis: 'Dr. Rahmawan', edisi: '2024 / Vol 2', kategori: 'Buku', cover: 'linear-gradient(135deg,#d1fae5,#a7f3d0)', color: '#047857', icon: 'fa-book-open', label: 'PIM BOOK' },
-    { id: 2, title: 'Fathul Qarib Al-Mujib', penulis: 'Ibnu Qasim', edisi: '1445 Hijriah', kategori: 'Kitab', cover: 'linear-gradient(135deg,#fef3c7,#fde68a)', color: '#92400e', icon: 'fa-scroll', label: 'CLASSIC KITAB' },
-    { id: 3, title: 'Pengantar Statistik Pendidikan', penulis: 'Prof. Dr. Aminah', edisi: '2023 / Cetakan 5', kategori: 'Buku', cover: 'linear-gradient(135deg,#d1fae5,#a7f3d0)', color: '#047857', icon: 'fa-flask', label: 'RISET' },
-    { id: 4, title: 'Amanat Edisi I', penulis: 'HSM PIM', edisi: '1991 / TH.VII', kategori: 'Majalah', cover: 'linear-gradient(135deg,#e0e7ff,#c7d2fe)', color: '#3730a3', icon: 'fa-newspaper', label: 'MAGAZINE' },
-    { id: 5, title: 'Nahwu Wadhih Juz 1', penulis: 'Ali Al-Jarim', edisi: '2020 / Cetakan 10', kategori: 'Kitab', cover: 'linear-gradient(135deg,#fef3c7,#fde68a)', color: '#92400e', icon: 'fa-scroll', label: 'NAHWU' },
-    { id: 6, title: 'Fiqih Ibadah Kontemporer', penulis: 'Dr. H. Ahmad', edisi: '2024 / Cetakan 1', kategori: 'Buku', cover: 'linear-gradient(135deg,#d1fae5,#a7f3d0)', color: '#047857', icon: 'fa-book-open', label: 'FIQIH' },
+    { id: 1, title: 'Metodologi Riset Modern', penulis: 'Dr. Rahmawan', edisi: '2024 / Vol 2', kategori: 'Buku', bahasa: 'Indonesia', keywords: 'riset, metodologi, penelitian', cover: 'linear-gradient(135deg,#d1fae5,#a7f3d0)', color: '#047857', icon: 'fa-book-open', label: 'PIM BOOK' },
+    { id: 2, title: 'Fathul Qarib Al-Mujib', penulis: 'Ibnu Qasim', edisi: '1445 Hijriah', kategori: 'Kitab', bahasa: 'Arab', keywords: 'fiqih, kitab, klasik', cover: 'linear-gradient(135deg,#fef3c7,#fde68a)', color: '#92400e', icon: 'fa-scroll', label: 'CLASSIC KITAB' },
+    { id: 3, title: 'Pengantar Statistik Pendidikan', penulis: 'Prof. Dr. Aminah', edisi: '2023 / Cetakan 5', kategori: 'Buku', bahasa: 'Indonesia', keywords: 'statistik, pendidikan, penelitian', cover: 'linear-gradient(135deg,#d1fae5,#a7f3d0)', color: '#047857', icon: 'fa-flask', label: 'RISET' },
+    { id: 4, title: 'Amanat Edisi I', penulis: 'HSM PIM', edisi: '1991 / TH.VII', kategori: 'Majalah', bahasa: 'Indonesia', keywords: 'majalah, HSM, amanat', cover: 'linear-gradient(135deg,#e0e7ff,#c7d2fe)', color: '#3730a3', icon: 'fa-newspaper', label: 'MAGAZINE' },
+    { id: 5, title: 'Nahwu Wadhih Juz 1', penulis: 'Ali Al-Jarim', edisi: '2020 / Cetakan 10', kategori: 'Kitab', bahasa: 'Arab', keywords: 'nahwu, gramatika, arab', cover: 'linear-gradient(135deg,#fef3c7,#fde68a)', color: '#92400e', icon: 'fa-scroll', label: 'NAHWU' },
+    { id: 6, title: 'Fiqih Ibadah Kontemporer', penulis: 'Dr. H. Ahmad', edisi: '2024 / Cetakan 1', kategori: 'Buku', bahasa: 'Indonesia', keywords: 'fiqih, ibadah, kontemporer', cover: 'linear-gradient(135deg,#d1fae5,#a7f3d0)', color: '#047857', icon: 'fa-book-open', label: 'FIQIH' },
 ];
 
 export function renderHome(main) {
@@ -53,7 +53,6 @@ export function renderHome(main) {
         <div class="categories-bar" id="categoryBar">
             <button class="category-chip active" data-kategori="">Semua</button>
             <button class="category-chip" data-kategori="Buku">Buku</button>
-            <button class="category-chip" data-kategori="Karya Tulis Ilmiah">Karya Tulis Ilmiah</button>
             <button class="category-chip" data-kategori="Kitab">Kitab</button>
             <button class="category-chip" data-kategori="Majalah">Majalah</button>
         </div>
@@ -134,7 +133,7 @@ function renderListCard(book) {
 }
 
 function initHomeEvents() {
-    // Filter button
+    // Filter button — langsung buka modal
     const btnFilter = document.getElementById('btnFilterHome');
     if (btnFilter) {
         btnFilter.addEventListener('click', () => {
@@ -142,22 +141,42 @@ function initHomeEvents() {
         });
     }
 
-    // Detail triggers
+    // Detail triggers — langsung buka modal, tidak ubah hash
     document.querySelectorAll('.detail-trigger').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
             const card = btn.closest('[data-id]');
-            const id = card.dataset.id;
-            window.location.hash = `#/detail/${id}`;
+            const id = parseInt(card.dataset.id);
+            const book = booksData.find(b => b.id === id);
+            
+            if (book) {
+                // Update modal content
+                const detailCover = document.getElementById('detailCover');
+                const detailTitle = document.getElementById('detailTitle');
+                const detailKategori = document.getElementById('detailKategori');
+                const detailPenulis = document.getElementById('detailPenulis');
+                const detailEdisi = document.getElementById('detailEdisi');
+                const detailBahasa = document.getElementById('detailBahasa');
+                const detailKeywords = document.getElementById('detailKeywords');
+
+                if (detailCover) { detailCover.style.background = book.cover; detailCover.style.color = book.color; }
+                if (detailTitle) detailTitle.textContent = book.title;
+                if (detailKategori) detailKategori.textContent = book.kategori;
+                if (detailPenulis) detailPenulis.textContent = book.penulis;
+                if (detailEdisi) detailEdisi.textContent = book.edisi;
+                if (detailBahasa) detailBahasa.textContent = book.bahasa;
+                if (detailKeywords) detailKeywords.textContent = book.keywords;
+
+                openModal('modalDetail');
+            }
         });
     });
 
-    // Klik card
+    // Klik card juga buka detail
     document.querySelectorAll('.card-item, .list-item').forEach(card => {
         card.addEventListener('click', (e) => {
             if (e.target.closest('button')) return;
-            const id = card.dataset.id;
-            window.location.hash = `#/detail/${id}`;
+            card.querySelector('.detail-trigger')?.click();
         });
     });
 
