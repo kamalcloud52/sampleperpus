@@ -159,8 +159,20 @@ export function initModalEvents() {
             }
             startY = 0;
             currentY = 0;
-        });
+        // ==================== LIMIT OPTIONS ====================
+  document.querySelectorAll('.limit-option').forEach(opt => {
+     opt.addEventListener('click', async function() {
+        const value = this.dataset.value;
+        const finalValue = value === 'all' ? 'all' : parseInt(value);
+        
+        // Update tampilan
+        const { updateLimit } = await import('../pages/home.js');
+        updateLimit(finalValue);
+        
+        // Tutup modal
+        closeModal('modalLimit');
     });
+});
 
     // ==================== TUTUP MODAL ====================
     document.querySelectorAll('.modal-close-btn, [data-close]').forEach(btn => {
