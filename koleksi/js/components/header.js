@@ -13,20 +13,12 @@ export function renderHeader() {
             <span class="user-name" id="userName">Tamu</span>
         </div>
         
-        <!-- Hamburger + Dropdown -->
-        <div style="position:relative;">
-            <button class="hamburger-white" id="hamburgerKoleksi" aria-label="Menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <div class="hamburger-dropdown" id="hamburgerDropdown">
-                <a href="../index.html"><i class="fa-solid fa-house"></i> Beranda</a>
-                <a href="index.html" class="active"><i class="fa-solid fa-book"></i> Koleksi Buku</a>
-                <a href="../mediapim/"><i class="fa-solid fa-hashtag"></i> Media PIM</a>
-                <a href="../arsipfoto/"><i class="fa-solid fa-camera-retro"></i> Arsip Foto PIM</a>
-            </div>
-        </div>
+        <!-- Hamburger (sama persis dengan Beranda) -->
+        <button class="hamburger" id="hamburgerKoleksi" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     `;
 }
 
@@ -41,33 +33,27 @@ export function initHeaderEvents() {
         });
     }
 
-    // Hamburger
+    // Hamburger + Mobile Menu
     const hamburger = document.getElementById('hamburgerKoleksi');
-    const dropdown = document.getElementById('hamburgerDropdown');
-    if (hamburger && dropdown) {
+    if (hamburger) {
         const newHamburger = hamburger.cloneNode(true);
         hamburger.parentNode.replaceChild(newHamburger, hamburger);
         
-        newHamburger.addEventListener('click', (e) => {
-            e.stopPropagation();
+        const mobileMenu = document.getElementById('mobileMenuKoleksi');
+        
+        newHamburger.addEventListener('click', () => {
             newHamburger.classList.toggle('open');
-            dropdown.classList.toggle('open');
+            if (mobileMenu) mobileMenu.classList.toggle('open');
         });
         
-        // Tutup dropdown saat klik di luar
-        document.addEventListener('click', (e) => {
-            if (!newHamburger.contains(e.target) && !dropdown.contains(e.target)) {
-                newHamburger.classList.remove('open');
-                dropdown.classList.remove('open');
-            }
-        });
-        
-        // Tutup dropdown saat link diklik
-        dropdown.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                newHamburger.classList.remove('open');
-                dropdown.classList.remove('open');
+        // Tutup menu saat link diklik
+        if (mobileMenu) {
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    newHamburger.classList.remove('open');
+                    mobileMenu.classList.remove('open');
+                });
             });
-        });
+        }
     }
 }
