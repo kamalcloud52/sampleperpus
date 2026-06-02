@@ -11,6 +11,8 @@ const booksData = [
     { id: 6, title: 'Fiqih Ibadah Kontemporer', penulis: 'Dr. H. Ahmad', edisi: '2024 / Cetakan 1', kategori: 'Buku', bahasa: 'Indonesia', keywords: 'fiqih, ibadah, kontemporer', cover: 'linear-gradient(135deg,#d1fae5,#a7f3d0)', color: '#047857', icon: 'fa-book-open', label: 'FIQIH' },
 ];
 
+let currentLimit = 12;
+
 export function renderHome(main) {
     main.innerHTML = `
         <!-- Welcome Card -->
@@ -49,16 +51,11 @@ export function renderHome(main) {
             </button>
         </div>
 
-        <!-- Categories -->
-        <div class="categories-bar slide-up slide-up-delay-4" id="categoryBar">
-            <button class="category-chip active" data-kategori="">Semua</button>
-            <button class="category-chip" data-kategori="Buku">Buku</button>
-            <button class="category-chip" data-kategori="Kitab">Kitab</button>
-            <button class="category-chip" data-kategori="Majalah">Majalah</button>
-        </div>
-
-        <!-- View Toggle -->
-        <div class="display-options slide-up slide-up-delay-5">
+        <!-- Display Controls (Tampilkan + View Toggle) -->
+        <div class="display-controls slide-up slide-up-delay-4">
+            <button class="limit-btn" id="btnLimit">
+                <i class="fa-solid fa-eye"></i> Tampilkan <span id="limitText">12</span>
+            </button>
             <div class="toggle-switch-group">
                 <button class="toggle-unit active" id="viewGrid"><i class="fa-solid fa-grip-vertical"></i></button>
                 <button class="toggle-unit" id="viewList"><i class="fa-solid fa-list"></i></button>
@@ -67,12 +64,12 @@ export function renderHome(main) {
 
         <!-- Grid View -->
         <div class="books-layout-grid" id="booksGrid">
-            ${booksData.map(book => renderGridCard(book)).join('')}
+            ${renderBookCards('grid')}
         </div>
 
         <!-- List View -->
         <div class="books-layout-list hidden" id="booksList">
-            ${booksData.map(book => renderListCard(book)).join('')}
+            ${renderBookCards('list')}
         </div>
 
         <!-- Pagination -->
@@ -98,29 +95,14 @@ export function renderHome(main) {
     initHomeEvents();
 }
 
-// Fungsi animasi counter
-function animateCounter(elementId, target, suffix) {
-    const el = document.getElementById(elementId);
-    if (!el) return;
-    
-    let current = 0;
-    const duration = 600;
-    const step = Math.ceil(target / (duration / 16));
-    
-    const timer = setInterval(() => {
-        current += step;
-        if (current >= target) {
-            el.textContent = target + ' ' + suffix;
-            clearInterval(timer);
-        } else {
-            el.textContent = current + ' ' + suffix;
-        }
-    }, 16);
+function renderBookCards(type) {
+    const data = booksData.slice(0, currentLimit === 'all' ? booksData.length : currentLimit);
+    return data.map(book => type === 'grid' ? renderGridCard(book) : renderListCard(book)).join('');
 }
 
 function renderGridCard(book) {
     return `
-        <div class="card-item" data-id="${book.id}" data-title="${book.title}" data-penulis="${book.penulis}" data-edisi="${book.edisi}" data-kategori="${book.kategori}">
+        <div class="card-item" data-id="${book.id}" data-title="${book.title}" data-penulis="${book.penulis}" data-edisi="${book.edisi}" data-kategori="${book.kategori}" data-bahasa="${book.bahasa}">
             <div class="cover-art-container" style="background:${book.cover};color:${book.color};">
                 <i class="fa-solid ${book.icon}"></i>
                 <span class="cover-text-preview">${book.label}</span>
@@ -140,7 +122,7 @@ function renderGridCard(book) {
 
 function renderListCard(book) {
     return `
-        <div class="list-item" data-id="${book.id}" data-title="${book.title}" data-penulis="${book.penulis}" data-edisi="${book.edisi}" data-kategori="${book.kategori}">
+        <div class="list-item" data-id="${book.id}" data-title="${book.title}" data-penulis="${book.penulis}" data-edisi="${book.edisi}" data-kategori="${book.kategori}" data-bahasa="${book.bahasa}">
             <div class="list-cover" style="background:${book.cover};color:${book.color};">
                 <i class="fa-solid ${book.icon}"></i>
                 <span>${book.label.substring(0,3)}</span>
@@ -158,12 +140,37 @@ function renderListCard(book) {
     `;
 }
 
+function animateCounter(elementId, target, suffix) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    let current = 0;
+    const duration = 600;
+    const step = Math.ceil(target / (duration / 16));
+    const timer = setInterval(() => {
+        current += step;
+        if (current >= target) {
+            el.textContent = target + ' ' + suffix;
+            clearInterval(timer);
+        } else {
+            el.textContent = current + ' ' + suffix;
+        }
+    }, 16);
+}
+
 function initHomeEvents() {
     // Filter button
     const btnFilter = document.getElementById('btnFilterHome');
     if (btnFilter) {
         btnFilter.addEventListener('click', () => {
             openModal('modalFilter');
+        });
+    }
+
+    // Limit button — buka modal pilihan
+    const btnLimit = document.getElementById('btnLimit');
+    if (btnLimit) {
+        btnLimit.addEventListener('click', () => {
+            openModal('modalLimit');
         });
     }
 
@@ -174,24 +181,15 @@ function initHomeEvents() {
             const card = btn.closest('[data-id]');
             const id = parseInt(card.dataset.id);
             const book = booksData.find(b => b.id === id);
-            
             if (book) {
+                document.getElementById('detailTitle').textContent = book.title;
+                document.getElementById('detailPenulis').textContent = book.penulis;
+                document.getElementById('detailEdisi').textContent = book.edisi;
+                document.getElementById('detailKategori').textContent = book.kategori;
+                document.getElementById('detailBahasa').textContent = book.bahasa;
+                document.getElementById('detailKeywords').textContent = book.keywords;
                 const detailCover = document.getElementById('detailCover');
-                const detailTitle = document.getElementById('detailTitle');
-                const detailKategori = document.getElementById('detailKategori');
-                const detailPenulis = document.getElementById('detailPenulis');
-                const detailEdisi = document.getElementById('detailEdisi');
-                const detailBahasa = document.getElementById('detailBahasa');
-                const detailKeywords = document.getElementById('detailKeywords');
-
                 if (detailCover) { detailCover.style.background = book.cover; detailCover.style.color = book.color; }
-                if (detailTitle) detailTitle.textContent = book.title;
-                if (detailKategori) detailKategori.textContent = book.kategori;
-                if (detailPenulis) detailPenulis.textContent = book.penulis;
-                if (detailEdisi) detailEdisi.textContent = book.edisi;
-                if (detailBahasa) detailBahasa.textContent = book.bahasa;
-                if (detailKeywords) detailKeywords.textContent = book.keywords;
-
                 openModal('modalDetail');
             }
         });
@@ -212,7 +210,6 @@ function initHomeEvents() {
         document.getElementById('booksGrid').classList.remove('hidden');
         document.getElementById('booksList').classList.add('hidden');
     });
-
     document.getElementById('viewList')?.addEventListener('click', function() {
         this.classList.add('active');
         document.getElementById('viewGrid').classList.remove('active');
@@ -228,20 +225,15 @@ function initHomeEvents() {
             item.style.display = title.includes(keyword) ? '' : 'none';
         });
     });
-
-    // Kategori chips
-    document.querySelectorAll('.category-chip').forEach(chip => {
-        chip.addEventListener('click', function() {
-            document.querySelector('.category-chip.active')?.classList.remove('active');
-            this.classList.add('active');
-            const kategori = this.dataset.kategori;
-            document.querySelectorAll('.card-item, .list-item').forEach(item => {
-                if (!kategori || item.dataset.kategori === kategori) {
-                    item.style.display = '';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        });
-    });
 }
+
+// Export fungsi untuk update limit dari modal
+export function updateLimit(value) {
+    currentLimit = value;
+    document.getElementById('limitText').textContent = value === 'all' ? 'Semua' : value;
+    document.getElementById('booksGrid').innerHTML = renderBookCards('grid');
+    document.getElementById('booksList').innerHTML = renderBookCards('list');
+    initHomeEvents();
+}
+
+export { booksData };
