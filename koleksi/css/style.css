@@ -844,3 +844,37 @@ footer {
 /* ==================== UTILITY ==================== */
 .hidden { display: none !important; }
 .text-center { text-align: center; }
+
+/* ==================== DISPLAY CONTROLS ==================== */
+.display-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    gap: 10px;
+}
+
+.limit-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--bg-body);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-sub);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Poppins', sans-serif;
+}
+
+.limit-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.limit-btn i {
+    font-size: 0.8rem;
+}
