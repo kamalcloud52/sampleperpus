@@ -51,7 +51,7 @@ export function renderHome(main) {
             </button>
         </div>
 
-        <!-- Display Controls (Tampilkan + View Toggle) -->
+        <!-- Display Controls -->
         <div class="display-controls slide-up slide-up-delay-4">
             <button class="limit-btn" id="btnLimit">
                 <i class="fa-solid fa-eye"></i> Tampilkan <span id="limitText">12</span>
@@ -85,13 +85,11 @@ export function renderHome(main) {
         </div>
     `;
 
-    // Animasi counter
     setTimeout(() => {
         animateCounter('countKoleksi', booksData.length, 'Buku');
         animateCounter('countJenis', new Set(booksData.map(b => b.kategori)).size, 'Jenis');
     }, 300);
 
-    // Init events
     initHomeEvents();
 }
 
@@ -158,23 +156,9 @@ function animateCounter(elementId, target, suffix) {
 }
 
 function initHomeEvents() {
-    // Filter button
-    const btnFilter = document.getElementById('btnFilterHome');
-    if (btnFilter) {
-        btnFilter.addEventListener('click', () => {
-            openModal('modalFilter');
-        });
-    }
+    document.getElementById('btnFilterHome')?.addEventListener('click', () => openModal('modalFilter'));
+    document.getElementById('btnLimit')?.addEventListener('click', () => openModal('modalLimit'));
 
-    // Limit button — buka modal pilihan
-    const btnLimit = document.getElementById('btnLimit');
-    if (btnLimit) {
-        btnLimit.addEventListener('click', () => {
-            openModal('modalLimit');
-        });
-    }
-
-    // Detail triggers
     document.querySelectorAll('.detail-trigger').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -195,7 +179,6 @@ function initHomeEvents() {
         });
     });
 
-    // Klik card
     document.querySelectorAll('.card-item, .list-item').forEach(card => {
         card.addEventListener('click', (e) => {
             if (e.target.closest('button')) return;
@@ -203,13 +186,13 @@ function initHomeEvents() {
         });
     });
 
-    // View toggle
     document.getElementById('viewGrid')?.addEventListener('click', function() {
         this.classList.add('active');
         document.getElementById('viewList').classList.remove('active');
         document.getElementById('booksGrid').classList.remove('hidden');
         document.getElementById('booksList').classList.add('hidden');
     });
+
     document.getElementById('viewList')?.addEventListener('click', function() {
         this.classList.add('active');
         document.getElementById('viewGrid').classList.remove('active');
@@ -217,7 +200,6 @@ function initHomeEvents() {
         document.getElementById('booksGrid').classList.add('hidden');
     });
 
-    // Search
     document.getElementById('searchInput')?.addEventListener('input', (e) => {
         const keyword = e.target.value.toLowerCase();
         document.querySelectorAll('.card-item, .list-item').forEach(item => {
@@ -227,12 +209,14 @@ function initHomeEvents() {
     });
 }
 
-// Export fungsi untuk update limit dari modal
 export function updateLimit(value) {
     currentLimit = value;
-    document.getElementById('limitText').textContent = value === 'all' ? 'Semua' : value;
-    document.getElementById('booksGrid').innerHTML = renderBookCards('grid');
-    document.getElementById('booksList').innerHTML = renderBookCards('list');
+    const limitText = document.getElementById('limitText');
+    if (limitText) limitText.textContent = value === 'all' ? 'Semua' : value;
+    const gridView = document.getElementById('booksGrid');
+    const listView = document.getElementById('booksList');
+    if (gridView) gridView.innerHTML = renderBookCards('grid');
+    if (listView) listView.innerHTML = renderBookCards('list');
     initHomeEvents();
 }
 
