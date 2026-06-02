@@ -60,7 +60,6 @@ header {
     height: var(--nav-height);
 }
 
-/* ==================== HEADER LEFT ==================== */
 .header-left {
     display: flex;
     align-items: center;
@@ -116,7 +115,7 @@ header {
     font-weight: 400;
 }
 
-/* ==================== HAMBURGER (SAMA PERSIS DENGAN BERANDA) ==================== */
+/* ==================== HAMBURGER ==================== */
 .hamburger {
     display: flex;
     flex-direction: column;
@@ -150,7 +149,7 @@ header {
     transform: rotate(-45deg) translate(5px, -5px);
 }
 
-/* ==================== MOBILE MENU (SAMA PERSIS DENGAN BERANDA) ==================== */
+/* ==================== MOBILE MENU ==================== */
 .nav-mobile {
     position: absolute;
     top: var(--nav-height);
@@ -331,44 +330,41 @@ main { padding: 16px; flex: 1; }
 
 .filter-action-btn:hover { border-color: var(--primary); color: var(--primary); }
 
-/* ==================== CATEGORIES ==================== */
-.categories-bar {
+/* ==================== DISPLAY CONTROLS ==================== */
+.display-controls {
     display: flex;
-    gap: 6px;
-    overflow-x: auto;
-    margin-bottom: 16px;
-    padding-bottom: 2px;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    gap: 10px;
 }
 
-.categories-bar::-webkit-scrollbar { display: none; }
-
-.category-chip {
-    white-space: nowrap;
-    padding: 7px 14px;
-    border-radius: 20px;
-    font-size: 0.75rem;
+.limit-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--bg-body);
     border: 1px solid var(--border);
-    background: #fff;
-    cursor: pointer;
+    border-radius: 6px;
+    font-size: 0.75rem;
     font-weight: 600;
     color: var(--text-sub);
+    cursor: pointer;
     transition: all 0.2s;
-    flex-shrink: 0;
+    font-family: 'Poppins', sans-serif;
 }
 
-.category-chip:active { transform: scale(0.96); }
-
-.category-chip.active {
-    background: var(--primary);
-    color: white;
+.limit-btn:hover {
     border-color: var(--primary);
+    color: var(--primary);
+}
+
+.limit-btn i {
+    font-size: 0.8rem;
 }
 
 /* ==================== VIEW TOGGLE ==================== */
-.display-options { display: flex; justify-content: flex-end; margin-bottom: 12px; }
-
 .toggle-switch-group {
     border: 1px solid var(--border);
     border-radius: 6px;
@@ -739,6 +735,34 @@ main { padding: 16px; flex: 1; }
     border-color: var(--primary);
 }
 
+/* Limit Options Modal */
+.limit-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.limit-option {
+    width: 100%;
+    padding: 12px;
+    background: var(--bg-body);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text-main);
+    transition: all 0.2s;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+.limit-option:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
 /* Login Page */
 .login-container {
     max-width: 320px;
@@ -844,65 +868,3 @@ footer {
 /* ==================== UTILITY ==================== */
 .hidden { display: none !important; }
 .text-center { text-align: center; }
-
-/* ==================== DISPLAY CONTROLS ==================== */
-.display-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-    gap: 10px;
-}
-
-.limit-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: var(--bg-body);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-sub);
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'Poppins', sans-serif;
-}
-
-.limit-btn:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-}
-
-.limit-btn i {
-    font-size: 0.8rem;
-}
-
-/* ==================== LIMIT OPTIONS ==================== */
-.limit-options {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.limit-option {
-    width: 100%;
-    padding: 12px;
-    background: var(--bg-body);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    color: var(--text-main);
-    transition: all 0.2s;
-    text-align: center;
-    font-family: 'Poppins', sans-serif;
-}
-
-.limit-option:hover {
-    background: var(--primary-light);
-    color: var(--primary);
-    border-color: var(--primary);
-}
