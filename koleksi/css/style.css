@@ -41,7 +41,6 @@ body {
     position: relative;
 }
 
-/* Container untuk konten utama */
 @media (min-width: 768px) {
     .app-container {
         max-width: 1200px;
@@ -74,7 +73,7 @@ header {
 
 @media (min-width: 768px) {
     .header-inner {
-        padding: 0 24px;
+        padding: 0 32px;
     }
 }
 
@@ -137,6 +136,47 @@ header {
     display: none;
 }
 
+/* ==================== DESKTOP NAV ==================== */
+.desktop-nav {
+    display: none;
+    list-style: none;
+    align-items: center;
+    gap: 4px;
+}
+
+@media (min-width: 1024px) {
+    .desktop-nav {
+        display: flex;
+    }
+}
+
+.desktop-nav a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.desktop-nav a:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.desktop-nav a.active {
+    color: white;
+    background: rgba(255, 255, 255, 0.18);
+    font-weight: 600;
+}
+
+.desktop-nav a i {
+    margin-right: 4px;
+    font-size: 0.75rem;
+}
+
 /* ==================== HAMBURGER ==================== */
 .hamburger {
     display: flex;
@@ -171,7 +211,6 @@ header {
     transform: rotate(-45deg) translate(4px, -4px);
 }
 
-/* Desktop: sembunyikan hamburger */
 @media (min-width: 1024px) {
     .hamburger {
         display: none;
@@ -197,7 +236,6 @@ header {
     max-height: 400px;
 }
 
-/* Desktop: sembunyikan mobile menu */
 @media (min-width: 1024px) {
     .nav-mobile {
         display: none !important;
@@ -257,10 +295,20 @@ main {
     width: 100%;
 }
 
+@media (min-width: 480px) {
+    main { padding: 20px; }
+}
+
 @media (min-width: 768px) {
-    main {
-        padding: 24px;
-    }
+    main { padding: 28px 32px; }
+}
+
+@media (min-width: 1024px) {
+    main { padding: 32px 40px; }
+}
+
+@media (min-width: 1280px) {
+    main { padding: 36px 48px; }
 }
 
 /* ==================== WELCOME CARD ==================== */
@@ -275,9 +323,7 @@ main {
 }
 
 @media (min-width: 768px) {
-    .welcome-card {
-        padding: 28px;
-    }
+    .welcome-card { padding: 28px; }
 }
 
 .welcome-card::after {
@@ -408,9 +454,7 @@ main {
     transition: opacity 0.2s;
 }
 
-.filter-action-btn:hover::after {
-    opacity: 1;
-}
+.filter-action-btn:hover::after { opacity: 1; }
 
 /* ==================== DISPLAY CONTROLS ==================== */
 .display-controls {
@@ -437,10 +481,7 @@ main {
     font-family: 'Poppins', sans-serif;
 }
 
-.limit-btn:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-}
+.limit-btn:hover { border-color: var(--primary); color: var(--primary); }
 
 .limit-btn i { font-size: 0.8rem; }
 
@@ -479,10 +520,7 @@ main {
 }
 
 @media (min-width: 480px) {
-    .books-layout-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 14px;
-    }
+    .books-layout-grid { gap: 14px; }
 }
 
 @media (min-width: 640px) {
@@ -702,12 +740,7 @@ main {
     margin-bottom: 16px;
 }
 
-.paginator-caption {
-    font-size: 0.7rem;
-    color: var(--text-sub);
-    font-weight: 600;
-    text-transform: uppercase;
-}
+.paginator-caption { font-size: 0.7rem; color: var(--text-sub); font-weight: 600; text-transform: uppercase; }
 
 .paginator-row { display: flex; align-items: center; gap: 4px; }
 
@@ -723,11 +756,7 @@ main {
     transition: all 0.15s;
 }
 
-.nav-step-btn.active {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-}
+.nav-step-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
 /* ==================== MODAL ==================== */
 .modal-overlay {
@@ -744,9 +773,7 @@ main {
 }
 
 @media (min-width: 768px) {
-    .modal-overlay {
-        align-items: center;
-    }
+    .modal-overlay { align-items: center; }
 }
 
 .modal-overlay.open { opacity: 1; visibility: visible; }
@@ -757,7 +784,7 @@ main {
     max-width: 600px;
     max-height: 85vh;
     border-radius: 20px 20px 0 0;
-    padding: 20px 18px 28px;
+    padding: 20px 24px 28px;
     overflow-y: auto;
     transform: translateY(100%);
     transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
@@ -776,35 +803,26 @@ main {
 
 .modal-close-btn {
     position: absolute;
-    top: 14px;
-    right: 14px;
-    width: 30px;
-    height: 30px;
+    top: 14px; right: 14px;
+    width: 30px; height: 30px;
     border-radius: 50%;
     background: var(--bg-body);
     border: none;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     color: var(--text-sub);
     font-size: 0.9rem;
     z-index: 10;
 }
 
 .modal-handle {
-    width: 32px;
-    height: 4px;
+    width: 32px; height: 4px;
     background: var(--border);
     border-radius: 2px;
     margin: 0 auto 14px;
 }
 
-@media (min-width: 768px) {
-    .modal-handle {
-        display: none;
-    }
-}
+@media (min-width: 768px) { .modal-handle { display: none; } }
 
 .modal-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 14px; }
 
@@ -812,23 +830,19 @@ main {
     width: 100%;
     aspect-ratio: 16/10;
     border-radius: var(--radius-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     margin-bottom: 14px;
     font-size: 2.5rem;
 }
 
 .modal-info-row {
-    display: flex;
-    justify-content: space-between;
+    display: flex; justify-content: space-between;
     padding: 8px 0;
     border-bottom: 1px solid var(--border);
     font-size: 0.8rem;
 }
 
 .modal-info-row span:first-child { color: var(--text-muted); font-weight: 500; }
-
 .modal-info-row span:last-child { font-weight: 600; text-align: right; }
 
 .modal-action-btn {
@@ -842,9 +856,7 @@ main {
     font-weight: 600;
     cursor: pointer;
     margin-top: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     gap: 6px;
 }
 
@@ -852,13 +864,10 @@ main {
 
 /* Profile Modal */
 .profile-avatar {
-    width: 70px;
-    height: 70px;
+    width: 70px; height: 70px;
     border-radius: 50%;
     background: var(--primary-light);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     margin: 0 auto 14px;
     font-size: 2.5rem;
     color: var(--primary);
@@ -866,17 +875,8 @@ main {
 
 /* Filter Modal */
 .filter-group { margin-bottom: 16px; }
-
-.filter-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-sub);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-}
-
+.filter-label { font-size: 0.75rem; font-weight: 600; color: var(--text-sub); margin-bottom: 6px; text-transform: uppercase; }
 .filter-options { display: flex; flex-wrap: wrap; gap: 6px; }
-
 .filter-option {
     padding: 6px 14px;
     border-radius: 16px;
@@ -886,20 +886,10 @@ main {
     background: white;
     transition: all 0.2s;
 }
-
-.filter-option.selected {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-}
+.filter-option.selected { background: var(--primary); color: white; border-color: var(--primary); }
 
 /* Limit Options Modal */
-.limit-options {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
+.limit-options { display: flex; flex-direction: column; gap: 8px; }
 .limit-option {
     width: 100%;
     padding: 12px;
@@ -914,45 +904,22 @@ main {
     text-align: center;
     font-family: 'Poppins', sans-serif;
 }
-
-.limit-option:hover {
-    background: var(--primary-light);
-    color: var(--primary);
-    border-color: var(--primary);
-}
+.limit-option:hover { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
 
 /* Login Page */
-.login-container {
-    max-width: 400px;
-    margin: 40px auto;
-    text-align: center;
-}
-
+.login-container { max-width: 400px; margin: 40px auto; text-align: center; }
 .login-avatar {
-    width: 80px;
-    height: 80px;
+    width: 80px; height: 80px;
     border-radius: 50%;
     background: var(--primary-light);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     margin: 0 auto 20px;
     font-size: 2.5rem;
     color: var(--primary);
 }
-
 .login-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 20px; }
-
 .form-group { margin-bottom: 14px; text-align: left; }
-
-.form-group label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--text-sub);
-    margin-bottom: 4px;
-    display: block;
-}
-
+.form-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-sub); margin-bottom: 4px; display: block; }
 .form-input {
     width: 100%;
     padding: 10px 14px;
@@ -962,11 +929,7 @@ main {
     outline: none;
     transition: all 0.2s;
 }
-
-.form-input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(4,120,87,0.1);
-}
+.form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(4,120,87,0.1); }
 
 /* ==================== FOOTER ==================== */
 footer {
@@ -977,15 +940,10 @@ footer {
     border-top: 1px solid var(--border);
     margin-top: auto;
 }
-
 .footer-social { display: flex; justify-content: center; gap: 12px; margin-top: 8px; }
-
 .social-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px;
     border-radius: 50%;
     background: var(--primary-light);
     color: var(--primary);
@@ -993,30 +951,14 @@ footer {
     text-decoration: none;
     transition: all 0.3s;
 }
+.social-link:hover { background: var(--primary); color: white; transform: translateY(-2px); }
 
-.social-link:hover {
-    background: var(--primary);
-    color: white;
-    transform: translateY(-2px);
-}
-
-/* ==================== ANIMASI HALAMAN ==================== */
+/* ==================== ANIMASI ==================== */
 @keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(40px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
 }
-
-.slide-up {
-    opacity: 0;
-    animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
+.slide-up { opacity: 0; animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
 .slide-up-delay-1 { animation-delay: 0.05s; }
 .slide-up-delay-2 { animation-delay: 0.10s; }
 .slide-up-delay-3 { animation-delay: 0.15s; }
