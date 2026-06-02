@@ -60,31 +60,60 @@ header {
     height: var(--nav-height);
 }
 
+/* ==================== HEADER LEFT ==================== */
 .header-left {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
-.header-left .profile-btn {
-    font-size: 1.3rem;
+/* Avatar Circle */
+.avatar-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
     color: white;
-    background: none;
-    border: none;
     cursor: pointer;
-    padding: 4px;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
-.header-left .profile-btn:hover {
-    color: #FCD34D;
+.avatar-circle:hover {
+    background: rgba(255, 255, 255, 0.35);
+    border-color: #FCD34D;
     transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(252, 211, 77, 0.3);
 }
 
-.header-left .user-name {
+/* User Info */
+.user-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.user-name {
     font-weight: 600;
     font-size: 0.85rem;
     color: white;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.user-name:hover {
+    color: #FCD34D;
+}
+
+.user-role {
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 400;
 }
 
 /* ==================== HAMBURGER (SAMA PERSIS DENGAN BERANDA) ==================== */
