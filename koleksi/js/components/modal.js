@@ -4,7 +4,7 @@ let currentModal = null;
 export function renderModal() {
     const container = document.getElementById('modalContainer');
     if (!container) return;
-    
+
     container.innerHTML = `
         <!-- Modal Detail -->
         <div class="modal-overlay" id="modalDetail">
@@ -100,12 +100,12 @@ export function renderModal() {
 }
 
 export function initModalEvents() {
-    // Tutup modal
+    // Tutup modal dengan tombol X
     document.querySelectorAll('.modal-close-btn, [data-close]').forEach(btn => {
         btn.addEventListener('click', () => {
             const modalId = btn.dataset.close;
             if (modalId) {
-                document.getElementById(modalId).classList.remove('open');
+                closeModal(modalId);
             }
         });
     });
@@ -114,60 +114,50 @@ export function initModalEvents() {
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) {
-                overlay.classList.remove('open');
+                closeModal(overlay.id);
             }
         });
     });
 
     // Tombol Baca
-    const btnBaca = document.getElementById('btnBaca');
-    if (btnBaca) {
-        btnBaca.addEventListener('click', () => {
-            alert('Fitur baca akan segera hadir!');
-        });
-    }
+    document.getElementById('btnBaca')?.addEventListener('click', () => {
+        alert('Fitur baca akan segera hadir!');
+    });
 
     // Tombol Download
-    const btnDownload = document.getElementById('btnDownload');
-    if (btnDownload) {
-        btnDownload.addEventListener('click', () => {
-            alert('Fitur unduh akan segera hadir!');
-        });
-    }
+    document.getElementById('btnDownload')?.addEventListener('click', () => {
+        alert('Fitur unduh akan segera hadir!');
+    });
 
     // Filter options
     document.querySelectorAll('.filter-options').forEach(group => {
         group.querySelectorAll('.filter-option').forEach(opt => {
-            opt.addEventListener('click', function() {
+            opt.addEventListener('click', function () {
                 group.querySelectorAll('.filter-option').forEach(o => o.classList.remove('selected'));
                 this.classList.add('selected');
             });
         });
     });
 
-    // Tombol Terapkan Filter
-    const btnTerapkan = document.getElementById('btnTerapkanFilter');
-    if (btnTerapkan) {
-        btnTerapkan.addEventListener('click', () => {
-            document.getElementById('modalFilter').classList.remove('open');
-            window.location.hash = '#/home';
-        });
-    }
+    // Terapkan Filter
+    document.getElementById('btnTerapkanFilter')?.addEventListener('click', () => {
+        closeModal('modalFilter');
+    });
 
-    // Tombol Reset Filter
-    const btnReset = document.getElementById('btnResetFilter');
-    if (btnReset) {
-        btnReset.addEventListener('click', () => {
-            document.querySelectorAll('.filter-option').forEach(opt => opt.classList.remove('selected'));
-            document.querySelectorAll('.filter-option:first-child').forEach(opt => opt.classList.add('selected'));
-        });
-    }
+    // Reset Filter
+    document.getElementById('btnResetFilter')?.addEventListener('click', () => {
+        document.querySelectorAll('.filter-option').forEach(opt => opt.classList.remove('selected'));
+        document.querySelectorAll('.filter-option:first-child').forEach(opt => opt.classList.add('selected'));
+    });
 }
 
 export function openModal(modalId) {
+    // Tutup modal lain dulu
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
     const modal = document.getElementById(modalId);
     if (modal) {
         modal.classList.add('open');
+        currentModal = modalId;
     }
 }
 
@@ -175,5 +165,11 @@ export function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
         modal.classList.remove('open');
+        if (currentModal === modalId) currentModal = null;
     }
+}
+
+export function closeAllModals() {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+    currentModal = null;
 }
