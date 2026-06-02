@@ -21,10 +21,10 @@ export function renderHeader() {
                 <span></span>
             </button>
             <div class="hamburger-dropdown" id="hamburgerDropdown">
-                <a href="../index.html">🏠 Beranda</a>
-                <a href="index.html">📚 Koleksi Buku</a>
-                <a href="../mediapim/">📱 Media PIM</a>
-                <a href="../arsipfoto/">📸 Arsip Foto PIM</a>
+                <a href="../index.html"><i class="fa-solid fa-house"></i> Beranda</a>
+                <a href="index.html"><i class="fa-solid fa-book"></i> Koleksi Buku</a>
+                <a href="../mediapim/"><i class="fa-solid fa-hashtag"></i> Media PIM</a>
+                <a href="../arsipfoto/"><i class="fa-solid fa-camera-retro"></i> Arsip Foto PIM</a>
             </div>
         </div>
     `;
