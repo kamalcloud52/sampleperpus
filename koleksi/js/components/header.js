@@ -8,10 +8,15 @@ export function renderHeader() {
     header.innerHTML = `
         <div class="header-inner">
             <div class="header-left">
-                <button class="profile-btn" id="btnProfile" title="Profil Saya">
+                <!-- Avatar Circle -->
+                <div class="avatar-circle" id="btnProfile" title="Profil Saya">
                     <i class="fa-solid fa-circle-user"></i>
-                </button>
-                <span class="user-name" id="userName">Tamu</span>
+                </div>
+                <!-- Info User -->
+                <div class="user-info">
+                    <span class="user-name" id="userName">Tamu</span>
+                    <span class="user-role">Pengunjung</span>
+                </div>
             </div>
             
             <!-- Hamburger -->
@@ -35,12 +40,19 @@ export function renderHeader() {
 }
 
 export function initHeaderEvents() {
-    // Profil
+    // Profil (avatar + nama bisa diklik)
     const btnProfile = document.getElementById('btnProfile');
     if (btnProfile) {
-        const newBtn = btnProfile.cloneNode(true);
-        btnProfile.parentNode.replaceChild(newBtn, btnProfile);
-        newBtn.addEventListener('click', () => {
+        btnProfile.addEventListener('click', () => {
+            openModal('modalProfil');
+        });
+    }
+    
+    // Nama user juga bisa diklik
+    const userName = document.getElementById('userName');
+    if (userName) {
+        userName.style.cursor = 'pointer';
+        userName.addEventListener('click', () => {
             openModal('modalProfil');
         });
     }
