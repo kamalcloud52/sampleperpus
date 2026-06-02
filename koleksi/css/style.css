@@ -13,7 +13,7 @@
     --radius-md: 12px;
     --radius-sm: 8px;
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
     --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
     --nav-height: 56px;
 }
@@ -115,11 +115,15 @@ header {
     font-weight: 400;
 }
 
-/* ==================== HAMBURGER ==================== */
+.user-info.logged-in .user-role {
+    display: none;
+}
+
+/* ==================== HAMBURGER (DIKECILKAN) ==================== */
 .hamburger {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 4px;
     background: none;
     border: none;
     cursor: pointer;
@@ -129,15 +133,15 @@ header {
 
 .hamburger span {
     display: block;
-    width: 24px;
-    height: 2.5px;
+    width: 20px;
+    height: 2px;
     background: white;
     border-radius: 2px;
     transition: all 0.35s ease;
 }
 
 .hamburger.open span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
+    transform: rotate(45deg) translate(4px, 4px);
 }
 
 .hamburger.open span:nth-child(2) {
@@ -146,7 +150,7 @@ header {
 }
 
 .hamburger.open span:nth-child(3) {
-    transform: rotate(-45deg) translate(5px, -5px);
+    transform: rotate(-45deg) translate(4px, -4px);
 }
 
 /* ==================== MOBILE MENU ==================== */
@@ -317,6 +321,7 @@ main { padding: 16px; flex: 1; }
 
 .search-input:focus { border-color: var(--primary); background: #fff; }
 
+/* Filter Button + Tooltip */
 .filter-action-btn {
     background: var(--bg-body);
     border: 1px solid var(--border);
@@ -326,9 +331,32 @@ main { padding: 16px; flex: 1; }
     color: var(--text-sub);
     font-size: 0.9rem;
     transition: all 0.2s;
+    position: relative;
 }
 
 .filter-action-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+.filter-action-btn::after {
+    content: 'Filter';
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1f2937;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.filter-action-btn:hover::after {
+    opacity: 1;
+}
 
 /* ==================== DISPLAY CONTROLS ==================== */
 .display-controls {
@@ -360,9 +388,7 @@ main { padding: 16px; flex: 1; }
     color: var(--primary);
 }
 
-.limit-btn i {
-    font-size: 0.8rem;
-}
+.limit-btn i { font-size: 0.8rem; }
 
 /* ==================== VIEW TOGGLE ==================== */
 .toggle-switch-group {
@@ -402,12 +428,18 @@ main { padding: 16px; flex: 1; }
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 12px;
-    background: var(--bg-card);
+    background: #fafafa;
     display: flex;
     flex-direction: column;
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     cursor: pointer;
     height: 100%;
+    box-shadow: var(--shadow-md);
+}
+
+.card-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
 
 .card-item:active { transform: scale(0.98); }
@@ -505,13 +537,19 @@ main { padding: 16px; flex: 1; }
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     padding: 10px;
-    background: var(--bg-card);
-    transition: all 0.2s;
+    background: #fafafa;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     align-items: center;
     cursor: pointer;
 }
 
-.list-item:active { background: #f9fafb; }
+.list-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+.list-item:active { background: #f0fdf4; }
 
 .list-cover {
     width: 50px;
