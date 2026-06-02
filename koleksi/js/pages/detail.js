@@ -13,12 +13,12 @@ const booksData = [
 export function renderDetail(main, param) {
     const bookId = parseInt(param);
     const book = booksData.find(b => b.id === bookId);
-    
+
     if (!book) {
         main.innerHTML = '<p class="text-center" style="padding:40px;">Buku tidak ditemukan.</p>';
         return;
     }
-    
+
     // Update modal content
     setTimeout(() => {
         const detailCover = document.getElementById('detailCover');
@@ -28,7 +28,7 @@ export function renderDetail(main, param) {
         const detailEdisi = document.getElementById('detailEdisi');
         const detailBahasa = document.getElementById('detailBahasa');
         const detailKeywords = document.getElementById('detailKeywords');
-        
+
         if (detailCover) detailCover.style.background = book.cover;
         if (detailCover) detailCover.style.color = book.color;
         if (detailTitle) detailTitle.textContent = book.title;
@@ -37,17 +37,7 @@ export function renderDetail(main, param) {
         if (detailEdisi) detailEdisi.textContent = book.edisi;
         if (detailBahasa) detailBahasa.textContent = book.bahasa;
         if (detailKeywords) detailKeywords.textContent = book.keywords;
-        
+
         openModal('modalDetail');
-        
-        // Kembali ke home setelah modal ditutup
-        const modalDetail = document.getElementById('modalDetail');
-        const observer = new MutationObserver(() => {
-            if (!modalDetail.classList.contains('open')) {
-                window.location.hash = '#/home';
-                observer.disconnect();
-            }
-        });
-        observer.observe(modalDetail, { attributes: true, attributeFilter: ['class'] });
     }, 100);
 }
