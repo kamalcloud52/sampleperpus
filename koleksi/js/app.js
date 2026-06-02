@@ -3,18 +3,12 @@ import { renderHeader, initHeaderEvents } from './components/header.js';
 import { renderFooter } from './components/footer.js';
 import { renderModal, initModalEvents, closeAllModals } from './components/modal.js';
 import { renderHome } from './pages/home.js';
-import { renderDetail } from './pages/detail.js';
 import { renderLogin } from './pages/login.js';
-import { renderProfil } from './pages/profil.js';
-import { renderFilter } from './pages/filter.js';
 
 const routes = {
     '': 'home',
     'home': 'home',
-    'detail': 'detail',
     'login': 'login',
-    'profil': 'profil',
-    'filter': 'filter',
 };
 
 let currentPage = 'home';
@@ -43,20 +37,11 @@ function router() {
         case 'home':
             renderHome(main);
             break;
-        case 'detail':
-            renderDetail(main, currentParam);
-            break;
         case 'login':
             renderLogin(main);
             break;
-        case 'profil':
-            renderProfil(main);
-            break;
-        case 'filter':
-            renderFilter(main);
-            break;
         default:
-            main.innerHTML = '<p class="text-center" style="padding:40px;">Halaman tidak ditemukan</p>';
+            renderHome(main);
     }
 
     // Render footer
