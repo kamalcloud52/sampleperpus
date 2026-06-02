@@ -6,11 +6,11 @@ export function renderHeader() {
     if (!header) return;
     
     header.innerHTML = `
-        <div style="display:flex;align-items:center;gap:10px;">
-            <button class="profile-btn" id="btnProfile" title="Profil Saya" style="font-size:1.5rem;color:#4b5563;background:none;border:none;cursor:pointer;padding:4px;">
+        <div class="header-left">
+            <button class="profile-btn" id="btnProfile" title="Profil Saya">
                 <i class="fa-solid fa-circle-user"></i>
             </button>
-            <span style="font-weight:600;font-size:0.9rem;color:#1f2937;" id="userName">Tamu</span>
+            <span class="user-name" id="userName">Tamu</span>
         </div>
         
         <!-- Hamburger + Dropdown -->
@@ -22,7 +22,7 @@ export function renderHeader() {
             </button>
             <div class="hamburger-dropdown" id="hamburgerDropdown">
                 <a href="../index.html"><i class="fa-solid fa-house"></i> Beranda</a>
-                <a href="index.html"><i class="fa-solid fa-book"></i> Koleksi Buku</a>
+                <a href="index.html" class="active"><i class="fa-solid fa-book"></i> Koleksi Buku</a>
                 <a href="../mediapim/"><i class="fa-solid fa-hashtag"></i> Media PIM</a>
                 <a href="../arsipfoto/"><i class="fa-solid fa-camera-retro"></i> Arsip Foto PIM</a>
             </div>
