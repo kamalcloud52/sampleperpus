@@ -26,6 +26,15 @@ export function renderHeader() {
                 ${userDisplay}
             </div>
             
+            <!-- Desktop Nav -->
+            <ul class="desktop-nav">
+                <li><a href="../index.html"><i class="fa-solid fa-house"></i> Beranda</a></li>
+                <li><a href="index.html" class="active"><i class="fa-solid fa-book"></i> Koleksi Buku</a></li>
+                <li><a href="../mediapim/"><i class="fa-solid fa-hashtag"></i> Media PIM</a></li>
+                <li><a href="../arsipfoto/"><i class="fa-solid fa-camera-retro"></i> Arsip Foto PIM</a></li>
+            </ul>
+            
+            <!-- Hamburger -->
             <button class="hamburger" id="hamburgerKoleksi" aria-label="Menu">
                 <span></span>
                 <span></span>
@@ -33,6 +42,7 @@ export function renderHeader() {
             </button>
         </div>
         
+        <!-- Mobile Menu -->
         <div class="nav-mobile" id="mobileMenuKoleksi">
             <ul>
                 <li><a href="../index.html"><i class="fa-solid fa-house"></i> Beranda</a></li>
@@ -48,11 +58,8 @@ export function initHeaderEvents() {
     const btnProfile = document.getElementById('btnProfile');
     if (btnProfile) {
         btnProfile.addEventListener('click', () => {
-            if (isLoggedIn) {
-                openModal('modalProfil');
-            } else {
-                window.location.hash = '#/login';
-            }
+            if (isLoggedIn) { openModal('modalProfil'); }
+            else { window.location.hash = '#/login'; }
         });
     }
     
@@ -60,11 +67,8 @@ export function initHeaderEvents() {
     if (userNameEl) {
         userNameEl.style.cursor = 'pointer';
         userNameEl.addEventListener('click', () => {
-            if (isLoggedIn) {
-                openModal('modalProfil');
-            } else {
-                window.location.hash = '#/login';
-            }
+            if (isLoggedIn) { openModal('modalProfil'); }
+            else { window.location.hash = '#/login'; }
         });
     }
 
