@@ -33,12 +33,22 @@ body {
 
 .app-container {
     width: 100%;
-    max-width: 480px;
+    max-width: 100%;
     background: var(--bg-card);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     position: relative;
+}
+
+/* Container untuk konten utama */
+@media (min-width: 768px) {
+    .app-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        border-left: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+    }
 }
 
 /* ==================== HEADER ==================== */
@@ -58,6 +68,14 @@ header {
     align-items: center;
     padding: 0 16px;
     height: var(--nav-height);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+    .header-inner {
+        padding: 0 24px;
+    }
 }
 
 .header-left {
@@ -119,7 +137,7 @@ header {
     display: none;
 }
 
-/* ==================== HAMBURGER (DIKECILKAN) ==================== */
+/* ==================== HAMBURGER ==================== */
 .hamburger {
     display: flex;
     flex-direction: column;
@@ -153,6 +171,13 @@ header {
     transform: rotate(-45deg) translate(4px, -4px);
 }
 
+/* Desktop: sembunyikan hamburger */
+@media (min-width: 1024px) {
+    .hamburger {
+        display: none;
+    }
+}
+
 /* ==================== MOBILE MENU ==================== */
 .nav-mobile {
     position: absolute;
@@ -170,6 +195,13 @@ header {
 
 .nav-mobile.open {
     max-height: 400px;
+}
+
+/* Desktop: sembunyikan mobile menu */
+@media (min-width: 1024px) {
+    .nav-mobile {
+        display: none !important;
+    }
 }
 
 .nav-mobile ul {
@@ -217,7 +249,19 @@ header {
 }
 
 /* ==================== MAIN ==================== */
-main { padding: 16px; flex: 1; }
+main { 
+    padding: 16px; 
+    flex: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    main {
+        padding: 24px;
+    }
+}
 
 /* ==================== WELCOME CARD ==================== */
 .welcome-card {
@@ -228,6 +272,12 @@ main { padding: 16px; flex: 1; }
     color: #fff;
     position: relative;
     overflow: hidden;
+}
+
+@media (min-width: 768px) {
+    .welcome-card {
+        padding: 28px;
+    }
 }
 
 .welcome-card::after {
@@ -254,6 +304,10 @@ main { padding: 16px; flex: 1; }
 }
 
 .welcome-card h1 { font-size: 1.2rem; margin-bottom: 6px; font-weight: 700; }
+
+@media (min-width: 768px) {
+    .welcome-card h1 { font-size: 1.5rem; }
+}
 
 .welcome-card p { font-size: 0.78rem; color: #d1fae5; }
 
@@ -416,12 +470,40 @@ main { padding: 16px; flex: 1; }
     box-shadow: var(--shadow-sm);
 }
 
-/* ==================== GRID VIEW ==================== */
+/* ==================== GRID VIEW (RESPONSIF) ==================== */
 .books-layout-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
     margin-bottom: 20px;
+}
+
+@media (min-width: 480px) {
+    .books-layout-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+}
+
+@media (min-width: 640px) {
+    .books-layout-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .books-layout-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .books-layout-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+    }
 }
 
 .card-item {
@@ -457,6 +539,10 @@ main { padding: 16px; flex: 1; }
 }
 
 .cover-art-container i { font-size: 1.8rem; margin-bottom: 4px; opacity: 0.7; }
+
+@media (min-width: 768px) {
+    .cover-art-container i { font-size: 2.2rem; }
+}
 
 .cover-text-preview {
     font-size: 0.6rem;
@@ -529,6 +615,20 @@ main { padding: 16px; flex: 1; }
     flex-direction: column;
     gap: 10px;
     margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+    .books-layout-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .books-layout-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 .list-item {
@@ -643,12 +743,18 @@ main { padding: 16px; flex: 1; }
     transition: all 0.3s ease;
 }
 
+@media (min-width: 768px) {
+    .modal-overlay {
+        align-items: center;
+    }
+}
+
 .modal-overlay.open { opacity: 1; visibility: visible; }
 
 .modal-sheet {
     background: white;
     width: 100%;
-    max-width: 480px;
+    max-width: 600px;
     max-height: 85vh;
     border-radius: 20px 20px 0 0;
     padding: 20px 18px 28px;
@@ -656,6 +762,14 @@ main { padding: 16px; flex: 1; }
     transform: translateY(100%);
     transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
     position: relative;
+}
+
+@media (min-width: 768px) {
+    .modal-sheet {
+        border-radius: 20px;
+        max-height: 90vh;
+        max-width: 650px;
+    }
 }
 
 .modal-overlay.open .modal-sheet { transform: translateY(0); }
@@ -684,6 +798,12 @@ main { padding: 16px; flex: 1; }
     background: var(--border);
     border-radius: 2px;
     margin: 0 auto 14px;
+}
+
+@media (min-width: 768px) {
+    .modal-handle {
+        display: none;
+    }
 }
 
 .modal-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 14px; }
@@ -803,7 +923,7 @@ main { padding: 16px; flex: 1; }
 
 /* Login Page */
 .login-container {
-    max-width: 320px;
+    max-width: 400px;
     margin: 40px auto;
     text-align: center;
 }
