@@ -8,7 +8,7 @@ export function renderModal() {
     container.innerHTML = `
         <!-- Modal Detail -->
         <div class="modal-overlay" id="modalDetail">
-            <div class="modal-sheet">
+            <div class="modal-sheet" id="modalSheetDetail">
                 <div class="modal-handle"></div>
                 <button class="modal-close-btn" data-close="modalDetail">
                     <i class="fa-solid fa-xmark"></i>
@@ -17,7 +17,7 @@ export function renderModal() {
                     <i class="fa-solid fa-book-open"></i>
                 </div>
                 <h3 class="modal-title" id="detailTitle">Judul Buku</h3>
-                <div class="modal-info-row"><span>Kategori</span><span id="detailKategori">-</span></div>
+                <div class="modal-info-row"><span>Jenis</span><span id="detailKategori">-</span></div>
                 <div class="modal-info-row"><span>Penulis</span><span id="detailPenulis">-</span></div>
                 <div class="modal-info-row"><span>Edisi</span><span id="detailEdisi">-</span></div>
                 <div class="modal-info-row"><span>Bahasa</span><span id="detailBahasa">-</span></div>
@@ -33,7 +33,7 @@ export function renderModal() {
 
         <!-- Modal Profil -->
         <div class="modal-overlay" id="modalProfil">
-            <div class="modal-sheet">
+            <div class="modal-sheet" id="modalSheetProfil">
                 <div class="modal-handle"></div>
                 <button class="modal-close-btn" data-close="modalProfil">
                     <i class="fa-solid fa-xmark"></i>
@@ -53,41 +53,41 @@ export function renderModal() {
 
         <!-- Modal Filter -->
         <div class="modal-overlay" id="modalFilter">
-            <div class="modal-sheet">
+            <div class="modal-sheet" id="modalSheetFilter">
                 <div class="modal-handle"></div>
                 <button class="modal-close-btn" data-close="modalFilter">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
                 <h3 class="modal-title">Filter Koleksi</h3>
+                
+                <!-- Jenis Filter -->
                 <div class="filter-group">
-                    <div class="filter-label">Kategori</div>
-                    <div class="filter-options" id="filterKategori">
+                    <div class="filter-label">Jenis</div>
+                    <div class="filter-options" id="filterJenis">
                         <button class="filter-option selected" data-value="">Semua</button>
                         <button class="filter-option" data-value="Buku">Buku</button>
+                        <button class="filter-option" data-value="Karya Tulis Ilmiah">KTI</button>
                         <button class="filter-option" data-value="Kitab">Kitab</button>
                         <button class="filter-option" data-value="Majalah">Majalah</button>
-                        <button class="filter-option" data-value="KTI">KTI</button>
+                        <button class="filter-option" data-value="Modul">Modul</button>
+                        <button class="filter-option" data-value="Skripsi">Skripsi</button>
+                        <button class="filter-option" data-value="Tesis">Tesis</button>
+                        <button class="filter-option" data-value="Web">Web</button>
                     </div>
                 </div>
+                
+                <!-- Bahasa Filter -->
                 <div class="filter-group">
                     <div class="filter-label">Bahasa</div>
                     <div class="filter-options" id="filterBahasa">
                         <button class="filter-option selected" data-value="">Semua</button>
                         <button class="filter-option" data-value="Indonesia">Indonesia</button>
                         <button class="filter-option" data-value="Arab">Arab</button>
+                        <button class="filter-option" data-value="Arab Pegon">Arab Pegon</button>
                         <button class="filter-option" data-value="Inggris">Inggris</button>
                     </div>
                 </div>
-                <div class="filter-group">
-                    <div class="filter-label">Tahun</div>
-                    <div class="filter-options" id="filterTahun">
-                        <button class="filter-option selected" data-value="">Semua</button>
-                        <button class="filter-option" data-value="2024">2024</button>
-                        <button class="filter-option" data-value="2023">2023</button>
-                        <button class="filter-option" data-value="2022">2022</button>
-                        <button class="filter-option" data-value="2021">2021</button>
-                    </div>
-                </div>
+                
                 <button class="modal-action-btn" id="btnTerapkanFilter">
                     <i class="fa-solid fa-check"></i> Terapkan Filter
                 </button>
@@ -100,7 +100,52 @@ export function renderModal() {
 }
 
 export function initModalEvents() {
-    // Tutup modal dengan tombol X
+    // ==================== GESER HANDLE UNTUK TUTUP MODAL ====================
+    document.querySelectorAll('.modal-sheet').forEach(sheet => {
+        let startY = 0;
+        let currentY = 0;
+        let isDragging = false;
+
+        const handle = sheet.querySelector('.modal-handle');
+        if (!handle) return;
+
+        handle.addEventListener('touchstart', (e) => {
+            startY = e.touches[0].clientY;
+            isDragging = true;
+            sheet.style.transition = 'none';
+        }, { passive: true });
+
+        handle.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            currentY = e.touches[0].clientY;
+            const diff = currentY - startY;
+            if (diff > 0) {
+                sheet.style.transform = `translateY(${diff}px)`;
+            }
+        }, { passive: true });
+
+        handle.addEventListener('touchend', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            sheet.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)';
+            
+            const diff = currentY - startY;
+            if (diff > 100) {
+                // Tutup modal
+                const overlay = sheet.closest('.modal-overlay');
+                if (overlay) {
+                    closeModal(overlay.id);
+                }
+            } else {
+                // Kembalikan posisi
+                sheet.style.transform = 'translateY(0)';
+            }
+            startY = 0;
+            currentY = 0;
+        });
+    });
+
+    // ==================== TUTUP MODAL ====================
     document.querySelectorAll('.modal-close-btn, [data-close]').forEach(btn => {
         btn.addEventListener('click', () => {
             const modalId = btn.dataset.close;
@@ -110,7 +155,6 @@ export function initModalEvents() {
         });
     });
 
-    // Klik overlay tutup modal
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) {
@@ -119,17 +163,16 @@ export function initModalEvents() {
         });
     });
 
-    // Tombol Baca
+    // ==================== TOMBOL BACA & DOWNLOAD ====================
     document.getElementById('btnBaca')?.addEventListener('click', () => {
         alert('Fitur baca akan segera hadir!');
     });
 
-    // Tombol Download
     document.getElementById('btnDownload')?.addEventListener('click', () => {
         alert('Fitur unduh akan segera hadir!');
     });
 
-    // Filter options
+    // ==================== FILTER OPTIONS ====================
     document.querySelectorAll('.filter-options').forEach(group => {
         group.querySelectorAll('.filter-option').forEach(opt => {
             opt.addEventListener('click', function () {
@@ -139,25 +182,82 @@ export function initModalEvents() {
         });
     });
 
-    // Terapkan Filter
+    // ==================== TERAPKAN FILTER ====================
     document.getElementById('btnTerapkanFilter')?.addEventListener('click', () => {
+        applyFilter();
         closeModal('modalFilter');
     });
 
-    // Reset Filter
+    // ==================== RESET FILTER ====================
     document.getElementById('btnResetFilter')?.addEventListener('click', () => {
         document.querySelectorAll('.filter-option').forEach(opt => opt.classList.remove('selected'));
         document.querySelectorAll('.filter-option:first-child').forEach(opt => opt.classList.add('selected'));
+        resetFilter();
+        closeModal('modalFilter');
     });
 }
 
+// ==================== FUNGSI FILTER ====================
+function applyFilter() {
+    const selectedJenis = document.querySelector('#filterJenis .filter-option.selected')?.dataset.value || '';
+    const selectedBahasa = document.querySelector('#filterBahasa .filter-option.selected')?.dataset.value || '';
+
+    let visibleCount = 0;
+
+    document.querySelectorAll('.card-item, .list-item').forEach(item => {
+        const kategori = item.dataset.kategori || '';
+        const bahasa = item.dataset.bahasa || '';
+
+        const matchJenis = !selectedJenis || kategori === selectedJenis;
+        const matchBahasa = !selectedBahasa || bahasa === selectedBahasa;
+
+        if (matchJenis && matchBahasa) {
+            item.style.display = '';
+            visibleCount++;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+
+    // Update ikon filter
+    updateFilterIcon(selectedJenis || selectedBahasa);
+}
+
+function resetFilter() {
+    document.querySelectorAll('.card-item, .list-item').forEach(item => {
+        item.style.display = '';
+    });
+    updateFilterIcon(false);
+}
+
+function updateFilterIcon(isActive) {
+    const filterBtn = document.getElementById('btnFilterHome');
+    if (!filterBtn) return;
+
+    if (isActive) {
+        filterBtn.style.color = '#047857';
+        filterBtn.style.borderColor = '#047857';
+        filterBtn.style.background = '#d1fae5';
+    } else {
+        filterBtn.style.color = '#4b5563';
+        filterBtn.style.borderColor = '#e5e7eb';
+        filterBtn.style.background = '#f8fafc';
+    }
+}
+
+// ==================== MODAL OPEN/CLOSE ====================
 export function openModal(modalId) {
-    // Tutup modal lain dulu
     document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
     const modal = document.getElementById(modalId);
     if (modal) {
         modal.classList.add('open');
         currentModal = modalId;
+
+        // Reset posisi sheet
+        const sheet = modal.querySelector('.modal-sheet');
+        if (sheet) {
+            sheet.style.transform = 'translateY(0)';
+        }
     }
 }
 
