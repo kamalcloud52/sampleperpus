@@ -13,7 +13,7 @@ export function renderHeader() {
             <span class="user-name" id="userName">Tamu</span>
         </div>
         
-        <!-- Hamburger (sama persis dengan Beranda) -->
+        <!-- Hamburger -->
         <button class="hamburger" id="hamburgerKoleksi" aria-label="Menu">
             <span></span>
             <span></span>
@@ -35,25 +35,23 @@ export function initHeaderEvents() {
 
     // Hamburger + Mobile Menu
     const hamburger = document.getElementById('hamburgerKoleksi');
-    if (hamburger) {
+    const mobileMenu = document.getElementById('mobileMenuKoleksi');
+    
+    if (hamburger && mobileMenu) {
         const newHamburger = hamburger.cloneNode(true);
         hamburger.parentNode.replaceChild(newHamburger, hamburger);
         
-        const mobileMenu = document.getElementById('mobileMenuKoleksi');
-        
         newHamburger.addEventListener('click', () => {
             newHamburger.classList.toggle('open');
-            if (mobileMenu) mobileMenu.classList.toggle('open');
+            mobileMenu.classList.toggle('open');
         });
         
         // Tutup menu saat link diklik
-        if (mobileMenu) {
-            mobileMenu.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    newHamburger.classList.remove('open');
-                    mobileMenu.classList.remove('open');
-                });
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                newHamburger.classList.remove('open');
+                mobileMenu.classList.remove('open');
             });
-        }
+        });
     }
 }
