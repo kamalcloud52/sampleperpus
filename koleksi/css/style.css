@@ -15,6 +15,7 @@
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
     --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05);
     --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+    --nav-height: 56px;
 }
 
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; -webkit-tap-highlight-color:transparent; }
@@ -25,6 +26,9 @@ body {
     display: flex;
     justify-content: center;
     min-height: 100vh;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
 }
 
 .app-container {
@@ -34,9 +38,6 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    border-left: 1px solid var(--border);
-    border-right: 1px solid var(--border);
-    box-shadow: 0 0 30px rgba(0,0,0,0.03);
     position: relative;
 }
 
@@ -45,25 +46,25 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 18px;
-    border-bottom: none;
+    padding: 0 16px;
+    height: var(--nav-height);
     position: sticky;
     top: 0;
     background: rgba(4, 120, 87, 0.95);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    z-index: 50;
-    color: white;
+    z-index: 1000;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
 }
 
 .header-left {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .header-left .profile-btn {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     color: white;
     background: none;
     border: none;
@@ -83,8 +84,8 @@ header {
     color: white;
 }
 
-/* Hamburger putih */
-.hamburger-white {
+/* ==================== HAMBURGER (SAMA PERSIS DENGAN BERANDA) ==================== */
+.hamburger {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -95,7 +96,7 @@ header {
     z-index: 1002;
 }
 
-.hamburger-white span {
+.hamburger span {
     display: block;
     width: 24px;
     height: 2.5px;
@@ -104,68 +105,79 @@ header {
     transition: all 0.35s ease;
 }
 
-.hamburger-white.open span:nth-child(1) {
+.hamburger.open span:nth-child(1) {
     transform: rotate(45deg) translate(5px, 5px);
 }
 
-.hamburger-white.open span:nth-child(2) {
+.hamburger.open span:nth-child(2) {
     opacity: 0;
     transform: scaleX(0);
 }
 
-.hamburger-white.open span:nth-child(3) {
+.hamburger.open span:nth-child(3) {
     transform: rotate(-45deg) translate(5px, -5px);
 }
 
-/* Dropdown */
-.hamburger-dropdown {
+/* ==================== MOBILE MENU (SAMA PERSIS DENGAN BERANDA) ==================== */
+.nav-mobile {
     position: absolute;
-    top: calc(100% + 8px);
-    right: 0;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-    min-width: 200px;
-    padding: 8px 0;
+    top: var(--nav-height);
+    left: 0;
+    width: 100%;
+    background: rgba(4, 120, 87, 0.97);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 999;
+}
+
+.nav-mobile.open {
+    max-height: 400px;
+}
+
+.nav-mobile ul {
+    list-style: none;
+    padding: 8px 16px;
+}
+
+.nav-mobile li {
     opacity: 0;
-    visibility: hidden;
-    transform: translateY(-8px);
-    transition: all 0.25s ease;
-    z-index: 1001;
+    transform: translateX(-40px);
+    transition: all 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.hamburger-dropdown.open {
+.nav-mobile.open li {
     opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+    transform: translateX(0);
 }
 
-.hamburger-dropdown a {
+.nav-mobile.open li:nth-child(1)  { transition-delay: 0.12s; }
+.nav-mobile.open li:nth-child(2)  { transition-delay: 0.22s; }
+.nav-mobile.open li:nth-child(3)  { transition-delay: 0.32s; }
+.nav-mobile.open li:nth-child(4)  { transition-delay: 0.42s; }
+
+.nav-mobile a {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 16px;
-    color: #374151;
+    color: rgba(255, 255, 255, 0.9);
     text-decoration: none;
-    font-size: 0.85rem;
+    padding: 12px 8px;
+    font-size: 0.9rem;
     font-weight: 500;
-    transition: background 0.15s;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.hamburger-dropdown a i {
-    width: 18px;
+.nav-mobile a i {
+    width: 20px;
     text-align: center;
-    color: #047857;
+    color: #FCD34D;
 }
 
-.hamburger-dropdown a:hover {
-    background: #f0fdf4;
-    color: #047857;
-}
-
-.hamburger-dropdown a.active {
-    background: #d1fae5;
-    color: #047857;
+.nav-mobile a.active {
+    color: #FCD34D;
     font-weight: 600;
 }
 
