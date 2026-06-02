@@ -6,19 +6,31 @@ export function renderHeader() {
     if (!header) return;
     
     header.innerHTML = `
-        <div class="header-left">
-            <button class="profile-btn" id="btnProfile" title="Profil Saya">
-                <i class="fa-solid fa-circle-user"></i>
+        <div class="header-inner">
+            <div class="header-left">
+                <button class="profile-btn" id="btnProfile" title="Profil Saya">
+                    <i class="fa-solid fa-circle-user"></i>
+                </button>
+                <span class="user-name" id="userName">Tamu</span>
+            </div>
+            
+            <!-- Hamburger -->
+            <button class="hamburger" id="hamburgerKoleksi" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
             </button>
-            <span class="user-name" id="userName">Tamu</span>
         </div>
         
-        <!-- Hamburger -->
-        <button class="hamburger" id="hamburgerKoleksi" aria-label="Menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
+        <!-- Mobile Menu -->
+        <div class="nav-mobile" id="mobileMenuKoleksi">
+            <ul>
+                <li><a href="../index.html"><i class="fa-solid fa-house"></i> Beranda</a></li>
+                <li><a href="index.html" class="active"><i class="fa-solid fa-book"></i> Koleksi Buku</a></li>
+                <li><a href="../mediapim/"><i class="fa-solid fa-hashtag"></i> Media PIM</a></li>
+                <li><a href="../arsipfoto/"><i class="fa-solid fa-camera-retro"></i> Arsip Foto PIM</a></li>
+            </ul>
+        </div>
     `;
 }
 
