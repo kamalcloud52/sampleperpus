@@ -1,25 +1,31 @@
 // ==================== HEADER COMPONENT ====================
 import { openModal } from '../components/modal.js';
 
+let isLoggedIn = false;
+let userName = 'Kamal Fikar';
+
 export function renderHeader() {
     const header = document.getElementById('appHeader');
     if (!header) return;
     
+    const userDisplay = isLoggedIn 
+        ? `<div class="user-info logged-in">
+              <span class="user-name" id="userName">${userName}</span>
+           </div>`
+        : `<div class="user-info">
+              <span class="user-name" id="userName">Tamu</span>
+              <span class="user-role">Silakan Masuk</span>
+           </div>`;
+    
     header.innerHTML = `
         <div class="header-inner">
             <div class="header-left">
-                <!-- Avatar Circle -->
                 <div class="avatar-circle" id="btnProfile" title="Profil Saya">
                     <i class="fa-solid fa-circle-user"></i>
                 </div>
-                <!-- Info User -->
-                <div class="user-info">
-                    <span class="user-name" id="userName">Tamu</span>
-                    <span class="user-role">Pengunjung</span>
-                </div>
+                ${userDisplay}
             </div>
             
-            <!-- Hamburger -->
             <button class="hamburger" id="hamburgerKoleksi" aria-label="Menu">
                 <span></span>
                 <span></span>
@@ -27,7 +33,6 @@ export function renderHeader() {
             </button>
         </div>
         
-        <!-- Mobile Menu -->
         <div class="nav-mobile" id="mobileMenuKoleksi">
             <ul>
                 <li><a href="../index.html"><i class="fa-solid fa-house"></i> Beranda</a></li>
@@ -40,24 +45,29 @@ export function renderHeader() {
 }
 
 export function initHeaderEvents() {
-    // Profil (avatar + nama bisa diklik)
     const btnProfile = document.getElementById('btnProfile');
     if (btnProfile) {
         btnProfile.addEventListener('click', () => {
-            openModal('modalProfil');
+            if (isLoggedIn) {
+                openModal('modalProfil');
+            } else {
+                window.location.hash = '#/login';
+            }
         });
     }
     
-    // Nama user juga bisa diklik
-    const userName = document.getElementById('userName');
-    if (userName) {
-        userName.style.cursor = 'pointer';
-        userName.addEventListener('click', () => {
-            openModal('modalProfil');
+    const userNameEl = document.getElementById('userName');
+    if (userNameEl) {
+        userNameEl.style.cursor = 'pointer';
+        userNameEl.addEventListener('click', () => {
+            if (isLoggedIn) {
+                openModal('modalProfil');
+            } else {
+                window.location.hash = '#/login';
+            }
         });
     }
 
-    // Hamburger + Mobile Menu
     const hamburger = document.getElementById('hamburgerKoleksi');
     const mobileMenu = document.getElementById('mobileMenuKoleksi');
     
@@ -70,7 +80,6 @@ export function initHeaderEvents() {
             mobileMenu.classList.toggle('open');
         });
         
-        // Tutup menu saat link diklik
         mobileMenu.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 newHamburger.classList.remove('open');
