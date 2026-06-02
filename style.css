@@ -182,7 +182,7 @@ body {
     -webkit-backdrop-filter: blur(12px);
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.7s cubic-bezier(0.25,0.8,0.25,1);
+    transition: max-height 1s cubic-bezier(0.25,0.8,0.25,1);
 }
 .nav-mobile.open {
     max-height: 600px;
