@@ -213,13 +213,22 @@ body {
 .nav-mobile.open li:nth-child(11) { transition-delay: 1.00s; }
 
 .nav-mobile a {
-    display: block;
-    color: rgba(255,255,255,0.9);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.9);
     text-decoration: none;
     padding: 12px 8px;
     font-size: 0.9rem;
     font-weight: 500;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Tambahan: ikon di mobile menu */
+.nav-mobile a i {
+    width: 20px;
+    text-align: center;
+    color: #FCD34D;
 }
 
 /* ==================== CONTAINER ==================== */
