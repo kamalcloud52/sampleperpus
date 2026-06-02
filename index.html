@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Perpustakaan Digital Mathali'ul Falah</title>
+    <title>Perpustakaan Mathali'ul Falah - Website Resmi</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="icon.jpg">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
@@ -24,54 +24,26 @@
         <!-- ==================== NAVBAR ==================== -->
         <nav class="navbar" id="navbar">
             <div class="navbar-inner">
-                <!-- Logo & Nama -->
                 <a href="#beranda" class="navbar-brand">
                     <img src="icon.jpg" alt="Logo PIM" class="navbar-logo-img">
                     <span class="navbar-name">Perpustakaan Digital PIM</span>
                 </a>
-
-                <!-- Desktop Menu -->
                 <ul class="nav-desktop">
                     <li><a href="#beranda" class="active">Beranda</a></li>
-                    <li><a href="arsippim/">Arsip PIM</a></li>
-                    <li><a href="mediapim/">Media PIM</a></li>
-                    <li><a href="https://sites.google.com/pim.sch.id/perpustakaandigitalpim/karya-alumni?authuser=0">Karya Alumni</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle">Lainnya <i class="fa-solid fa-chevron-down"></i></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="https://sites.google.com/pim.sch.id/perpustakaandigitalpim/arsip-foto-pim">Arsip Foto PIM</a></li>
-                            <li><a href="amanat/">Amanat Majalah PIM</a></li>
-                            <li><a href="https://sites.google.com/pim.sch.id/perpustakaandigitalpim/ukhuwwah-majalah-pim?authuser=0">Ukhuwwah Majalah PIM</a></li>
-                            <li><a href="https://sites.google.com/pim.sch.id/perpustakaandigitalpim/sacred-majalah-pim?authuser=0">SACRED Majalah PIM</a></li>
-                            <li><a href="https://sites.google.com/pim.sch.id/perpustakaandigitalpim/qns-majalah-pim?authuser=0">QNS Majalah PIM</a></li>
-                            <li><a href="https://sites.google.com/pim.sch.id/perpustakaandigitalpim/buletin-pim?authuser=0">Buletin PIM</a></li>
-                            <li><a href="kta/">KTA PIM</a></li>
-                        </ul>
-                    </li>
+                    <li><a href="#koleksi">Koleksi Buku</a></li>
+                    <li><a href="#mediapim">Media PIM</a></li>
+                    <li><a href="#arsipfoto">Arsip Foto PIM</a></li>
                 </ul>
-
-                <!-- Hamburger -->
                 <button class="hamburger" id="hamburger" aria-label="Menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <span></span><span></span><span></span>
                 </button>
             </div>
-
-            <!-- Mobile Menu -->
             <div class="nav-mobile" id="mobileMenu">
                 <ul>
                     <li><a href="#beranda">Beranda</a></li>
-                    <li><a href="arsippim/">Arsip PIM</a></li>
-                    <li><a href="mediapim/">Media PIM</a></li>
-                    <li><a href="https://sites.google.com/pim.sch.id/perpustakaandigitalpim/arsip-foto-pim">Arsip Foto PIM</a></li>
-                    <li><a href="amanat/">Amanat Majalah PIM</a></li>
-                    <li><a href="https://sites.google.com/pim.sch.id/perpustakaandigitalpim/ukhuwwah-majalah-pim?authuser=0">Ukhuwwah Majalah PIM</a></li>
-                    <li><a href="https://sites.google.com/pim.sch.id/perpustakaandigitalpim/sacred-majalah-pim?authuser=0">SACRED Majalah PIM</a></li>
-                    <li><a href="https://sites.google.com/pim.sch.id/perpustakaandigitalpim/qns-majalah-pim?authuser=0">QNS Majalah PIM</a></li>
-                    <li><a href="https://sites.google.com/pim.sch.id/perpustakaandigitalpim/buletin-pim?authuser=0">Buletin PIM</a></li>
-                    <li><a href="https://sites.google.com/pim.sch.id/perpustakaandigitalpim/karya-alumni?authuser=0">Karya Alumni</a></li>
-                    <li><a href="kta/">KTA PIM</a></li>
+                    <li><a href="#koleksi">Koleksi Buku</a></li>
+                    <li><a href="#mediapim">Media PIM</a></li>
+                    <li><a href="#arsipfoto">Arsip Foto PIM</a></li>
                 </ul>
             </div>
         </nav>
@@ -97,7 +69,7 @@
                     <h1 id="hero-title">Perpustakaan Mathali'ul Falah</h1>
                     <p id="hero-slogan">Unggul dalam Prestasi, Berkarakter dalam Budaya</p>
                     <div class="hero-buttons">
-                        <a href="arsippim/" class="btn btn-primary">
+                        <a href="#koleksi" class="btn btn-primary">
                             <i class="fa-solid fa-book"></i> Lihat Koleksi
                         </a>
                         <a href="https://api.whatsapp.com/send/?phone=6285293609457&text=+Assalamualaikum%2CPak+Saya+mau+tanya+terkait+perpustakaan+PIM.&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
@@ -114,45 +86,29 @@
                 <h2 class="fade-up" id="about-title">Tentang Perpustakaan</h2>
                 <div class="space-y-6">
                     <div class="card fade-up">
-                        <h3 class="card-title">
-                            <i class="fa-solid fa-landmark icon-yellow"></i> Sejarah Singkat
-                        </h3>
+                        <h3 class="card-title"><i class="fa-solid fa-landmark icon-yellow"></i> Sejarah Singkat</h3>
                         <div id="history-container">
-                            <div id="history-loading" class="loading-text">
-                                <i class="fa-solid fa-spinner fa-spin"></i> Memuat sejarah...
-                            </div>
+                            <div id="history-loading" class="loading-text"><i class="fa-solid fa-spinner fa-spin"></i> Memuat sejarah...</div>
                             <div id="history-content" class="hidden">
                                 <div id="history-preview" class="content-text"></div>
                                 <div id="history-full" class="content-text hidden"></div>
                                 <div class="toggle-area">
-                                    <a href="#" id="history-toggle" class="toggle-link">
-                                        Selengkapnya <i class="fa-solid fa-arrow-right toggle-icon"></i>
-                                    </a>
-                                    <button id="history-retry" class="retry-btn hidden">
-                                        <i class="fa-solid fa-rotate"></i> Coba lagi
-                                    </button>
+                                    <a href="#" id="history-toggle" class="toggle-link">Selengkapnya <i class="fa-solid fa-arrow-right toggle-icon"></i></a>
+                                    <button id="history-retry" class="retry-btn hidden"><i class="fa-solid fa-rotate"></i> Coba lagi</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="card fade-up">
-                        <h3 class="card-title">
-                            <i class="fa-solid fa-bullseye icon-yellow"></i> Visi & Misi
-                        </h3>
+                        <h3 class="card-title"><i class="fa-solid fa-bullseye icon-yellow"></i> Visi & Misi</h3>
                         <div id="vision-container">
-                            <div id="vision-loading" class="loading-text">
-                                <i class="fa-solid fa-spinner fa-spin"></i> Memuat visi dan misi...
-                            </div>
+                            <div id="vision-loading" class="loading-text"><i class="fa-solid fa-spinner fa-spin"></i> Memuat visi dan misi...</div>
                             <div id="vision-content" class="hidden">
                                 <div id="vision-preview" class="content-text"></div>
                                 <div id="vision-full" class="content-text hidden"></div>
                                 <div class="toggle-area">
-                                    <a href="#" id="vision-toggle" class="toggle-link">
-                                        Selengkapnya <i class="fa-solid fa-arrow-right toggle-icon"></i>
-                                    </a>
-                                    <button id="vision-retry" class="retry-btn hidden">
-                                        <i class="fa-solid fa-rotate"></i> Coba lagi
-                                    </button>
+                                    <a href="#" id="vision-toggle" class="toggle-link">Selengkapnya <i class="fa-solid fa-arrow-right toggle-icon"></i></a>
+                                    <button id="vision-retry" class="retry-btn hidden"><i class="fa-solid fa-rotate"></i> Coba lagi</button>
                                 </div>
                             </div>
                         </div>
@@ -166,10 +122,10 @@
             <div class="container">
                 <h2 class="fade-up text-white" id="profile-title">Lihat Perpustakaan Digital</h2>
                 <div class="grid-4">
-                    <a href="arsippim/" class="arsip-card fade-up"><i class="fa-solid fa-book"></i><h3>Buku</h3><p>Koleksi Buku Digital</p></a>
+                    <a href="https://sites.google.com/pim.sch.id/perpustakaandigitalpim/arsip-pim" class="arsip-card fade-up"><i class="fa-solid fa-book"></i><h3>Buku</h3><p>Koleksi Buku Digital</p></a>
                     <a href="https://sites.google.com/pim.sch.id/perpustakaandigitalpim/karya-alumni?authuser=0" class="arsip-card fade-up"><i class="fa-solid fa-graduation-cap"></i><h3>Karya Alumni</h3><p>Koleksi Karya Alumni</p></a>
-                    <a href="kta/" class="arsip-card fade-up"><i class="fa-solid fa-scroll"></i><h3>Karya Tulis Arab</h3><p>Kumpulan KTA Siswa</p></a>
-                    <a href="mediapim/" class="arsip-card fade-up"><i class="fa-solid fa-hashtag"></i><h3>Media Sosial PIM</h3><p>Media Publikasi</p></a>
+                    <a href="https://sites.google.com/pim.sch.id/ktapim/pencarian?authuser=0" class="arsip-card fade-up"><i class="fa-solid fa-scroll"></i><h3>Karya Tulis Arab</h3><p>Kumpulan KTA Siswa</p></a>
+                    <a href="https://sites.google.com/pim.sch.id/perpustakaandigitalpim/media-pim?authuser=0" class="arsip-card fade-up"><i class="fa-solid fa-hashtag"></i><h3>Media Sosial PIM</h3><p>Media Publikasi</p></a>
                     <a href="https://id.welib.org/search?q=Nusantara&page=2" target="_blank" rel="noopener noreferrer" class="arsip-card fade-up"><i class="fa-solid fa-book-open-reader"></i><h3>Buku Bacaan</h3><p>Koleksi Buku Bacaan</p></a>
                     <a href="https://shamela.ws/" target="_blank" rel="noopener noreferrer" class="arsip-card fade-up"><i class="fa-solid fa-mosque"></i><h3>Maktabah Syamilah</h3><p>Perpustakaan Arab Digital</p></a>
                     <a href="https://perpustakaanislamdigital.com/index.php/fp/content" target="_blank" rel="noopener noreferrer" class="arsip-card fade-up"><i class="fa-solid fa-book-quran"></i><h3>Perpustakaan Islam Digital</h3><p>Koleksi Buku Islam</p></a>
@@ -254,14 +210,25 @@
         </section>
 
         <!-- ==================== FOOTER ==================== -->
-        <footer>
-            <p>© 2026 Perpustakaan Mathali'ul Falah. All Rights Reserved.</p>
+        <footer class="site-footer">
+            <div class="footer-container">
+                <p class="footer-copyright">© 2026 Perpustakaan Mathali'ul Falah. All Rights Reserved.</p>
+                <div class="footer-social">
+                    <a href="https://facebook.com/perpuspim" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+                    <a href="https://instagram.com/perpus_pim" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                    <a href="https://youtube.com/@perpuspim" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="YouTube">
+                        <i class="fa-brands fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
         </footer>
 
     </div>
 
-    <!-- Custom JS -->
     <script src="script.js"></script>
-
 </body>
 </html>
