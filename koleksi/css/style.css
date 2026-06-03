@@ -338,26 +338,12 @@ main {
     color: var(--text-sub);
     font-size: 0.9rem;
     transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 .filter-action-btn:hover { border-color: var(--primary); color: var(--primary); }
 
-.filter-action-btn::after {
-    content: 'Filter';
-    position: absolute;
-    top: calc(100% + 6px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: #1f2937;
-    color: white;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 0.65rem;
-    font-weight: 500;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
-}
 .filter-action-btn:hover::after { opacity: 1; }
 
 /* ==================== DISPLAY CONTROLS ==================== */
