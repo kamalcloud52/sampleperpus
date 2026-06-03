@@ -1,5 +1,5 @@
 // ==================== MODAL COMPONENT ====================
-import { setFilter, refreshAfterFilter, updateFilterIcon, getFilterState, fetchAndRender } from '../pages/home.js';
+import { setFilter, updateFilterIcon, getFilterState, fetchAndRender } from '../pages/home.js';
 
 let currentModal = null;
 
@@ -65,7 +65,6 @@ export function renderModal() {
 }
 
 export function initModalEvents() {
-    // Geser handle untuk tutup modal
     document.querySelectorAll('.modal-sheet').forEach(sheet => {
         let startY = 0, currentY = 0, isDragging = false;
         const handle = sheet.querySelector('.modal-handle');
@@ -81,83 +80,58 @@ export function initModalEvents() {
         });
     });
 
-    // Tutup modal
     document.querySelectorAll('.modal-close-btn, [data-close]').forEach(btn => {
-        const newBtn = btn.cloneNode(true);
-        btn.parentNode.replaceChild(newBtn, btn);
+        const newBtn = btn.cloneNode(true); btn.parentNode.replaceChild(newBtn, btn);
         newBtn.addEventListener('click', () => { const modalId = newBtn.dataset.close; if (modalId) closeModal(modalId); });
     });
 
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
-        const newOverlay = overlay.cloneNode(true);
-        overlay.parentNode.replaceChild(newOverlay, overlay);
+        const newOverlay = overlay.cloneNode(true); overlay.parentNode.replaceChild(newOverlay, overlay);
         newOverlay.addEventListener('click', (e) => { if (e.target === newOverlay) closeModal(newOverlay.id); });
     });
 
-    // Baca & Download
     const btnBaca = document.getElementById('btnBaca');
-    if (btnBaca) {
-        const newBtn = btnBaca.cloneNode(true);
-        btnBaca.parentNode.replaceChild(newBtn, btnBaca);
-        newBtn.addEventListener('click', () => alert('Fitur baca akan segera hadir!'));
-    }
+    if (btnBaca) { const nb = btnBaca.cloneNode(true); btnBaca.parentNode.replaceChild(nb, btnBaca); nb.addEventListener('click', () => alert('Fitur baca akan segera hadir!')); }
 
     const btnDownload = document.getElementById('btnDownload');
-    if (btnDownload) {
-        const newBtn = btnDownload.cloneNode(true);
-        btnDownload.parentNode.replaceChild(newBtn, btnDownload);
-        newBtn.addEventListener('click', () => alert('Fitur unduh akan segera hadir!'));
-    }
+    if (btnDownload) { const nb = btnDownload.cloneNode(true); btnDownload.parentNode.replaceChild(nb, btnDownload); nb.addEventListener('click', () => alert('Fitur unduh akan segera hadir!')); }
 
-    // Filter options
     document.querySelectorAll('.filter-options').forEach(group => {
         group.querySelectorAll('.filter-option').forEach(opt => {
-            const newOpt = opt.cloneNode(true);
-            opt.parentNode.replaceChild(newOpt, opt);
-            newOpt.addEventListener('click', function() {
-                group.querySelectorAll('.filter-option').forEach(o => o.classList.remove('selected'));
-                this.classList.add('selected');
-            });
+            const newOpt = opt.cloneNode(true); opt.parentNode.replaceChild(newOpt, opt);
+            newOpt.addEventListener('click', function() { group.querySelectorAll('.filter-option').forEach(o => o.classList.remove('selected')); this.classList.add('selected'); });
         });
     });
 
-    // Terapkan Filter (tutup dulu, baru fetch)
+    // Terapkan Filter
     const btnTerapkan = document.getElementById('btnTerapkanFilter');
     if (btnTerapkan) {
-        const newBtn = btnTerapkan.cloneNode(true);
-        btnTerapkan.parentNode.replaceChild(newBtn, btnTerapkan);
-        newBtn.addEventListener('click', () => {
+        const nb = btnTerapkan.cloneNode(true); btnTerapkan.parentNode.replaceChild(nb, btnTerapkan);
+        nb.addEventListener('click', () => {
             const selectedJenis = document.querySelector('#filterJenis .filter-option.selected')?.dataset.value || '';
             const selectedBahasa = document.querySelector('#filterBahasa .filter-option.selected')?.dataset.value || '';
             const { search, limit } = getFilterState();
-            
-            // Tutup modal secepat kilat
             closeModal('modalFilter');
-            
-            // Fetch di background (loading akan muncul dari fetchAndRender)
             fetchAndRender(search, selectedJenis, selectedBahasa, 1, limit === 'all' ? 999 : limit).then(() => {
                 updateFilterIcon(!!(selectedJenis || selectedBahasa));
             });
         });
     }
 
-    // Reset Filter (tutup dulu, baru fetch)
+    // Reset Filter
     const btnReset = document.getElementById('btnResetFilter');
     if (btnReset) {
-        const newBtn = btnReset.cloneNode(true);
-        btnReset.parentNode.replaceChild(newBtn, btnReset);
-        newBtn.addEventListener('click', () => {
+        const nb = btnReset.cloneNode(true); btnReset.parentNode.replaceChild(nb, btnReset);
+        nb.addEventListener('click', () => {
+            // Animasi ikon berputar
+            const icon = nb.querySelector('.fa-rotate');
+            if (icon) { icon.classList.add('fa-spin'); setTimeout(() => icon.classList.remove('fa-spin'), 1000); }
+
             const { search, limit } = getFilterState();
             setFilter('', '');
-            
-            // Reset tampilan filter option
             document.querySelectorAll('.filter-option').forEach(opt => opt.classList.remove('selected'));
             document.querySelectorAll('.filter-option:first-child').forEach(opt => opt.classList.add('selected'));
-            
-            // Tutup modal secepat kilat
             closeModal('modalFilter');
-            
-            // Fetch di background
             fetchAndRender(search, '', '', 1, limit === 'all' ? 999 : limit).then(() => {
                 updateFilterIcon(false);
             });
@@ -165,55 +139,30 @@ export function initModalEvents() {
     }
 }
 
-// ==================== MODAL OPEN/CLOSE ====================
 export function openModal(modalId) {
     document.querySelectorAll('.modal-overlay.open').forEach(m => {
-        const sheet = m.querySelector('.modal-sheet');
-        if (sheet) sheet.style.transform = 'translateY(100%)';
+        const sheet = m.querySelector('.modal-sheet'); if (sheet) sheet.style.transform = 'translateY(100%)';
         m.classList.remove('open');
     });
-
-    const modal = document.getElementById(modalId);
-    if (!modal) return;
-
+    const modal = document.getElementById(modalId); if (!modal) return;
     const sheet = modal.querySelector('.modal-sheet');
-    if (sheet) {
-        sheet.style.transition = 'none';
-        sheet.style.transform = 'translateY(100%)';
-    }
-
-    modal.classList.add('open');
-    currentModal = modalId;
-
-    if (sheet) {
-        sheet.offsetHeight;
-        sheet.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)';
-        sheet.style.transform = 'translateY(0)';
-    }
+    if (sheet) { sheet.style.transition = 'none'; sheet.style.transform = 'translateY(100%)'; }
+    modal.classList.add('open'); currentModal = modalId;
+    if (sheet) { sheet.offsetHeight; sheet.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)'; sheet.style.transform = 'translateY(0)'; }
 }
 
 export function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (!modal) return;
-
+    const modal = document.getElementById(modalId); if (!modal) return;
     const sheet = modal.querySelector('.modal-sheet');
     if (sheet) {
-        sheet.style.transition = 'transform 0.3s cubic-bezier(0.55, 0, 1, 0.45)';
-        sheet.style.transform = 'translateY(100%)';
-        setTimeout(() => {
-            modal.classList.remove('open');
-            if (currentModal === modalId) currentModal = null;
-        }, 300);
-    } else {
-        modal.classList.remove('open');
-        if (currentModal === modalId) currentModal = null;
-    }
+        sheet.style.transition = 'transform 0.3s cubic-bezier(0.55, 0, 1, 0.45)'; sheet.style.transform = 'translateY(100%)';
+        setTimeout(() => { modal.classList.remove('open'); if (currentModal === modalId) currentModal = null; }, 300);
+    } else { modal.classList.remove('open'); if (currentModal === modalId) currentModal = null; }
 }
 
 export function closeAllModals() {
     document.querySelectorAll('.modal-overlay.open').forEach(m => {
-        const sheet = m.querySelector('.modal-sheet');
-        if (sheet) sheet.style.transform = 'translateY(100%)';
+        const sheet = m.querySelector('.modal-sheet'); if (sheet) sheet.style.transform = 'translateY(100%)';
         m.classList.remove('open');
     });
     currentModal = null;
