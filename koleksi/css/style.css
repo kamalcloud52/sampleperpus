@@ -477,6 +477,7 @@ main {
     cursor: pointer;
     height: 100%;
     box-shadow: var(--shadow-md);
+    overflow: hidden; /* ← TAMBAH BARIS INI */
 }
 
 .card-item:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
