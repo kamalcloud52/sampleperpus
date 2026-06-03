@@ -73,20 +73,7 @@ export function renderModal() {
         </div>
 
         <!-- Modal Limit -->
-        <div class="modal-overlay" id="modalLimit">
-            <div class="modal-sheet" id="modalSheetLimit">
-                <div class="modal-handle"></div>
-                <button class="modal-close-btn" data-close="modalLimit"><i class="fa-solid fa-xmark"></i></button>
-                <h3 class="modal-title">Jumlah Tampilan</h3>
-                <div class="limit-options">
-                    <button class="limit-option" data-value="12">12</button>
-                    <button class="limit-option" data-value="24">24</button>
-                    <button class="limit-option" data-value="48">48</button>
-                    <button class="limit-option" data-value="96">96</button>
-                    <button class="limit-option" data-value="all">Semua</button>
-                </div>
-            </div>
-        </div>
+
     `;
 }
 
@@ -134,15 +121,7 @@ export function initModalEvents() {
     document.getElementById('btnResetFilter')?.addEventListener('click', () => { resetFilter(); closeModal('modalFilter'); });
 
     // Limit options
-    document.querySelectorAll('.limit-option').forEach(opt => {
-        opt.addEventListener('click', async function() {
-            const value = this.dataset.value;
-            const finalValue = value === 'all' ? 'all' : parseInt(value);
-            const { updateLimit } = await import('../pages/home.js');
-            updateLimit(finalValue);
-            closeModal('modalLimit');
-        });
-    });
+
 }
 
 function applyFilter() {
