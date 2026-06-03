@@ -121,35 +121,46 @@ export function initModalEvents() {
         });
     });
 
-    // Terapkan Filter (fix)
+    // Terapkan Filter (tutup dulu, baru fetch)
     const btnTerapkan = document.getElementById('btnTerapkanFilter');
     if (btnTerapkan) {
         const newBtn = btnTerapkan.cloneNode(true);
         btnTerapkan.parentNode.replaceChild(newBtn, btnTerapkan);
-        newBtn.addEventListener('click', async () => {
+        newBtn.addEventListener('click', () => {
             const selectedJenis = document.querySelector('#filterJenis .filter-option.selected')?.dataset.value || '';
             const selectedBahasa = document.querySelector('#filterBahasa .filter-option.selected')?.dataset.value || '';
             const { search, limit } = getFilterState();
             
-            await fetchAndRender(search, selectedJenis, selectedBahasa, 1, limit === 'all' ? 999 : limit);
-            updateFilterIcon(!!(selectedJenis || selectedBahasa));
+            // Tutup modal secepat kilat
             closeModal('modalFilter');
+            
+            // Fetch di background (loading akan muncul dari fetchAndRender)
+            fetchAndRender(search, selectedJenis, selectedBahasa, 1, limit === 'all' ? 999 : limit).then(() => {
+                updateFilterIcon(!!(selectedJenis || selectedBahasa));
+            });
         });
     }
 
-    // Reset Filter (fix)
+    // Reset Filter (tutup dulu, baru fetch)
     const btnReset = document.getElementById('btnResetFilter');
     if (btnReset) {
         const newBtn = btnReset.cloneNode(true);
         btnReset.parentNode.replaceChild(newBtn, btnReset);
-        newBtn.addEventListener('click', async () => {
+        newBtn.addEventListener('click', () => {
             const { search, limit } = getFilterState();
             setFilter('', '');
-            await fetchAndRender(search, '', '', 1, limit === 'all' ? 999 : limit);
-            updateFilterIcon(false);
+            
+            // Reset tampilan filter option
             document.querySelectorAll('.filter-option').forEach(opt => opt.classList.remove('selected'));
             document.querySelectorAll('.filter-option:first-child').forEach(opt => opt.classList.add('selected'));
+            
+            // Tutup modal secepat kilat
             closeModal('modalFilter');
+            
+            // Fetch di background
+            fetchAndRender(search, '', '', 1, limit === 'all' ? 999 : limit).then(() => {
+                updateFilterIcon(false);
+            });
         });
     }
 }
