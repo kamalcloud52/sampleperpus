@@ -1,17 +1,17 @@
 // ==================== HOME PAGE ====================
 import { openModal } from '../components/modal.js';
 
+// Data dummy buku (tanpa field icon)
 const booksData = [
-    { id: 1, title: 'Metodologi Riset Modern', penulis: 'Dr. Rahmawan', edisi: '2024 / Vol 2', kategori: 'Buku', bahasa: 'Indonesia', keywords: 'riset, metodologi, penelitian', cover: 'linear-gradient(135deg,#d1fae5,#a7f3d0)', color: '#047857', icon: 'fa-book-open', label: 'PIM BOOK' },
-    { id: 2, title: 'Fathul Qarib Al-Mujib', penulis: 'Ibnu Qasim', edisi: '1445 Hijriah', kategori: 'Kitab', bahasa: 'Arab', keywords: 'fiqih, kitab, klasik', cover: 'linear-gradient(135deg,#fef3c7,#fde68a)', color: '#92400e', icon: 'fa-scroll', label: 'CLASSIC KITAB' },
-    { id: 3, title: 'Pengantar Statistik Pendidikan', penulis: 'Prof. Dr. Aminah', edisi: '2023 / Cetakan 5', kategori: 'Buku', bahasa: 'Indonesia', keywords: 'statistik, pendidikan, penelitian', cover: 'linear-gradient(135deg,#d1fae5,#a7f3d0)', color: '#047857', icon: 'fa-flask', label: 'RISET' },
-    { id: 4, title: 'Amanat Edisi I', penulis: 'HSM PIM', edisi: '1991 / TH.VII', kategori: 'Majalah', bahasa: 'Indonesia', keywords: 'majalah, HSM, amanat', cover: 'linear-gradient(135deg,#e0e7ff,#c7d2fe)', color: '#3730a3', icon: 'fa-newspaper', label: 'MAGAZINE' },
-    { id: 5, title: 'Nahwu Wadhih Juz 1', penulis: 'Ali Al-Jarim', edisi: '2020 / Cetakan 10', kategori: 'Kitab', bahasa: 'Arab', keywords: 'nahwu, gramatika, arab', cover: 'linear-gradient(135deg,#fef3c7,#fde68a)', color: '#92400e', icon: 'fa-scroll', label: 'NAHWU' },
-    { id: 6, title: 'Fiqih Ibadah Kontemporer', penulis: 'Dr. H. Ahmad', edisi: '2024 / Cetakan 1', kategori: 'Buku', bahasa: 'Indonesia', keywords: 'fiqih, ibadah, kontemporer', cover: 'linear-gradient(135deg,#d1fae5,#a7f3d0)', color: '#047857', icon: 'fa-book-open', label: 'FIQIH' },
+    { id: 1, title: 'Metodologi Riset Modern', penulis: 'Dr. Rahmawan', edisi: '2024 / Vol 2', kategori: 'Buku', bahasa: 'Indonesia', keywords: 'riset, metodologi, penelitian', cover: 'linear-gradient(135deg,#d1fae5,#a7f3d0)', color: '#047857', label: 'PIM BOOK' },
+    { id: 2, title: 'Fathul Qarib Al-Mujib', penulis: 'Ibnu Qasim', edisi: '1445 Hijriah', kategori: 'Kitab', bahasa: 'Arab', keywords: 'fiqih, kitab, klasik', cover: 'linear-gradient(135deg,#fef3c7,#fde68a)', color: '#92400e', label: 'CLASSIC KITAB' },
+    { id: 3, title: 'Pengantar Statistik Pendidikan', penulis: 'Prof. Dr. Aminah', edisi: '2023 / Cetakan 5', kategori: 'Buku', bahasa: 'Indonesia', keywords: 'statistik, pendidikan, penelitian', cover: 'linear-gradient(135deg,#d1fae5,#a7f3d0)', color: '#047857', label: 'RISET' },
+    { id: 4, title: 'Amanat Edisi I', penulis: 'HSM PIM', edisi: '1991 / TH.VII', kategori: 'Majalah', bahasa: 'Indonesia', keywords: 'majalah, HSM, amanat', cover: 'linear-gradient(135deg,#e0e7ff,#c7d2fe)', color: '#3730a3', label: 'MAGAZINE' },
+    { id: 5, title: 'Nahwu Wadhih Juz 1', penulis: 'Ali Al-Jarim', edisi: '2020 / Cetakan 10', kategori: 'Kitab', bahasa: 'Arab', keywords: 'nahwu, gramatika, arab', cover: 'linear-gradient(135deg,#fef3c7,#fde68a)', color: '#92400e', label: 'NAHWU' },
+    { id: 6, title: 'Fiqih Ibadah Kontemporer', penulis: 'Dr. H. Ahmad', edisi: '2024 / Cetakan 1', kategori: 'Buku', bahasa: 'Indonesia', keywords: 'fiqih, ibadah, kontemporer', cover: 'linear-gradient(135deg,#d1fae5,#a7f3d0)', color: '#047857', label: 'FIQIH' },
 ];
 
 let currentLimit = 12;
-let limitMenuOpen = false;
 
 export function renderHome(main) {
     main.innerHTML = `
@@ -92,21 +92,39 @@ function renderBookCards(type) {
 function renderGridCard(book) {
     return `
         <div class="card-item" data-id="${book.id}" data-title="${book.title}" data-penulis="${book.penulis}" data-edisi="${book.edisi}" data-kategori="${book.kategori}" data-bahasa="${book.bahasa}">
-            <div class="cover-art-container" style="background:${book.cover};color:${book.color};"><i class="fa-solid ${book.icon}"></i><span class="cover-text-preview">${book.label}</span></div>
+            <div class="cover-art-container" style="background:${book.cover};color:${book.color};">
+                <span class="cover-text-preview">${book.label}</span>
+            </div>
             <div class="card-body">
-                <div class="card-info"><span class="tag-badge">${book.kategori}</span><div class="item-main-title">${book.title}</div><div class="meta-text-line">${book.penulis}</div><div class="meta-text-line">${book.edisi}</div></div>
+                <div class="card-info">
+                    <span class="tag-badge">${book.kategori}</span>
+                    <div class="item-main-title">${book.title}</div>
+                    <div class="meta-text-line">${book.penulis}</div>
+                    <div class="meta-text-line">${book.edisi}</div>
+                </div>
                 <button class="action-card-btn detail-trigger"><i class="fa-solid fa-circle-info"></i> Detail</button>
             </div>
-        </div>`;
+        </div>
+    `;
 }
 
 function renderListCard(book) {
     return `
         <div class="list-item" data-id="${book.id}" data-title="${book.title}" data-penulis="${book.penulis}" data-edisi="${book.edisi}" data-kategori="${book.kategori}" data-bahasa="${book.bahasa}">
-            <div class="list-cover" style="background:${book.cover};color:${book.color};"><i class="fa-solid ${book.icon}"></i><span>${book.label.substring(0,3)}</span></div>
-            <div class="list-info"><span class="tag-badge">${book.kategori}</span><div class="item-main-title">${book.title}</div><div class="meta-text-line">${book.penulis}</div><div class="meta-text-line">${book.edisi}</div></div>
-            <div class="list-action"><button class="action-card-btn detail-trigger"><i class="fa-solid fa-circle-info"></i> Detail</button></div>
-        </div>`;
+            <div class="list-cover" style="background:${book.cover};color:${book.color};">
+                <span>${book.label.substring(0,3)}</span>
+            </div>
+            <div class="list-info">
+                <span class="tag-badge">${book.kategori}</span>
+                <div class="item-main-title">${book.title}</div>
+                <div class="meta-text-line">${book.penulis}</div>
+                <div class="meta-text-line">${book.edisi}</div>
+            </div>
+            <div class="list-action">
+                <button class="action-card-btn detail-trigger"><i class="fa-solid fa-circle-info"></i> Detail</button>
+            </div>
+        </div>
+    `;
 }
 
 function animateCounter(elementId, target, suffix) {
@@ -121,7 +139,6 @@ function animateCounter(elementId, target, suffix) {
     }, 16);
 }
 
-// ==================== EVENT BINDING ====================
 function bindCardEvents() {
     document.querySelectorAll('.detail-trigger').forEach(btn => {
         const newBtn = btn.cloneNode(true);
@@ -139,8 +156,6 @@ function bindCardEvents() {
                 document.getElementById('detailKategori').textContent = book.kategori;
                 document.getElementById('detailBahasa').textContent = book.bahasa;
                 document.getElementById('detailKeywords').textContent = book.keywords;
-                const detailCover = document.getElementById('detailCover');
-                if (detailCover) { detailCover.style.background = book.cover; detailCover.style.color = book.color; }
                 openModal('modalDetail');
             }
         });
@@ -159,7 +174,6 @@ function bindCardEvents() {
 function initHomeEvents() {
     document.getElementById('btnFilterHome')?.addEventListener('click', () => openModal('modalFilter'));
 
-    // Limit dropdown
     const btnLimit = document.getElementById('btnLimit');
     const limitMenu = document.getElementById('limitMenu');
     if (btnLimit && limitMenu) {
@@ -207,10 +221,8 @@ export function updateLimit(value) {
     currentLimit = value;
     const limitText = document.getElementById('limitText');
     if (limitText) limitText.textContent = value === 'all' ? 'Semua' : value;
-    const gridView = document.getElementById('booksGrid');
-    const listView = document.getElementById('booksList');
-    if (gridView) gridView.innerHTML = renderBookCards('grid');
-    if (listView) listView.innerHTML = renderBookCards('list');
+    document.getElementById('booksGrid').innerHTML = renderBookCards('grid');
+    document.getElementById('booksList').innerHTML = renderBookCards('list');
     bindCardEvents();
 }
 
