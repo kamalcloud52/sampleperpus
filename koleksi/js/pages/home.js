@@ -111,7 +111,14 @@ export async function renderHome(main) {
     main.innerHTML = `
         <div class="welcome-card slide-up slide-up-delay-1"><span class="welcome-tag">👋 Halo, Pembaca Hebat!</span><h1>Selamat Datang di Perpustakaan Digital PIM</h1><p>Temukan ribuan referensi dalam satu genggaman.</p></div>
         <div class="stats-grid slide-up slide-up-delay-2"><div class="stat-item"><div class="stat-icon-wrapper"><i class="fa-solid fa-book-bookmark"></i></div><div class="stat-info"><span class="stat-label">Koleksi</span><span class="stat-value" id="countKoleksi">0</span></div></div><div class="stat-item"><div class="stat-icon-wrapper"><i class="fa-solid fa-tags"></i></div><div class="stat-info"><span class="stat-label">Jenis</span><span class="stat-value" id="countJenis">0</span></div></div></div>
-        <div class="search-row slide-up slide-up-delay-3"><div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input type="text" class="search-input" id="searchInput" placeholder="Cari judul, penulis..."></div><button class="filter-action-btn" id="btnFilterHome"><i class="fa-solid fa-arrow-down-short-wide"></i> Filter</button></div>
+        <div class="search-row slide-up slide-up-delay-3">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" class="search-input" id="searchInput" placeholder="Cari judul, penulis...">
+                <button class="search-clear-btn hidden" id="btnClearSearch" title="Hapus pencarian"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <button class="filter-action-btn" id="btnFilterHome"><i class="fa-solid fa-arrow-down-short-wide"></i> Filter</button>
+        </div>
         <div class="display-controls slide-up slide-up-delay-4">
             <div class="limit-dropdown"><button class="limit-btn" id="btnLimit"><i class="fa-solid fa-eye"></i> Tampilkan <span id="limitText">12</span> <i class="fa-solid fa-chevron-down"></i></button><div class="limit-menu" id="limitMenu"><button class="limit-menu-item" data-value="12">12</button><button class="limit-menu-item" data-value="24">24</button><button class="limit-menu-item" data-value="48">48</button><button class="limit-menu-item" data-value="96">96</button><button class="limit-menu-item" data-value="all">Semua</button></div></div>
             <div class="toggle-switch-group"><button class="toggle-unit active" id="viewGrid"><i class="fa-solid fa-grip-vertical"></i></button><button class="toggle-unit" id="viewList"><i class="fa-solid fa-list"></i></button></div>
@@ -177,12 +184,39 @@ function bindCardEvents() {
 
 function initHomeEvents() {
     document.getElementById('btnFilterHome')?.addEventListener('click', () => openModal('modalFilter'));
+
+    // Limit dropdown
     const bl = document.getElementById('btnLimit'), lm = document.getElementById('limitMenu');
     if (bl && lm) { bl.addEventListener('click', (e) => { e.stopPropagation(); lm.classList.toggle('open'); }); lm.querySelectorAll('.limit-menu-item').forEach(item => item.addEventListener('click', async function() { const v = this.dataset.value; currentLimit = v === 'all' ? 'all' : parseInt(v); document.getElementById('limitText').textContent = v === 'all' ? 'Semua' : v; showLoading('Memuat koleksi...'); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); lm.classList.remove('open'); })); document.addEventListener('click', (e) => { if (!lm.contains(e.target) && !bl.contains(e.target)) lm.classList.remove('open'); }); }
+
     bindCardEvents();
+
+    // View toggle
     document.getElementById('viewGrid')?.addEventListener('click', function() { this.classList.add('active'); document.getElementById('viewList').classList.remove('active'); document.getElementById('booksGrid').classList.remove('hidden'); document.getElementById('booksList').classList.add('hidden'); });
     document.getElementById('viewList')?.addEventListener('click', function() { this.classList.add('active'); document.getElementById('viewGrid').classList.remove('active'); document.getElementById('booksList').classList.remove('hidden'); document.getElementById('booksGrid').classList.add('hidden'); });
-    document.getElementById('searchInput')?.addEventListener('input', debounce(async (e) => { currentSearch = e.target.value; showLoading('Memuat koleksi...'); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); }, 500));
+
+    // Search input + clear button
+    const searchInput = document.getElementById('searchInput');
+    const btnClear = document.getElementById('btnClearSearch');
+    if (searchInput && btnClear) {
+        searchInput.addEventListener('input', debounce(async (e) => {
+            currentSearch = e.target.value;
+            showLoading('Memuat koleksi...');
+            await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit);
+            refreshGrid(); updatePagination();
+        }, 500));
+        searchInput.addEventListener('input', () => {
+            btnClear.classList.toggle('hidden', searchInput.value.length === 0);
+        });
+        btnClear.addEventListener('click', () => {
+            searchInput.value = '';
+            btnClear.classList.add('hidden');
+            searchInput.dispatchEvent(new Event('input'));
+            searchInput.focus();
+        });
+    }
+
+    // Pagination
     document.getElementById('btnAwal')?.addEventListener('click', async () => { if (currentPage === 1) return; showLoading('Memuat koleksi...'); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); });
     document.getElementById('btnPrev')?.addEventListener('click', async () => { if (currentPage <= 1) return; showLoading('Memuat koleksi...'); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage - 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); });
     document.getElementById('btnNext')?.addEventListener('click', async () => { if (currentPage >= totalPages) return; showLoading('Memuat koleksi...'); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage + 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); });
