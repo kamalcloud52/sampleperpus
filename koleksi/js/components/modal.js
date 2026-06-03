@@ -151,14 +151,59 @@ function updateFilterIcon(isActive) {
 
 // ==================== MODAL OPEN/CLOSE ====================
 export function openModal(modalId) {
-    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+    // Tutup semua modal lain dulu
+    document.querySelectorAll('.modal-overlay.open').forEach(m => {
+        const sheet = m.querySelector('.modal-sheet');
+        if (sheet) {
+            sheet.style.transform = 'translateY(100%)';
+        }
+        m.classList.remove('open');
+    });
+
     const modal = document.getElementById(modalId);
-    if (modal) { modal.classList.add('open'); currentModal = modalId; const sheet = modal.querySelector('.modal-sheet'); if (sheet) sheet.style.transform = 'translateY(0)'; }
+    if (!modal) return;
+
+    const sheet = modal.querySelector('.modal-sheet');
+    
+    // Reset posisi ke bawah dulu
+    if (sheet) {
+        sheet.style.transition = 'none';
+        sheet.style.transform = 'translateY(100%)';
+    }
+
+    // Buka modal
+    modal.classList.add('open');
+    currentModal = modalId;
+
+    // Trigger animasi geser ke atas
+    if (sheet) {
+        // Force reflow
+        sheet.offsetHeight;
+        sheet.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)';
+        sheet.style.transform = 'translateY(0)';
+    }
 }
 
 export function closeModal(modalId) {
     const modal = document.getElementById(modalId);
-    if (modal) { modal.classList.remove('open'); if (currentModal === modalId) currentModal = null; }
+    if (!modal) return;
+
+    const sheet = modal.querySelector('.modal-sheet');
+    
+    if (sheet) {
+        // Animasi geser ke bawah
+        sheet.style.transition = 'transform 0.3s cubic-bezier(0.55, 0, 1, 0.45)';
+        sheet.style.transform = 'translateY(100%)';
+        
+        // Tunggu animasi selesai lalu tutup
+        setTimeout(() => {
+            modal.classList.remove('open');
+            if (currentModal === modalId) currentModal = null;
+        }, 300);
+    } else {
+        modal.classList.remove('open');
+        if (currentModal === modalId) currentModal = null;
+    }
 }
 
 export function closeAllModals() {
