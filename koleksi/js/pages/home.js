@@ -31,7 +31,6 @@ async function fetchBooks(search = '', jenis = '', bahasa = '', page = 1, limit 
     if (isLoading) return null;
     isLoading = true;
     try {
-        showLoading('Memuat koleksi...');
         const params = new URLSearchParams({ search, jenis, bahasa, page, limit });
         const response = await fetch(`${API_URL}?${params}`);
         const result = await response.json();
@@ -84,10 +83,7 @@ function updatePagination() {
     if (caption) caption.textContent = `Halaman ${currentPage} dari ${totalPages}`;
     const activeBtn = document.querySelector('.nav-step-btn.active');
     if (activeBtn) activeBtn.textContent = currentPage;
-    const btnAwal = document.getElementById('btnAwal');
-    const btnPrev = document.getElementById('btnPrev');
-    const btnNext = document.getElementById('btnNext');
-    const btnAkhir = document.getElementById('btnAkhir');
+    const btnAwal = document.getElementById('btnAwal'), btnPrev = document.getElementById('btnPrev'), btnNext = document.getElementById('btnNext'), btnAkhir = document.getElementById('btnAkhir');
     if (btnAwal) btnAwal.disabled = currentPage === 1;
     if (btnPrev) btnPrev.disabled = currentPage === 1;
     if (btnNext) btnNext.disabled = currentPage === totalPages || totalPages === 0;
@@ -101,30 +97,14 @@ export function updateFilterIcon(active) {
     fb.style.background = active ? '#d1fae5' : '#f8fafc';
 }
 
-export function getFilterState() {
-    return { search: currentSearch, jenis: currentFilterJenis, bahasa: currentFilterBahasa, limit: currentLimit };
-}
-
-export function setFilter(jenis, bahasa) {
-    currentFilterJenis = jenis;
-    currentFilterBahasa = bahasa;
-}
+export function getFilterState() { return { search: currentSearch, jenis: currentFilterJenis, bahasa: currentFilterBahasa, limit: currentLimit }; }
+export function setFilter(jenis, bahasa) { currentFilterJenis = jenis; currentFilterBahasa = bahasa; }
 
 export async function fetchAndRender(search, jenis, bahasa, page, limit) {
-    currentSearch = search;
-    currentFilterJenis = jenis;
-    currentFilterBahasa = bahasa;
+    currentSearch = search; currentFilterJenis = jenis; currentFilterBahasa = bahasa;
     showLoading('Menerapkan filter...');
     await fetchBooks(search, jenis, bahasa, page, limit);
-    refreshGrid();
-    updatePagination();
-}
-
-export async function refreshAfterFilter() {
-    showLoading('Menerapkan filter...');
-    await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit);
-    refreshGrid();
-    updatePagination();
+    refreshGrid(); updatePagination();
 }
 
 export async function renderHome(main) {
@@ -140,11 +120,10 @@ export async function renderHome(main) {
         <div class="books-layout-list hidden" id="booksList"></div>
         <div class="paginator-box"><span class="paginator-caption">Halaman ...</span><div class="paginator-row"><button class="nav-step-btn" id="btnAwal" disabled>Awal</button><button class="nav-step-btn" id="btnPrev" disabled><i class="fa-solid fa-angle-left"></i></button><button class="nav-step-btn active">1</button><button class="nav-step-btn" id="btnNext" disabled><i class="fa-solid fa-angle-right"></i></button><button class="nav-step-btn" id="btnAkhir" disabled>Akhir</button></div></div>
     `;
+    showLoading('Memuat koleksi...');
     const result = await fetchBooks();
     setTimeout(() => { animateCounter('countKoleksi', result?.total || 0, 'Buku'); animateCounter('countJenis', allJenis.length || 0, 'Jenis'); }, 300);
-    refreshGrid();
-    updatePagination();
-    initHomeEvents();
+    refreshGrid(); updatePagination(); initHomeEvents();
 }
 
 function renderBookCards(type) {
@@ -179,16 +158,14 @@ function animateCounter(elId, target, suffix) {
 function bindCardEvents() {
     document.querySelectorAll('.detail-trigger').forEach(btn => {
         const nb = btn.cloneNode(true); btn.parentNode.replaceChild(nb, btn);
-        nb.addEventListener('click', (e) => {
-            e.stopPropagation(); const card = nb.closest('[data-id]'); if (!card) return;
+        nb.addEventListener('click', (e) => { e.stopPropagation(); const card = nb.closest('[data-id]'); if (!card) return;
             document.getElementById('detailTitle').textContent = card.dataset.title || '-';
             document.getElementById('detailPenulis').textContent = card.dataset.penulis || '-';
             document.getElementById('detailEdisi').textContent = card.dataset.edisi || '-';
             document.getElementById('detailKategori').textContent = card.dataset.kategori || '-';
             document.getElementById('detailBahasa').textContent = card.dataset.bahasa || '-';
             document.getElementById('detailKeywords').textContent = card.dataset.keywords || '-';
-            const dc = document.getElementById('detailCover');
-            if (dc && card.dataset.cover) dc.innerHTML = `<img src="${card.dataset.cover}" alt="${card.dataset.title}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`;
+            const dc = document.getElementById('detailCover'); if (dc && card.dataset.cover) dc.innerHTML = `<img src="${card.dataset.cover}" alt="${card.dataset.title}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`;
             openModal('modalDetail');
         });
     });
@@ -200,29 +177,12 @@ function bindCardEvents() {
 
 function initHomeEvents() {
     document.getElementById('btnFilterHome')?.addEventListener('click', () => openModal('modalFilter'));
-
     const bl = document.getElementById('btnLimit'), lm = document.getElementById('limitMenu');
-    if (bl && lm) {
-        bl.addEventListener('click', (e) => { e.stopPropagation(); lm.classList.toggle('open'); });
-        lm.querySelectorAll('.limit-menu-item').forEach(item => item.addEventListener('click', async function() {
-            const v = this.dataset.value; currentLimit = v === 'all' ? 'all' : parseInt(v);
-            document.getElementById('limitText').textContent = v === 'all' ? 'Semua' : v;
-            showLoading('Memuat koleksi...');
-            await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit);
-            refreshGrid();
-            updatePagination();
-            lm.classList.remove('open');
-        }));
-        document.addEventListener('click', (e) => { if (!lm.contains(e.target) && !bl.contains(e.target)) lm.classList.remove('open'); });
-    }
-
+    if (bl && lm) { bl.addEventListener('click', (e) => { e.stopPropagation(); lm.classList.toggle('open'); }); lm.querySelectorAll('.limit-menu-item').forEach(item => item.addEventListener('click', async function() { const v = this.dataset.value; currentLimit = v === 'all' ? 'all' : parseInt(v); document.getElementById('limitText').textContent = v === 'all' ? 'Semua' : v; showLoading('Memuat koleksi...'); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); lm.classList.remove('open'); })); document.addEventListener('click', (e) => { if (!lm.contains(e.target) && !bl.contains(e.target)) lm.classList.remove('open'); }); }
     bindCardEvents();
-
     document.getElementById('viewGrid')?.addEventListener('click', function() { this.classList.add('active'); document.getElementById('viewList').classList.remove('active'); document.getElementById('booksGrid').classList.remove('hidden'); document.getElementById('booksList').classList.add('hidden'); });
     document.getElementById('viewList')?.addEventListener('click', function() { this.classList.add('active'); document.getElementById('viewGrid').classList.remove('active'); document.getElementById('booksList').classList.remove('hidden'); document.getElementById('booksGrid').classList.add('hidden'); });
-
     document.getElementById('searchInput')?.addEventListener('input', debounce(async (e) => { currentSearch = e.target.value; showLoading('Memuat koleksi...'); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); }, 500));
-
     document.getElementById('btnAwal')?.addEventListener('click', async () => { if (currentPage === 1) return; showLoading('Memuat koleksi...'); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); });
     document.getElementById('btnPrev')?.addEventListener('click', async () => { if (currentPage <= 1) return; showLoading('Memuat koleksi...'); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage - 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); });
     document.getElementById('btnNext')?.addEventListener('click', async () => { if (currentPage >= totalPages) return; showLoading('Memuat koleksi...'); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage + 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); });
