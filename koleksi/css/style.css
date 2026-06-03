@@ -468,6 +468,7 @@ main {
 /* ==================== LIMIT DROPDOWN ==================== */
 .limit-dropdown {
     position: relative;
+    z-index: 100;
 }
 
 .limit-btn {
@@ -500,14 +501,14 @@ main {
     background: white;
     border: 1px solid var(--border);
     border-radius: 8px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
     min-width: 120px;
     padding: 4px 0;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-4px);
     transition: all 0.2s ease;
-    z-index: 100;
+    z-index: 9999;
 }
 
 .limit-menu.open {
@@ -606,11 +607,14 @@ main {
     cursor: pointer;
     height: 100%;
     box-shadow: var(--shadow-md);
+    position: relative;
+    z-index: 1;
 }
 
 .card-item:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    z-index: 2;
 }
 
 .card-item:active { transform: scale(0.98); }
@@ -731,11 +735,14 @@ main {
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     align-items: center;
     cursor: pointer;
+    position: relative;
+    z-index: 1;
 }
 
 .list-item:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    z-index: 2;
 }
 
 .list-item:active { background: #f0fdf4; }
