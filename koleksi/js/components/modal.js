@@ -1,4 +1,6 @@
 // ==================== MODAL COMPONENT ====================
+import { setFilter, refreshAfterFilter, updateFilterIcon, getFilterState, fetchAndRender } from '../pages/home.js';
+
 let currentModal = null;
 
 export function renderModal() {
@@ -119,26 +121,34 @@ export function initModalEvents() {
         });
     });
 
-    // Terapkan Filter (fix double click)
+    // Terapkan Filter (fix)
     const btnTerapkan = document.getElementById('btnTerapkanFilter');
     if (btnTerapkan) {
         const newBtn = btnTerapkan.cloneNode(true);
         btnTerapkan.parentNode.replaceChild(newBtn, btnTerapkan);
         newBtn.addEventListener('click', async () => {
-            const { applyFilterFromModal } = await import('../pages/home.js');
-            await applyFilterFromModal();
+            const selectedJenis = document.querySelector('#filterJenis .filter-option.selected')?.dataset.value || '';
+            const selectedBahasa = document.querySelector('#filterBahasa .filter-option.selected')?.dataset.value || '';
+            const { search, limit } = getFilterState();
+            
+            await fetchAndRender(search, selectedJenis, selectedBahasa, 1, limit === 'all' ? 999 : limit);
+            updateFilterIcon(!!(selectedJenis || selectedBahasa));
             closeModal('modalFilter');
         });
     }
 
-    // Reset Filter (fix double click)
+    // Reset Filter (fix)
     const btnReset = document.getElementById('btnResetFilter');
     if (btnReset) {
         const newBtn = btnReset.cloneNode(true);
         btnReset.parentNode.replaceChild(newBtn, btnReset);
         newBtn.addEventListener('click', async () => {
-            const { resetFilterFromModal } = await import('../pages/home.js');
-            resetFilterFromModal();
+            const { search, limit } = getFilterState();
+            setFilter('', '');
+            await fetchAndRender(search, '', '', 1, limit === 'all' ? 999 : limit);
+            updateFilterIcon(false);
+            document.querySelectorAll('.filter-option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelectorAll('.filter-option:first-child').forEach(opt => opt.classList.add('selected'));
             closeModal('modalFilter');
         });
     }
