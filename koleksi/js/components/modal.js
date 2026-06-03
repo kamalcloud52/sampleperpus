@@ -91,24 +91,24 @@ export function initModalEvents() {
         });
     });
 
-    // Tutup modal dengan tombol X
+    // Tutup modal
     document.querySelectorAll('.modal-close-btn, [data-close]').forEach(btn => {
         btn.addEventListener('click', () => { const modalId = btn.dataset.close; if (modalId) closeModal(modalId); });
     });
-
-    // Klik overlay tutup modal
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
         overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(overlay.id); });
     });
 
-    // Tombol Baca & Download
+    // Baca & Download
     document.getElementById('btnBaca')?.addEventListener('click', () => alert('Fitur baca akan segera hadir!'));
     document.getElementById('btnDownload')?.addEventListener('click', () => alert('Fitur unduh akan segera hadir!'));
 
     // Filter options
     document.querySelectorAll('.filter-options').forEach(group => {
         group.querySelectorAll('.filter-option').forEach(opt => {
-            opt.addEventListener('click', function() {
+            const newOpt = opt.cloneNode(true);
+            opt.parentNode.replaceChild(newOpt, opt);
+            newOpt.addEventListener('click', function() {
                 group.querySelectorAll('.filter-option').forEach(o => o.classList.remove('selected'));
                 this.classList.add('selected');
             });
@@ -116,47 +116,25 @@ export function initModalEvents() {
     });
 
     // Terapkan Filter
-    document.getElementById('btnTerapkanFilter')?.addEventListener('click', () => { applyFilter(); closeModal('modalFilter'); });
+    document.getElementById('btnTerapkanFilter')?.addEventListener('click', async () => {
+        const { applyFilterFromModal } = await import('../pages/home.js');
+        await applyFilterFromModal();
+        closeModal('modalFilter');
+    });
 
     // Reset Filter
-    document.getElementById('btnResetFilter')?.addEventListener('click', () => { resetFilter(); closeModal('modalFilter'); });
-}
-
-// ==================== FUNGSI FILTER ====================
-function applyFilter() {
-    const selectedJenis = document.querySelector('#filterJenis .filter-option.selected')?.dataset.value || '';
-    const selectedBahasa = document.querySelector('#filterBahasa .filter-option.selected')?.dataset.value || '';
-    document.querySelectorAll('.card-item, .list-item').forEach(item => {
-        const kategori = item.dataset.kategori || '';
-        const bahasa = item.dataset.bahasa || '';
-        item.style.display = (!selectedJenis || kategori === selectedJenis) && (!selectedBahasa || bahasa === selectedBahasa) ? '' : 'none';
+    document.getElementById('btnResetFilter')?.addEventListener('click', async () => {
+        const { resetFilterFromModal } = await import('../pages/home.js');
+        resetFilterFromModal();
+        closeModal('modalFilter');
     });
-    updateFilterIcon(!!(selectedJenis || selectedBahasa));
-}
-
-function resetFilter() {
-    document.querySelectorAll('.filter-option').forEach(opt => opt.classList.remove('selected'));
-    document.querySelectorAll('.filter-option:first-child').forEach(opt => opt.classList.add('selected'));
-    document.querySelectorAll('.card-item, .list-item').forEach(item => item.style.display = '');
-    updateFilterIcon(false);
-}
-
-function updateFilterIcon(isActive) {
-    const filterBtn = document.getElementById('btnFilterHome');
-    if (!filterBtn) return;
-    filterBtn.style.color = isActive ? '#047857' : '#4b5563';
-    filterBtn.style.borderColor = isActive ? '#047857' : '#e5e7eb';
-    filterBtn.style.background = isActive ? '#d1fae5' : '#f8fafc';
 }
 
 // ==================== MODAL OPEN/CLOSE ====================
 export function openModal(modalId) {
-    // Tutup semua modal lain dulu
     document.querySelectorAll('.modal-overlay.open').forEach(m => {
         const sheet = m.querySelector('.modal-sheet');
-        if (sheet) {
-            sheet.style.transform = 'translateY(100%)';
-        }
+        if (sheet) sheet.style.transform = 'translateY(100%)';
         m.classList.remove('open');
     });
 
@@ -164,20 +142,15 @@ export function openModal(modalId) {
     if (!modal) return;
 
     const sheet = modal.querySelector('.modal-sheet');
-    
-    // Reset posisi ke bawah dulu
     if (sheet) {
         sheet.style.transition = 'none';
         sheet.style.transform = 'translateY(100%)';
     }
 
-    // Buka modal
     modal.classList.add('open');
     currentModal = modalId;
 
-    // Trigger animasi geser ke atas
     if (sheet) {
-        // Force reflow
         sheet.offsetHeight;
         sheet.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)';
         sheet.style.transform = 'translateY(0)';
@@ -189,13 +162,9 @@ export function closeModal(modalId) {
     if (!modal) return;
 
     const sheet = modal.querySelector('.modal-sheet');
-    
     if (sheet) {
-        // Animasi geser ke bawah
         sheet.style.transition = 'transform 0.3s cubic-bezier(0.55, 0, 1, 0.45)';
         sheet.style.transform = 'translateY(100%)';
-        
-        // Tunggu animasi selesai lalu tutup
         setTimeout(() => {
             modal.classList.remove('open');
             if (currentModal === modalId) currentModal = null;
@@ -207,6 +176,10 @@ export function closeModal(modalId) {
 }
 
 export function closeAllModals() {
-    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+    document.querySelectorAll('.modal-overlay.open').forEach(m => {
+        const sheet = m.querySelector('.modal-sheet');
+        if (sheet) sheet.style.transform = 'translateY(100%)';
+        m.classList.remove('open');
+    });
     currentModal = null;
 }
