@@ -71,9 +71,6 @@ export function renderModal() {
                 <button class="modal-action-btn" id="btnResetFilter" style="background:#6b7280;margin-top:8px;"><i class="fa-solid fa-rotate"></i> Reset Filter</button>
             </div>
         </div>
-
-        <!-- Modal Limit -->
-
     `;
 }
 
@@ -94,15 +91,17 @@ export function initModalEvents() {
         });
     });
 
-    // Tutup modal
+    // Tutup modal dengan tombol X
     document.querySelectorAll('.modal-close-btn, [data-close]').forEach(btn => {
         btn.addEventListener('click', () => { const modalId = btn.dataset.close; if (modalId) closeModal(modalId); });
     });
+
+    // Klik overlay tutup modal
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
         overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(overlay.id); });
     });
 
-    // Baca & Download
+    // Tombol Baca & Download
     document.getElementById('btnBaca')?.addEventListener('click', () => alert('Fitur baca akan segera hadir!'));
     document.getElementById('btnDownload')?.addEventListener('click', () => alert('Fitur unduh akan segera hadir!'));
 
@@ -116,14 +115,14 @@ export function initModalEvents() {
         });
     });
 
-    // Terapkan filter
+    // Terapkan Filter
     document.getElementById('btnTerapkanFilter')?.addEventListener('click', () => { applyFilter(); closeModal('modalFilter'); });
+
+    // Reset Filter
     document.getElementById('btnResetFilter')?.addEventListener('click', () => { resetFilter(); closeModal('modalFilter'); });
-
-    // Limit options
-
 }
 
+// ==================== FUNGSI FILTER ====================
 function applyFilter() {
     const selectedJenis = document.querySelector('#filterJenis .filter-option.selected')?.dataset.value || '';
     const selectedBahasa = document.querySelector('#filterBahasa .filter-option.selected')?.dataset.value || '';
@@ -150,6 +149,7 @@ function updateFilterIcon(isActive) {
     filterBtn.style.background = isActive ? '#d1fae5' : '#f8fafc';
 }
 
+// ==================== MODAL OPEN/CLOSE ====================
 export function openModal(modalId) {
     document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
     const modal = document.getElementById(modalId);
