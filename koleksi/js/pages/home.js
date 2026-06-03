@@ -37,8 +37,8 @@ export function renderHome(main) {
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" class="search-input" id="searchInput" placeholder="Cari judul, penulis...">
             </div>
-            <button class="filter-action-btn" id="btnFilterHome" title="Filter">
-                <i class="fa-solid fa-arrow-down-short-wide"></i>
+            <button class="filter-action-btn" id="btnFilterHome">
+                <i class="fa-solid fa-arrow-down-short-wide"></i> Filter
             </button>
         </div>
 
