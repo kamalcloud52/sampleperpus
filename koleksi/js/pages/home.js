@@ -169,36 +169,18 @@ function animateCounter(elementId, target, suffix) {
     }, 16);
 }
 
-function initHomeEvents() {
-    // Filter button
-    document.getElementById('btnFilterHome')?.addEventListener('click', () => openModal('modalFilter'));
-
-    // Limit dropdown
-    const btnLimit = document.getElementById('btnLimit');
-    const limitMenu = document.getElementById('limitMenu');
-    if (btnLimit && limitMenu) {
-        btnLimit.addEventListener('click', (e) => {
-            e.stopPropagation();
-            limitMenu.classList.toggle('open');
-        });
-        document.addEventListener('click', () => {
-            limitMenu.classList.remove('open');
-        });
-        limitMenu.querySelectorAll('.limit-menu-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const value = this.dataset.value;
-                const finalValue = value === 'all' ? 'all' : parseInt(value);
-                updateLimit(finalValue);
-                limitMenu.classList.remove('open');
-            });
-        });
-    }
-
+// ==================== EVENT BINDING ====================
+function bindCardEvents() {
     // Detail triggers
     document.querySelectorAll('.detail-trigger').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        // Hapus listener lama dengan clone
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+        
+        newBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            const card = btn.closest('[data-id]');
+            const card = newBtn.closest('[data-id]');
+            if (!card) return;
             const id = parseInt(card.dataset.id);
             const book = booksData.find(b => b.id === id);
             if (book) {
@@ -217,35 +199,92 @@ function initHomeEvents() {
 
     // Klik card
     document.querySelectorAll('.card-item, .list-item').forEach(card => {
-        card.addEventListener('click', (e) => {
+        const newCard = card.cloneNode(true);
+        card.parentNode.replaceChild(newCard, card);
+        
+        newCard.addEventListener('click', (e) => {
             if (e.target.closest('button')) return;
-            card.querySelector('.detail-trigger')?.click();
+            newCard.querySelector('.detail-trigger')?.click();
         });
     });
+}
+
+function initHomeEvents() {
+    // Filter button
+    const btnFilterHome = document.getElementById('btnFilterHome');
+    if (btnFilterHome) {
+        const newBtnFilter = btnFilterHome.cloneNode(true);
+        btnFilterHome.parentNode.replaceChild(newBtnFilter, btnFilterHome);
+        newBtnFilter.addEventListener('click', () => openModal('modalFilter'));
+    }
+
+    // Limit dropdown — pakai event delegation di document
+    document.addEventListener('click', function(e) {
+        const limitMenu = document.getElementById('limitMenu');
+        const btnLimit = document.getElementById('btnLimit');
+        
+        // Toggle dropdown
+        if (btnLimit && btnLimit.contains(e.target)) {
+            e.stopPropagation();
+            if (limitMenu) limitMenu.classList.toggle('open');
+            return;
+        }
+        
+        // Klik item dropdown
+        if (limitMenu && e.target.classList.contains('limit-menu-item')) {
+            const value = e.target.dataset.value;
+            const finalValue = value === 'all' ? 'all' : parseInt(value);
+            updateLimit(finalValue);
+            limitMenu.classList.remove('open');
+            return;
+        }
+        
+        // Klik di luar — tutup
+        if (limitMenu && !limitMenu.contains(e.target) && !(btnLimit && btnLimit.contains(e.target))) {
+            limitMenu.classList.remove('open');
+        }
+    });
+
+    // Bind card events
+    bindCardEvents();
 
     // View toggle
-    document.getElementById('viewGrid')?.addEventListener('click', function() {
-        this.classList.add('active');
-        document.getElementById('viewList').classList.remove('active');
-        document.getElementById('booksGrid').classList.remove('hidden');
-        document.getElementById('booksList').classList.add('hidden');
-    });
-
-    document.getElementById('viewList')?.addEventListener('click', function() {
-        this.classList.add('active');
-        document.getElementById('viewGrid').classList.remove('active');
-        document.getElementById('booksList').classList.remove('hidden');
-        document.getElementById('booksGrid').classList.add('hidden');
-    });
+    const viewGridBtn = document.getElementById('viewGrid');
+    const viewListBtn = document.getElementById('viewList');
+    if (viewGridBtn) {
+        const newViewGrid = viewGridBtn.cloneNode(true);
+        viewGridBtn.parentNode.replaceChild(newViewGrid, viewGridBtn);
+        newViewGrid.addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('viewList').classList.remove('active');
+            document.getElementById('booksGrid').classList.remove('hidden');
+            document.getElementById('booksList').classList.add('hidden');
+        });
+    }
+    if (viewListBtn) {
+        const newViewList = viewListBtn.cloneNode(true);
+        viewListBtn.parentNode.replaceChild(newViewList, viewListBtn);
+        newViewList.addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('viewGrid').classList.remove('active');
+            document.getElementById('booksList').classList.remove('hidden');
+            document.getElementById('booksGrid').classList.add('hidden');
+        });
+    }
 
     // Search
-    document.getElementById('searchInput')?.addEventListener('input', (e) => {
-        const keyword = e.target.value.toLowerCase();
-        document.querySelectorAll('.card-item, .list-item').forEach(item => {
-            const title = item.dataset.title?.toLowerCase() || '';
-            item.style.display = title.includes(keyword) ? '' : 'none';
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        const newSearch = searchInput.cloneNode(true);
+        searchInput.parentNode.replaceChild(newSearch, searchInput);
+        newSearch.addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            document.querySelectorAll('.card-item, .list-item').forEach(item => {
+                const title = item.dataset.title?.toLowerCase() || '';
+                item.style.display = title.includes(keyword) ? '' : 'none';
+            });
         });
-    });
+    }
 }
 
 // ==================== UPDATE LIMIT ====================
@@ -253,11 +292,15 @@ export function updateLimit(value) {
     currentLimit = value;
     const limitText = document.getElementById('limitText');
     if (limitText) limitText.textContent = value === 'all' ? 'Semua' : value;
+    
+    // Update grid & list
     const gridView = document.getElementById('booksGrid');
     const listView = document.getElementById('booksList');
     if (gridView) gridView.innerHTML = renderBookCards('grid');
     if (listView) listView.innerHTML = renderBookCards('list');
-    initHomeEvents();
+    
+    // Re-bind event listeners
+    bindCardEvents();
 }
 
 export { booksData };
