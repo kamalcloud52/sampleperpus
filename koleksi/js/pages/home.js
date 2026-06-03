@@ -19,10 +19,10 @@ function debounce(func, delay) {
     return (...args) => { clearTimeout(timer); timer = setTimeout(() => func.apply(this, args), delay); };
 }
 
-function showLoading() {
+function showLoading(text = 'Memuat koleksi...') {
     const grid = document.getElementById('booksGrid');
     const list = document.getElementById('booksList');
-    const loadingHTML = `<div class="loading-container" style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:12px;"><div class="loading-spinner"></div><p class="loading-text">Memuat koleksi...</p></div>`;
+    const loadingHTML = `<div class="loading-container" style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:12px;"><div class="loading-spinner"></div><p class="loading-text">${text}</p></div>`;
     if (grid && !grid.classList.contains('hidden')) grid.innerHTML = loadingHTML;
     if (list && !list.classList.contains('hidden')) list.innerHTML = loadingHTML;
 }
@@ -31,7 +31,7 @@ async function fetchBooks(search = '', jenis = '', bahasa = '', page = 1, limit 
     if (isLoading) return null;
     isLoading = true;
     try {
-        showLoading();
+        showLoading('Memuat koleksi...');
         const params = new URLSearchParams({ search, jenis, bahasa, page, limit });
         const response = await fetch(`${API_URL}?${params}`);
         const result = await response.json();
@@ -114,14 +114,14 @@ export async function fetchAndRender(search, jenis, bahasa, page, limit) {
     currentSearch = search;
     currentFilterJenis = jenis;
     currentFilterBahasa = bahasa;
-    showLoading();
+    showLoading('Menerapkan filter...');
     await fetchBooks(search, jenis, bahasa, page, limit);
     refreshGrid();
     updatePagination();
 }
 
 export async function refreshAfterFilter() {
-    showLoading();
+    showLoading('Menerapkan filter...');
     await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit);
     refreshGrid();
     updatePagination();
@@ -207,7 +207,7 @@ function initHomeEvents() {
         lm.querySelectorAll('.limit-menu-item').forEach(item => item.addEventListener('click', async function() {
             const v = this.dataset.value; currentLimit = v === 'all' ? 'all' : parseInt(v);
             document.getElementById('limitText').textContent = v === 'all' ? 'Semua' : v;
-            showLoading();
+            showLoading('Memuat koleksi...');
             await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit);
             refreshGrid();
             updatePagination();
@@ -221,10 +221,10 @@ function initHomeEvents() {
     document.getElementById('viewGrid')?.addEventListener('click', function() { this.classList.add('active'); document.getElementById('viewList').classList.remove('active'); document.getElementById('booksGrid').classList.remove('hidden'); document.getElementById('booksList').classList.add('hidden'); });
     document.getElementById('viewList')?.addEventListener('click', function() { this.classList.add('active'); document.getElementById('viewGrid').classList.remove('active'); document.getElementById('booksList').classList.remove('hidden'); document.getElementById('booksGrid').classList.add('hidden'); });
 
-    document.getElementById('searchInput')?.addEventListener('input', debounce(async (e) => { currentSearch = e.target.value; showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); }, 500));
+    document.getElementById('searchInput')?.addEventListener('input', debounce(async (e) => { currentSearch = e.target.value; showLoading('Memuat koleksi...'); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); }, 500));
 
-    document.getElementById('btnAwal')?.addEventListener('click', async () => { if (currentPage === 1) return; showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); });
-    document.getElementById('btnPrev')?.addEventListener('click', async () => { if (currentPage <= 1) return; showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage - 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); });
-    document.getElementById('btnNext')?.addEventListener('click', async () => { if (currentPage >= totalPages) return; showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage + 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); });
-    document.getElementById('btnAkhir')?.addEventListener('click', async () => { if (currentPage === totalPages) return; showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, totalPages, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); });
+    document.getElementById('btnAwal')?.addEventListener('click', async () => { if (currentPage === 1) return; showLoading('Memuat koleksi...'); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); });
+    document.getElementById('btnPrev')?.addEventListener('click', async () => { if (currentPage <= 1) return; showLoading('Memuat koleksi...'); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage - 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); });
+    document.getElementById('btnNext')?.addEventListener('click', async () => { if (currentPage >= totalPages) return; showLoading('Memuat koleksi...'); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage + 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); });
+    document.getElementById('btnAkhir')?.addEventListener('click', async () => { if (currentPage === totalPages) return; showLoading('Memuat koleksi...'); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, totalPages, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); });
 }
