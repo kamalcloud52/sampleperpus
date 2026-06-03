@@ -79,6 +79,24 @@ function refreshGrid() {
     bindCardEvents();
 }
 
+function updatePagination() {
+    const caption = document.querySelector('.paginator-caption');
+    if (caption) caption.textContent = `Halaman ${currentPage} dari ${totalPages}`;
+    
+    const activeBtn = document.querySelector('.nav-step-btn.active');
+    if (activeBtn) activeBtn.textContent = currentPage;
+    
+    const btnAwal = document.getElementById('btnAwal');
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+    const btnAkhir = document.getElementById('btnAkhir');
+    
+    if (btnAwal) btnAwal.disabled = currentPage === 1;
+    if (btnPrev) btnPrev.disabled = currentPage === 1;
+    if (btnNext) btnNext.disabled = currentPage === totalPages || totalPages === 0;
+    if (btnAkhir) btnAkhir.disabled = currentPage === totalPages || totalPages === 0;
+}
+
 export async function renderHome(main) {
     main.innerHTML = `
         <div class="welcome-card slide-up slide-up-delay-1"><span class="welcome-tag">👋 Halo, Pembaca Hebat!</span><h1>Selamat Datang di Perpustakaan Digital PIM</h1><p>Temukan ribuan referensi dalam satu genggaman.</p></div>
@@ -90,12 +108,21 @@ export async function renderHome(main) {
         </div>
         <div class="books-layout-grid" id="booksGrid"><div class="loading-container" style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:12px;"><div class="loading-spinner"></div><p class="loading-text">Memuat koleksi...</p></div></div>
         <div class="books-layout-list hidden" id="booksList"></div>
-        <div class="paginator-box"><span class="paginator-caption">Halaman ...</span><div class="paginator-row"><button class="nav-step-btn" disabled>Awal</button><button class="nav-step-btn" disabled><i class="fa-solid fa-angle-left"></i></button><button class="nav-step-btn active">...</button><button class="nav-step-btn" disabled><i class="fa-solid fa-angle-right"></i></button><button class="nav-step-btn" disabled>Akhir</button></div></div>
+        <div class="paginator-box">
+            <span class="paginator-caption">Halaman ...</span>
+            <div class="paginator-row">
+                <button class="nav-step-btn" id="btnAwal" disabled>Awal</button>
+                <button class="nav-step-btn" id="btnPrev" disabled><i class="fa-solid fa-angle-left"></i></button>
+                <button class="nav-step-btn active">1</button>
+                <button class="nav-step-btn" id="btnNext" disabled><i class="fa-solid fa-angle-right"></i></button>
+                <button class="nav-step-btn" id="btnAkhir" disabled>Akhir</button>
+            </div>
+        </div>
     `;
     const result = await fetchBooks();
     setTimeout(() => { animateCounter('countKoleksi', result?.total || 0, 'Buku'); animateCounter('countJenis', allJenis.length || 0, 'Jenis'); }, 300);
     refreshGrid();
-    document.querySelector('.paginator-caption').textContent = `Halaman ${currentPage} dari ${totalPages}`;
+    updatePagination();
     initHomeEvents();
 }
 
@@ -152,25 +179,67 @@ function bindCardEvents() {
 
 function initHomeEvents() {
     document.getElementById('btnFilterHome')?.addEventListener('click', () => openModal('modalFilter'));
+
     const bl = document.getElementById('btnLimit'), lm = document.getElementById('limitMenu');
     if (bl && lm) {
         bl.addEventListener('click', (e) => { e.stopPropagation(); lm.classList.toggle('open'); });
         lm.querySelectorAll('.limit-menu-item').forEach(item => item.addEventListener('click', async function() {
             const v = this.dataset.value; currentLimit = v === 'all' ? 'all' : parseInt(v);
             document.getElementById('limitText').textContent = v === 'all' ? 'Semua' : v;
-            showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit);
-            refreshGrid(); lm.classList.remove('open');
+            showLoading();
+            await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit);
+            refreshGrid();
+            updatePagination();
+            lm.classList.remove('open');
         }));
         document.addEventListener('click', (e) => { if (!lm.contains(e.target) && !bl.contains(e.target)) lm.classList.remove('open'); });
     }
+
     bindCardEvents();
+
     document.getElementById('viewGrid')?.addEventListener('click', function() { this.classList.add('active'); document.getElementById('viewList').classList.remove('active'); document.getElementById('booksGrid').classList.remove('hidden'); document.getElementById('booksList').classList.add('hidden'); });
     document.getElementById('viewList')?.addEventListener('click', function() { this.classList.add('active'); document.getElementById('viewGrid').classList.remove('active'); document.getElementById('booksList').classList.remove('hidden'); document.getElementById('booksGrid').classList.add('hidden'); });
-    document.getElementById('searchInput')?.addEventListener('input', debounce(async (e) => { currentSearch = e.target.value; showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); }, 500));
-    document.getElementById('btnAwal')?.addEventListener('click', async () => { showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); });
-    document.getElementById('btnPrev')?.addEventListener('click', async () => { if (currentPage > 1) { showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage - 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); } });
-    document.getElementById('btnNext')?.addEventListener('click', async () => { if (currentPage < totalPages) { showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage + 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); } });
-    document.getElementById('btnAkhir')?.addEventListener('click', async () => { showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, totalPages, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); });
+
+    document.getElementById('searchInput')?.addEventListener('input', debounce(async (e) => {
+        currentSearch = e.target.value;
+        showLoading();
+        await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit);
+        refreshGrid();
+        updatePagination();
+    }, 500));
+
+    // Pagination buttons
+    document.getElementById('btnAwal')?.addEventListener('click', async () => {
+        if (currentPage === 1) return;
+        showLoading();
+        await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit);
+        refreshGrid();
+        updatePagination();
+    });
+
+    document.getElementById('btnPrev')?.addEventListener('click', async () => {
+        if (currentPage <= 1) return;
+        showLoading();
+        await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage - 1, currentLimit === 'all' ? 999 : currentLimit);
+        refreshGrid();
+        updatePagination();
+    });
+
+    document.getElementById('btnNext')?.addEventListener('click', async () => {
+        if (currentPage >= totalPages) return;
+        showLoading();
+        await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage + 1, currentLimit === 'all' ? 999 : currentLimit);
+        refreshGrid();
+        updatePagination();
+    });
+
+    document.getElementById('btnAkhir')?.addEventListener('click', async () => {
+        if (currentPage === totalPages) return;
+        showLoading();
+        await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, totalPages, currentLimit === 'all' ? 999 : currentLimit);
+        refreshGrid();
+        updatePagination();
+    });
 }
 
 export async function applyFilterFromModal() {
@@ -181,6 +250,7 @@ export async function applyFilterFromModal() {
     showLoading();
     await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit);
     refreshGrid();
+    updatePagination();
     updateFilterIcon(!!(selectedJenis || selectedBahasa));
 }
 
@@ -188,7 +258,11 @@ export function resetFilterFromModal() {
     currentFilterJenis = '';
     currentFilterBahasa = '';
     showLoading();
-    fetchBooks(currentSearch, '', '', 1, currentLimit === 'all' ? 999 : currentLimit).then(() => { refreshGrid(); updateFilterIcon(false); });
+    fetchBooks(currentSearch, '', '', 1, currentLimit === 'all' ? 999 : currentLimit).then(() => {
+        refreshGrid();
+        updatePagination();
+        updateFilterIcon(false);
+    });
 }
 
 function updateFilterIcon(active) {
@@ -204,4 +278,5 @@ export async function updateLimit(value) {
     showLoading();
     await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, value === 'all' ? 999 : value);
     refreshGrid();
+    updatePagination();
 }
