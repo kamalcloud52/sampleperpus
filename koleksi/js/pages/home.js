@@ -82,19 +82,49 @@ function refreshGrid() {
 function updatePagination() {
     const caption = document.querySelector('.paginator-caption');
     if (caption) caption.textContent = `Halaman ${currentPage} dari ${totalPages}`;
-    
     const activeBtn = document.querySelector('.nav-step-btn.active');
     if (activeBtn) activeBtn.textContent = currentPage;
-    
     const btnAwal = document.getElementById('btnAwal');
     const btnPrev = document.getElementById('btnPrev');
     const btnNext = document.getElementById('btnNext');
     const btnAkhir = document.getElementById('btnAkhir');
-    
     if (btnAwal) btnAwal.disabled = currentPage === 1;
     if (btnPrev) btnPrev.disabled = currentPage === 1;
     if (btnNext) btnNext.disabled = currentPage === totalPages || totalPages === 0;
     if (btnAkhir) btnAkhir.disabled = currentPage === totalPages || totalPages === 0;
+}
+
+export function updateFilterIcon(active) {
+    const fb = document.getElementById('btnFilterHome'); if (!fb) return;
+    fb.style.color = active ? '#047857' : '#4b5563';
+    fb.style.borderColor = active ? '#047857' : '#e5e7eb';
+    fb.style.background = active ? '#d1fae5' : '#f8fafc';
+}
+
+export function getFilterState() {
+    return { search: currentSearch, jenis: currentFilterJenis, bahasa: currentFilterBahasa, limit: currentLimit };
+}
+
+export function setFilter(jenis, bahasa) {
+    currentFilterJenis = jenis;
+    currentFilterBahasa = bahasa;
+}
+
+export async function fetchAndRender(search, jenis, bahasa, page, limit) {
+    currentSearch = search;
+    currentFilterJenis = jenis;
+    currentFilterBahasa = bahasa;
+    showLoading();
+    await fetchBooks(search, jenis, bahasa, page, limit);
+    refreshGrid();
+    updatePagination();
+}
+
+export async function refreshAfterFilter() {
+    showLoading();
+    await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit);
+    refreshGrid();
+    updatePagination();
 }
 
 export async function renderHome(main) {
@@ -108,16 +138,7 @@ export async function renderHome(main) {
         </div>
         <div class="books-layout-grid" id="booksGrid"><div class="loading-container" style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:12px;"><div class="loading-spinner"></div><p class="loading-text">Memuat koleksi...</p></div></div>
         <div class="books-layout-list hidden" id="booksList"></div>
-        <div class="paginator-box">
-            <span class="paginator-caption">Halaman ...</span>
-            <div class="paginator-row">
-                <button class="nav-step-btn" id="btnAwal" disabled>Awal</button>
-                <button class="nav-step-btn" id="btnPrev" disabled><i class="fa-solid fa-angle-left"></i></button>
-                <button class="nav-step-btn active">1</button>
-                <button class="nav-step-btn" id="btnNext" disabled><i class="fa-solid fa-angle-right"></i></button>
-                <button class="nav-step-btn" id="btnAkhir" disabled>Akhir</button>
-            </div>
-        </div>
+        <div class="paginator-box"><span class="paginator-caption">Halaman ...</span><div class="paginator-row"><button class="nav-step-btn" id="btnAwal" disabled>Awal</button><button class="nav-step-btn" id="btnPrev" disabled><i class="fa-solid fa-angle-left"></i></button><button class="nav-step-btn active">1</button><button class="nav-step-btn" id="btnNext" disabled><i class="fa-solid fa-angle-right"></i></button><button class="nav-step-btn" id="btnAkhir" disabled>Akhir</button></div></div>
     `;
     const result = await fetchBooks();
     setTimeout(() => { animateCounter('countKoleksi', result?.total || 0, 'Buku'); animateCounter('countJenis', allJenis.length || 0, 'Jenis'); }, 300);
@@ -200,83 +221,10 @@ function initHomeEvents() {
     document.getElementById('viewGrid')?.addEventListener('click', function() { this.classList.add('active'); document.getElementById('viewList').classList.remove('active'); document.getElementById('booksGrid').classList.remove('hidden'); document.getElementById('booksList').classList.add('hidden'); });
     document.getElementById('viewList')?.addEventListener('click', function() { this.classList.add('active'); document.getElementById('viewGrid').classList.remove('active'); document.getElementById('booksList').classList.remove('hidden'); document.getElementById('booksGrid').classList.add('hidden'); });
 
-    document.getElementById('searchInput')?.addEventListener('input', debounce(async (e) => {
-        currentSearch = e.target.value;
-        showLoading();
-        await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit);
-        refreshGrid();
-        updatePagination();
-    }, 500));
+    document.getElementById('searchInput')?.addEventListener('input', debounce(async (e) => { currentSearch = e.target.value; showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); }, 500));
 
-    // Pagination buttons
-    document.getElementById('btnAwal')?.addEventListener('click', async () => {
-        if (currentPage === 1) return;
-        showLoading();
-        await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit);
-        refreshGrid();
-        updatePagination();
-    });
-
-    document.getElementById('btnPrev')?.addEventListener('click', async () => {
-        if (currentPage <= 1) return;
-        showLoading();
-        await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage - 1, currentLimit === 'all' ? 999 : currentLimit);
-        refreshGrid();
-        updatePagination();
-    });
-
-    document.getElementById('btnNext')?.addEventListener('click', async () => {
-        if (currentPage >= totalPages) return;
-        showLoading();
-        await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage + 1, currentLimit === 'all' ? 999 : currentLimit);
-        refreshGrid();
-        updatePagination();
-    });
-
-    document.getElementById('btnAkhir')?.addEventListener('click', async () => {
-        if (currentPage === totalPages) return;
-        showLoading();
-        await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, totalPages, currentLimit === 'all' ? 999 : currentLimit);
-        refreshGrid();
-        updatePagination();
-    });
-}
-
-export async function applyFilterFromModal() {
-    const selectedJenis = document.querySelector('#filterJenis .filter-option.selected')?.dataset.value || '';
-    const selectedBahasa = document.querySelector('#filterBahasa .filter-option.selected')?.dataset.value || '';
-    currentFilterJenis = selectedJenis;
-    currentFilterBahasa = selectedBahasa;
-    showLoading();
-    await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit);
-    refreshGrid();
-    updatePagination();
-    updateFilterIcon(!!(selectedJenis || selectedBahasa));
-}
-
-export function resetFilterFromModal() {
-    currentFilterJenis = '';
-    currentFilterBahasa = '';
-    showLoading();
-    fetchBooks(currentSearch, '', '', 1, currentLimit === 'all' ? 999 : currentLimit).then(() => {
-        refreshGrid();
-        updatePagination();
-        updateFilterIcon(false);
-    });
-}
-
-function updateFilterIcon(active) {
-    const fb = document.getElementById('btnFilterHome'); if (!fb) return;
-    fb.style.color = active ? '#047857' : '#4b5563';
-    fb.style.borderColor = active ? '#047857' : '#e5e7eb';
-    fb.style.background = active ? '#d1fae5' : '#f8fafc';
-}
-
-export async function updateLimit(value) {
-    currentLimit = value;
-    document.getElementById('limitText').textContent = value === 'all' ? 'Semua' : value;
-    showLoading();
-    await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, value === 'all' ? 999 : value);
-    refreshGrid();
-    updatePagination();
+    document.getElementById('btnAwal')?.addEventListener('click', async () => { if (currentPage === 1) return; showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); });
+    document.getElementById('btnPrev')?.addEventListener('click', async () => { if (currentPage <= 1) return; showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage - 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); });
+    document.getElementById('btnNext')?.addEventListener('click', async () => { if (currentPage >= totalPages) return; showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage + 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); });
+    document.getElementById('btnAkhir')?.addEventListener('click', async () => { if (currentPage === totalPages) return; showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, totalPages, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); updatePagination(); });
 }
