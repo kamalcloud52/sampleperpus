@@ -1,7 +1,6 @@
 // ==================== HOME PAGE ====================
 import { openModal } from '../components/modal.js';
 
-// Ganti dengan URL Apps Script kamu
 const API_URL = 'https://script.google.com/macros/s/AKfycbxGxMfe48R_pfZx0bpNSgG1gvegbsTmaiZ7ydnceEhpU24BihZqLOO_1YJAhebpgGsu/exec';
 
 let booksData = [];
@@ -228,34 +227,60 @@ function bindCardEvents() {
 
 function initHomeEvents() {
     document.getElementById('btnFilterHome')?.addEventListener('click', () => openModal('modalFilter'));
+
     const btnLimit = document.getElementById('btnLimit');
     const limitMenu = document.getElementById('limitMenu');
     if (btnLimit && limitMenu) {
         btnLimit.addEventListener('click', (e) => { e.stopPropagation(); limitMenu.classList.toggle('open'); });
-        limitMenu.querySelectorAll('.limit-menu-item').forEach(item => { item.addEventListener('click', async function() { const value = this.dataset.value; currentLimit = value === 'all' ? 'all' : parseInt(value); document.getElementById('limitText').textContent = value === 'all' ? 'Semua' : value; showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); limitMenu.classList.remove('open'); }); });
+        limitMenu.querySelectorAll('.limit-menu-item').forEach(item => {
+            item.addEventListener('click', async function() {
+                const value = this.dataset.value;
+                currentLimit = value === 'all' ? 'all' : parseInt(value);
+                document.getElementById('limitText').textContent = value === 'all' ? 'Semua' : value;
+                const limit = currentLimit === 'all' ? 999 : currentLimit;
+                showLoading();
+                await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, limit);
+                refreshGrid();
+                limitMenu.classList.remove('open');
+            });
+        });
         document.addEventListener('click', (e) => { if (!limitMenu.contains(e.target) && !btnLimit.contains(e.target)) limitMenu.classList.remove('open'); });
     }
+
     bindCardEvents();
+
     document.getElementById('viewGrid')?.addEventListener('click', function() { this.classList.add('active'); document.getElementById('viewList').classList.remove('active'); document.getElementById('booksGrid').classList.remove('hidden'); document.getElementById('booksList').classList.add('hidden'); });
     document.getElementById('viewList')?.addEventListener('click', function() { this.classList.add('active'); document.getElementById('viewGrid').classList.remove('active'); document.getElementById('booksList').classList.remove('hidden'); document.getElementById('booksGrid').classList.add('hidden'); });
-    document.getElementById('searchInput')?.addEventListener('input', debounce(async (e) => { currentSearch = e.target.value; currentPage = 1; showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); }, 500));
-    document.getElementById('btnAwal')?.addEventListener('click', async () => { currentPage = 1; showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); });
-    document.getElementById('btnPrev')?.addEventListener('click', async () => { if (currentPage > 1) { currentPage--; showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); } });
-    document.getElementById('btnNext')?.addEventListener('click', async () => { if (currentPage < totalPages) { currentPage++; showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); } });
-    document.getElementById('btnAkhir')?.addEventListener('click', async () => { currentPage = totalPages; showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); });
+
+    document.getElementById('searchInput')?.addEventListener('input', debounce(async (e) => { currentSearch = e.target.value; showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); }, 500));
+
+    document.getElementById('btnAwal')?.addEventListener('click', async () => { showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); });
+    document.getElementById('btnPrev')?.addEventListener('click', async () => { if (currentPage > 1) { showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage - 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); } });
+    document.getElementById('btnNext')?.addEventListener('click', async () => { if (currentPage < totalPages) { showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage + 1, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); } });
+    document.getElementById('btnAkhir')?.addEventListener('click', async () => { showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, totalPages, currentLimit === 'all' ? 999 : currentLimit); refreshGrid(); });
 }
 
 export async function applyFilterFromModal() {
-    const selectedJenis = document.querySelector('#filterJenis .filter-option.selected')?.dataset.value || '';
+    const selectedJenis = document.querySelector('#filterJenas .filter-option.selected')?.dataset.value || '';
     const selectedBahasa = document.querySelector('#filterBahasa .filter-option.selected')?.dataset.value || '';
-    currentFilterJenis = selectedJenis; currentFilterBahasa = selectedBahasa; currentPage = 1;
-    showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage, currentLimit === 'all' ? 999 : currentLimit); refreshGrid();
+    currentFilterJenis = selectedJenis;
+    currentFilterBahasa = selectedBahasa;
+    showLoading();
+    await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit);
+    refreshGrid();
     updateFilterIcon(!!(selectedJenis || selectedBahasa));
 }
 
 export function resetFilterFromModal() {
-    currentFilterJenis = ''; currentFilterBahasa = ''; currentPage = 1;
-    showLoading(); fetchBooks(currentSearch, '', '', currentPage, currentLimit === 'all' ? 999 : currentLimit).then(() => { refreshGrid(); updateFilterIcon(false); });
+    currentFilterJenis = '';
+    currentFilterBahasa = '';
+    showLoading();
+    fetchBooks(currentSearch, '', '', 1, currentLimit === 'all' ? 999 : currentLimit).then(() => {
+        refreshGrid();
+        updateFilterIcon(false);
+        document.querySelectorAll('.filter-option').forEach(opt => opt.classList.remove('selected'));
+        document.querySelectorAll('.filter-option:first-child').forEach(opt => opt.classList.add('selected'));
+    });
 }
 
 function updateFilterIcon(isActive) {
@@ -270,5 +295,8 @@ export async function updateLimit(value) {
     currentLimit = value;
     const limitText = document.getElementById('limitText');
     if (limitText) limitText.textContent = value === 'all' ? 'Semua' : value;
-    showLoading(); await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage, value === 'all' ? 999 : value); refreshGrid();
+    const limit = value === 'all' ? 999 : value;
+    showLoading();
+    await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, limit);
+    refreshGrid();
 }
