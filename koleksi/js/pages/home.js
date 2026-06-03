@@ -59,7 +59,10 @@ function updateFilterOptions() {
         });
         if (selected) {
             const opt = filterJenis.querySelector(`[data-value="${selected}"]`);
-            if (opt) opt.classList.add('selected');
+            if (opt) {
+                filterJenis.querySelector('.filter-option.selected')?.classList.remove('selected');
+                opt.classList.add('selected');
+            }
         }
     }
     
@@ -71,23 +74,24 @@ function updateFilterOptions() {
         });
         if (selected) {
             const opt = filterBahasa.querySelector(`[data-value="${selected}"]`);
-            if (opt) opt.classList.add('selected');
+            if (opt) {
+                filterBahasa.querySelector('.filter-option.selected')?.classList.remove('selected');
+                opt.classList.add('selected');
+            }
         }
     }
     
-    // Re-init filter events
-    if (typeof initModalEvents === 'function') {
-        document.querySelectorAll('.filter-options').forEach(group => {
-            group.querySelectorAll('.filter-option').forEach(opt => {
-                const newOpt = opt.cloneNode(true);
-                opt.parentNode.replaceChild(newOpt, opt);
-                newOpt.addEventListener('click', function() {
-                    group.querySelectorAll('.filter-option').forEach(o => o.classList.remove('selected'));
-                    this.classList.add('selected');
-                });
+    // Rebind filter option events
+    document.querySelectorAll('.filter-options').forEach(group => {
+        group.querySelectorAll('.filter-option').forEach(opt => {
+            const newOpt = opt.cloneNode(true);
+            opt.parentNode.replaceChild(newOpt, opt);
+            newOpt.addEventListener('click', function() {
+                group.querySelectorAll('.filter-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
             });
         });
-    }
+    });
 }
 
 // Refresh grid
@@ -214,11 +218,11 @@ function renderGridCard(book) {
     
     return `
         <div class="card-item" data-id="${book.id}" data-title="${book.judul}" data-penulis="${book.nama}" data-edisi="${book.edisi}" data-kategori="${book.jenis}" data-bahasa="${book.bahasa}" data-keywords="${book.kataKunci || ''}" data-cover="${book.cover || ''}">
-            <div class="cover-art-container" style="background:${style.background};color:${style.color || '#047857'};">
+            <div class="cover-art-container" style="background:${style.background};">
                 ${style.isImage 
-                    ? `<img src="${book.cover}" alt="${book.judul}" class="cover-thumbnail" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`
-                    : ''}
-                <span class="cover-text-preview" style="${style.isImage ? 'display:none;' : ''}">${label}</span>
+                    ? `<img src="${book.cover}" alt="${book.judul}" class="cover-thumbnail" loading="lazy" onerror="this.parentElement.style.background='${style.background}'; this.style.display='none';">`
+                    : `<span class="cover-text-preview">${label}</span>`
+                }
             </div>
             <div class="card-body">
                 <div class="card-info">
@@ -239,8 +243,11 @@ function renderListCard(book) {
     
     return `
         <div class="list-item" data-id="${book.id}" data-title="${book.judul}" data-penulis="${book.nama}" data-edisi="${book.edisi}" data-kategori="${book.jenis}" data-bahasa="${book.bahasa}" data-keywords="${book.kataKunci || ''}" data-cover="${book.cover || ''}">
-            <div class="list-cover" style="background:${style.background};color:${style.color || '#047857'};">
-                <span>${label}</span>
+            <div class="list-cover" style="background:${style.background};">
+                ${style.isImage 
+                    ? `<img src="${book.cover}" alt="${book.judul}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;" loading="lazy">`
+                    : `<span>${label}</span>`
+                }
             </div>
             <div class="list-info">
                 <span class="tag-badge">${book.jenis || 'Buku'}</span>
@@ -303,10 +310,8 @@ function bindCardEvents() {
 }
 
 function initHomeEvents() {
-    // Filter button
     document.getElementById('btnFilterHome')?.addEventListener('click', () => openModal('modalFilter'));
 
-    // Limit dropdown
     const btnLimit = document.getElementById('btnLimit');
     const limitMenu = document.getElementById('limitMenu');
     if (btnLimit && limitMenu) {
@@ -333,7 +338,6 @@ function initHomeEvents() {
 
     bindCardEvents();
 
-    // View toggle
     document.getElementById('viewGrid')?.addEventListener('click', function() {
         this.classList.add('active');
         document.getElementById('viewList').classList.remove('active');
@@ -347,7 +351,6 @@ function initHomeEvents() {
         document.getElementById('booksGrid').classList.add('hidden');
     });
 
-    // Search
     document.getElementById('searchInput')?.addEventListener('input', debounce(async (e) => {
         currentSearch = e.target.value;
         currentPage = 1;
@@ -355,7 +358,6 @@ function initHomeEvents() {
         refreshGrid();
     }, 500));
 
-    // Pagination
     document.getElementById('btnAwal')?.addEventListener('click', async () => {
         currentPage = 1;
         await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage, currentLimit === 'all' ? 999 : currentLimit);
@@ -382,7 +384,6 @@ function initHomeEvents() {
     });
 }
 
-// Fungsi apply filter dari modal
 export async function applyFilterFromModal() {
     const selectedJenis = document.querySelector('#filterJenis .filter-option.selected')?.dataset.value || '';
     const selectedBahasa = document.querySelector('#filterBahasa .filter-option.selected')?.dataset.value || '';
@@ -393,8 +394,6 @@ export async function applyFilterFromModal() {
     
     await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage, currentLimit === 'all' ? 999 : currentLimit);
     refreshGrid();
-    
-    // Update ikon filter
     updateFilterIcon(!!(selectedJenis || selectedBahasa));
 }
 
