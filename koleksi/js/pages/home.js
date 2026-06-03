@@ -52,16 +52,25 @@ export function renderHome(main) {
         </div>
 
         <!-- Display Controls -->
-        <div class="limit-dropdown">
-            <button class="limit-btn" id="btnLimit">
-                <i class="fa-solid fa-eye"></i> Tampilkan <span id="limitText">12</span> <i class="fa-solid fa-chevron-down"></i>
-            </button>
-            <div class="limit-menu" id="limitMenu">
-                <button class="limit-menu-item" data-value="12">12</button>
-                <button class="limit-menu-item" data-value="24">24</button>
-                <button class="limit-menu-item" data-value="48">48</button>
-                <button class="limit-menu-item" data-value="96">96</button>
-                <button class="limit-menu-item" data-value="all">Semua</button>
+        <div class="display-controls slide-up slide-up-delay-4">
+            <!-- Limit Dropdown -->
+            <div class="limit-dropdown">
+                <button class="limit-btn" id="btnLimit">
+                    <i class="fa-solid fa-eye"></i> Tampilkan <span id="limitText">12</span> <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="limit-menu" id="limitMenu">
+                    <button class="limit-menu-item" data-value="12">12</button>
+                    <button class="limit-menu-item" data-value="24">24</button>
+                    <button class="limit-menu-item" data-value="48">48</button>
+                    <button class="limit-menu-item" data-value="96">96</button>
+                    <button class="limit-menu-item" data-value="all">Semua</button>
+                </div>
+            </div>
+            
+            <!-- View Toggle -->
+            <div class="toggle-switch-group">
+                <button class="toggle-unit active" id="viewGrid"><i class="fa-solid fa-grip-vertical"></i></button>
+                <button class="toggle-unit" id="viewList"><i class="fa-solid fa-list"></i></button>
             </div>
         </div>
 
@@ -88,11 +97,13 @@ export function renderHome(main) {
         </div>
     `;
 
+    // Animasi counter
     setTimeout(() => {
         animateCounter('countKoleksi', booksData.length, 'Buku');
         animateCounter('countJenis', new Set(booksData.map(b => b.kategori)).size, 'Jenis');
     }, 300);
 
+    // Init events
     initHomeEvents();
 }
 
@@ -159,7 +170,9 @@ function animateCounter(elementId, target, suffix) {
 }
 
 function initHomeEvents() {
+    // Filter button
     document.getElementById('btnFilterHome')?.addEventListener('click', () => openModal('modalFilter'));
+
     // Limit dropdown
     const btnLimit = document.getElementById('btnLimit');
     const limitMenu = document.getElementById('limitMenu');
@@ -181,6 +194,7 @@ function initHomeEvents() {
         });
     }
 
+    // Detail triggers
     document.querySelectorAll('.detail-trigger').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -201,6 +215,7 @@ function initHomeEvents() {
         });
     });
 
+    // Klik card
     document.querySelectorAll('.card-item, .list-item').forEach(card => {
         card.addEventListener('click', (e) => {
             if (e.target.closest('button')) return;
@@ -208,6 +223,7 @@ function initHomeEvents() {
         });
     });
 
+    // View toggle
     document.getElementById('viewGrid')?.addEventListener('click', function() {
         this.classList.add('active');
         document.getElementById('viewList').classList.remove('active');
@@ -222,6 +238,7 @@ function initHomeEvents() {
         document.getElementById('booksGrid').classList.add('hidden');
     });
 
+    // Search
     document.getElementById('searchInput')?.addEventListener('input', (e) => {
         const keyword = e.target.value.toLowerCase();
         document.querySelectorAll('.card-item, .list-item').forEach(item => {
@@ -231,6 +248,7 @@ function initHomeEvents() {
     });
 }
 
+// ==================== UPDATE LIMIT ====================
 export function updateLimit(value) {
     currentLimit = value;
     const limitText = document.getElementById('limitText');
