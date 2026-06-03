@@ -52,13 +52,16 @@ export function renderHome(main) {
         </div>
 
         <!-- Display Controls -->
-        <div class="display-controls slide-up slide-up-delay-4">
+        <div class="limit-dropdown">
             <button class="limit-btn" id="btnLimit">
-                <i class="fa-solid fa-eye"></i> Tampilkan <span id="limitText">12</span>
+                <i class="fa-solid fa-eye"></i> Tampilkan <span id="limitText">12</span> <i class="fa-solid fa-chevron-down"></i>
             </button>
-            <div class="toggle-switch-group">
-                <button class="toggle-unit active" id="viewGrid"><i class="fa-solid fa-grip-vertical"></i></button>
-                <button class="toggle-unit" id="viewList"><i class="fa-solid fa-list"></i></button>
+            <div class="limit-menu" id="limitMenu">
+                <button class="limit-menu-item" data-value="12">12</button>
+                <button class="limit-menu-item" data-value="24">24</button>
+                <button class="limit-menu-item" data-value="48">48</button>
+                <button class="limit-menu-item" data-value="96">96</button>
+                <button class="limit-menu-item" data-value="all">Semua</button>
             </div>
         </div>
 
@@ -157,7 +160,26 @@ function animateCounter(elementId, target, suffix) {
 
 function initHomeEvents() {
     document.getElementById('btnFilterHome')?.addEventListener('click', () => openModal('modalFilter'));
-    document.getElementById('btnLimit')?.addEventListener('click', () => openModal('modalLimit'));
+    // Limit dropdown
+    const btnLimit = document.getElementById('btnLimit');
+    const limitMenu = document.getElementById('limitMenu');
+    if (btnLimit && limitMenu) {
+        btnLimit.addEventListener('click', (e) => {
+            e.stopPropagation();
+            limitMenu.classList.toggle('open');
+        });
+        document.addEventListener('click', () => {
+            limitMenu.classList.remove('open');
+        });
+        limitMenu.querySelectorAll('.limit-menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const value = this.dataset.value;
+                const finalValue = value === 'all' ? 'all' : parseInt(value);
+                updateLimit(finalValue);
+                limitMenu.classList.remove('open');
+            });
+        });
+    }
 
     document.querySelectorAll('.detail-trigger').forEach(btn => {
         btn.addEventListener('click', (e) => {
