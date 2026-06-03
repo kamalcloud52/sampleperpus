@@ -47,24 +47,12 @@ export function renderModal() {
                     <div class="filter-label">Jenis</div>
                     <div class="filter-options" id="filterJenis">
                         <button class="filter-option selected" data-value="">Semua</button>
-                        <button class="filter-option" data-value="Buku">Buku</button>
-                        <button class="filter-option" data-value="Karya Tulis Ilmiah">KTI</button>
-                        <button class="filter-option" data-value="Kitab">Kitab</button>
-                        <button class="filter-option" data-value="Majalah">Majalah</button>
-                        <button class="filter-option" data-value="Modul">Modul</button>
-                        <button class="filter-option" data-value="Skripsi">Skripsi</button>
-                        <button class="filter-option" data-value="Tesis">Tesis</button>
-                        <button class="filter-option" data-value="Web">Web</button>
                     </div>
                 </div>
                 <div class="filter-group">
                     <div class="filter-label">Bahasa</div>
                     <div class="filter-options" id="filterBahasa">
                         <button class="filter-option selected" data-value="">Semua</button>
-                        <button class="filter-option" data-value="Indonesia">Indonesia</button>
-                        <button class="filter-option" data-value="Arab">Arab</button>
-                        <button class="filter-option" data-value="Arab Pegon">Arab Pegon</button>
-                        <button class="filter-option" data-value="Inggris">Inggris</button>
                     </div>
                 </div>
                 <button class="modal-action-btn" id="btnTerapkanFilter"><i class="fa-solid fa-check"></i> Terapkan Filter</button>
@@ -93,15 +81,31 @@ export function initModalEvents() {
 
     // Tutup modal
     document.querySelectorAll('.modal-close-btn, [data-close]').forEach(btn => {
-        btn.addEventListener('click', () => { const modalId = btn.dataset.close; if (modalId) closeModal(modalId); });
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+        newBtn.addEventListener('click', () => { const modalId = newBtn.dataset.close; if (modalId) closeModal(modalId); });
     });
+
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
-        overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(overlay.id); });
+        const newOverlay = overlay.cloneNode(true);
+        overlay.parentNode.replaceChild(newOverlay, overlay);
+        newOverlay.addEventListener('click', (e) => { if (e.target === newOverlay) closeModal(newOverlay.id); });
     });
 
     // Baca & Download
-    document.getElementById('btnBaca')?.addEventListener('click', () => alert('Fitur baca akan segera hadir!'));
-    document.getElementById('btnDownload')?.addEventListener('click', () => alert('Fitur unduh akan segera hadir!'));
+    const btnBaca = document.getElementById('btnBaca');
+    if (btnBaca) {
+        const newBtn = btnBaca.cloneNode(true);
+        btnBaca.parentNode.replaceChild(newBtn, btnBaca);
+        newBtn.addEventListener('click', () => alert('Fitur baca akan segera hadir!'));
+    }
+
+    const btnDownload = document.getElementById('btnDownload');
+    if (btnDownload) {
+        const newBtn = btnDownload.cloneNode(true);
+        btnDownload.parentNode.replaceChild(newBtn, btnDownload);
+        newBtn.addEventListener('click', () => alert('Fitur unduh akan segera hadir!'));
+    }
 
     // Filter options
     document.querySelectorAll('.filter-options').forEach(group => {
@@ -115,19 +119,29 @@ export function initModalEvents() {
         });
     });
 
-    // Terapkan Filter
-    document.getElementById('btnTerapkanFilter')?.addEventListener('click', async () => {
-        const { applyFilterFromModal } = await import('../pages/home.js');
-        await applyFilterFromModal();
-        closeModal('modalFilter');
-    });
+    // Terapkan Filter (fix double click)
+    const btnTerapkan = document.getElementById('btnTerapkanFilter');
+    if (btnTerapkan) {
+        const newBtn = btnTerapkan.cloneNode(true);
+        btnTerapkan.parentNode.replaceChild(newBtn, btnTerapkan);
+        newBtn.addEventListener('click', async () => {
+            const { applyFilterFromModal } = await import('../pages/home.js');
+            await applyFilterFromModal();
+            closeModal('modalFilter');
+        });
+    }
 
-    // Reset Filter
-    document.getElementById('btnResetFilter')?.addEventListener('click', async () => {
-        const { resetFilterFromModal } = await import('../pages/home.js');
-        resetFilterFromModal();
-        closeModal('modalFilter');
-    });
+    // Reset Filter (fix double click)
+    const btnReset = document.getElementById('btnResetFilter');
+    if (btnReset) {
+        const newBtn = btnReset.cloneNode(true);
+        btnReset.parentNode.replaceChild(newBtn, btnReset);
+        newBtn.addEventListener('click', async () => {
+            const { resetFilterFromModal } = await import('../pages/home.js');
+            resetFilterFromModal();
+            closeModal('modalFilter');
+        });
+    }
 }
 
 // ==================== MODAL OPEN/CLOSE ====================
