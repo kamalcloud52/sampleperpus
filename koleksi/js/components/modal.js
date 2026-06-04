@@ -14,20 +14,85 @@ export function renderModal() {
 }
 
 export function initModalEvents() {
-    document.querySelectorAll('.modal-sheet').forEach(sheet => { let startY = 0, currentY = 0, isDragging = false; const handle = sheet.querySelector('.modal-handle'); if (!handle) return; handle.addEventListener('touchstart', (e) => { startY = e.touches[0].clientY; isDragging = true; sheet.style.transition = 'none'; }, { passive: true }); handle.addEventListener('touchmove', (e) => { if (!isDragging) return; currentY = e.touches[0].clientY; const diff = currentY - startY; if (diff > 0) sheet.style.transform = `translateY(${diff}px)`; }, { passive: true }); handle.addEventListener('touchend', () => { if (!isDragging) return; isDragging = false; sheet.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)'; if (currentY - startY > 100) { const overlay = sheet.closest('.modal-overlay'); if (overlay) closeModal(overlay.id); } else sheet.style.transform = 'translateY(0)'; startY = 0; currentY = 0; }); });
-    document.querySelectorAll('.modal-close-btn, [data-close]').forEach(btn => { const newBtn = btn.cloneNode(true); btn.parentNode.replaceChild(newBtn, btn); newBtn.addEventListener('click', () => { const modalId = newBtn.dataset.close; if (modalId) closeModal(modalId); }); });
-    document.querySelectorAll('.modal-overlay').forEach(overlay => { const newOverlay = overlay.cloneNode(true); overlay.parentNode.replaceChild(newOverlay, overlay); newOverlay.addEventListener('click', (e) => { if (e.target === newOverlay) closeModal(newOverlay.id); }); });
-    const btnBaca = document.getElementById('btnBaca'); if (btnBaca) { const nb = btnBaca.cloneNode(true); btnBaca.parentNode.replaceChild(nb, btnBaca); nb.addEventListener('click', () => alert('Fitur baca akan segera hadir!')); }
-    const btnDownload = document.getElementById('btnDownload'); if (btnDownload) { const nb = btnDownload.cloneNode(true); btnDownload.parentNode.replaceChild(nb, btnDownload); nb.addEventListener('click', () => alert('Fitur unduh akan segera hadir!')); }
-    document.querySelectorAll('.filter-options').forEach(group => { group.querySelectorAll('.filter-option').forEach(opt => { const newOpt = opt.cloneNode(true); opt.parentNode.replaceChild(newOpt, opt); newOpt.addEventListener('click', function() { group.querySelectorAll('.filter-option').forEach(o => o.classList.remove('selected')); this.classList.add('selected'); }); }); });
+    // Geser handle untuk tutup modal
+    document.querySelectorAll('.modal-sheet').forEach(sheet => {
+        let startY = 0, currentY = 0, isDragging = false;
+        const handle = sheet.querySelector('.modal-handle');
+        if (!handle) return;
+        handle.addEventListener('touchstart', (e) => { startY = e.touches[0].clientY; isDragging = true; sheet.style.transition = 'none'; }, { passive: true });
+        handle.addEventListener('touchmove', (e) => { if (!isDragging) return; currentY = e.touches[0].clientY; const diff = currentY - startY; if (diff > 0) sheet.style.transform = `translateY(${diff}px)`; }, { passive: true });
+        handle.addEventListener('touchend', () => {
+            if (!isDragging) return; isDragging = false;
+            sheet.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)';
+            if (currentY - startY > 100) { const overlay = sheet.closest('.modal-overlay'); if (overlay) closeModal(overlay.id); }
+            else sheet.style.transform = 'translateY(0)';
+            startY = 0; currentY = 0;
+        });
+    });
 
+    // Klik overlay tutup modal
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        const newOverlay = overlay.cloneNode(true);
+        overlay.parentNode.replaceChild(newOverlay, overlay);
+        newOverlay.addEventListener('click', (e) => { if (e.target === newOverlay) closeModal(newOverlay.id); });
+    });
+
+    // Baca & Download
+    const btnBaca = document.getElementById('btnBaca');
+    if (btnBaca) { const nb = btnBaca.cloneNode(true); btnBaca.parentNode.replaceChild(nb, btnBaca); nb.addEventListener('click', () => alert('Fitur baca akan segera hadir!')); }
+    const btnDownload = document.getElementById('btnDownload');
+    if (btnDownload) { const nb = btnDownload.cloneNode(true); btnDownload.parentNode.replaceChild(nb, btnDownload); nb.addEventListener('click', () => alert('Fitur unduh akan segera hadir!')); }
+
+    // Filter options
+    document.querySelectorAll('.filter-options').forEach(group => {
+        group.querySelectorAll('.filter-option').forEach(opt => {
+            const newOpt = opt.cloneNode(true); opt.parentNode.replaceChild(newOpt, opt);
+            newOpt.addEventListener('click', function() { group.querySelectorAll('.filter-option').forEach(o => o.classList.remove('selected')); this.classList.add('selected'); });
+        });
+    });
+
+    // Terapkan Filter
     const btnTerapkan = document.getElementById('btnTerapkanFilter');
     if (btnTerapkan) { const nb = btnTerapkan.cloneNode(true); btnTerapkan.parentNode.replaceChild(nb, btnTerapkan); nb.addEventListener('click', () => { const selectedJenis = document.querySelector('#filterJenis .filter-option.selected')?.dataset.value || ''; const selectedBahasa = document.querySelector('#filterBahasa .filter-option.selected')?.dataset.value || ''; const { search, limit } = getFilterState(); closeModal('modalFilter'); fetchAndRender(search, selectedJenis, selectedBahasa, 1, limit === 'all' ? 999 : limit).then(() => { updateFilterIcon(!!(selectedJenis || selectedBahasa)); }); }); }
 
+    // Reset Filter
     const btnReset = document.getElementById('btnResetFilter');
     if (btnReset) { const nb = btnReset.cloneNode(true); btnReset.parentNode.replaceChild(nb, btnReset); nb.addEventListener('click', () => { const icon = nb.querySelector('.fa-rotate'); if (icon) { icon.classList.add('fa-spin'); setTimeout(() => icon.classList.remove('fa-spin'), 1000); } const { search, limit } = getFilterState(); setFilter('', ''); document.querySelectorAll('.filter-option').forEach(opt => opt.classList.remove('selected')); document.querySelectorAll('.filter-option:first-child').forEach(opt => opt.classList.add('selected')); closeModal('modalFilter'); fetchAndRender(search, '', '', 1, limit === 'all' ? 999 : limit).then(() => { updateFilterIcon(false); }); }); }
 }
 
-export function openModal(modalId) { document.querySelectorAll('.modal-overlay.open').forEach(m => { const sheet = m.querySelector('.modal-sheet'); if (sheet) sheet.style.transform = 'translateY(100%)'; m.classList.remove('open'); }); const modal = document.getElementById(modalId); if (!modal) return; const sheet = modal.querySelector('.modal-sheet'); if (sheet) { sheet.style.transition = 'none'; sheet.style.transform = 'translateY(100%)'; } modal.classList.add('open'); currentModal = modalId; if (sheet) { sheet.offsetHeight; sheet.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)'; sheet.style.transform = 'translateY(0)'; } }
-export function closeModal(modalId) { const modal = document.getElementById(modalId); if (!modal) return; const sheet = modal.querySelector('.modal-sheet'); if (sheet) { sheet.style.transition = 'transform 0.3s cubic-bezier(0.55, 0, 1, 0.45)'; sheet.style.transform = 'translateY(100%)'; setTimeout(() => { modal.classList.remove('open'); if (currentModal === modalId) currentModal = null; }, 300); } else { modal.classList.remove('open'); if (currentModal === modalId) currentModal = null; } }
-export function closeAllModals() { document.querySelectorAll('.modal-overlay.open').forEach(m => { const sheet = m.querySelector('.modal-sheet'); if (sheet) sheet.style.transform = 'translateY(100%)'; m.classList.remove('open'); }); currentModal = null; }
+// Event delegation untuk semua close button (dipasang sekali di document)
+document.addEventListener('click', (e) => {
+    const closeBtn = e.target.closest('.modal-close-btn') || e.target.closest('[data-close]');
+    if (closeBtn) {
+        const modalId = closeBtn.dataset.close;
+        if (modalId) closeModal(modalId);
+    }
+});
+
+// ==================== MODAL OPEN/CLOSE ====================
+export function openModal(modalId) {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => {
+        const sheet = m.querySelector('.modal-sheet'); if (sheet) sheet.style.transform = 'translateY(100%)';
+        m.classList.remove('open');
+    });
+    const modal = document.getElementById(modalId); if (!modal) return;
+    const sheet = modal.querySelector('.modal-sheet');
+    if (sheet) { sheet.style.transition = 'none'; sheet.style.transform = 'translateY(100%)'; }
+    modal.classList.add('open'); currentModal = modalId;
+    if (sheet) { sheet.offsetHeight; sheet.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)'; sheet.style.transform = 'translateY(0)'; }
+}
+
+export function closeModal(modalId) {
+    const modal = document.getElementById(modalId); if (!modal) return;
+    const sheet = modal.querySelector('.modal-sheet');
+    if (sheet) { sheet.style.transition = 'transform 0.3s cubic-bezier(0.55, 0, 1, 0.45)'; sheet.style.transform = 'translateY(100%)'; setTimeout(() => { modal.classList.remove('open'); if (currentModal === modalId) currentModal = null; }, 300); }
+    else { modal.classList.remove('open'); if (currentModal === modalId) currentModal = null; }
+}
+
+export function closeAllModals() {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => {
+        const sheet = m.querySelector('.modal-sheet'); if (sheet) sheet.style.transform = 'translateY(100%)';
+        m.classList.remove('open');
+    });
+    currentModal = null;
+}
