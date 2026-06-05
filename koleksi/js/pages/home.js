@@ -1,7 +1,8 @@
 // ==================== HOME PAGE ====================
 import { openModal } from '../components/modal.js';
-import { fetchBooks, shuffleArray, getThumbnailUrl, isGoogleDriveUrl } from '../api/books.js';
+import { fetchBooks } from '../api/books.js';
 import { debounce, showLoading, animateCounter, getCoverColors, getInitials } from '../utils/helpers.js';
+import { isGoogleDriveUrl } from '../api/books.js';
 
 let booksData = [];
 let allJenis = [];
@@ -13,53 +14,89 @@ let currentSearch = '';
 let currentFilterJenis = '';
 let currentFilterBahasa = '';
 
+// ==================== RENDER HOME ====================
 export async function renderHome(main) {
     main.innerHTML = `
         <div class="welcome-card slide-up slide-up-delay-1"><span class="welcome-tag">👋 Halo, Pembaca Hebat!</span><h1>Selamat Datang di Perpustakaan Digital PIM</h1><p>Temukan ribuan referensi dalam satu genggaman.</p></div>
         <div class="stats-grid slide-up slide-up-delay-2"><div class="stat-item"><div class="stat-icon-wrapper"><i class="fa-solid fa-book-bookmark"></i></div><div class="stat-info"><span class="stat-label">Koleksi</span><span class="stat-value" id="countKoleksi">0</span></div></div><div class="stat-item"><div class="stat-icon-wrapper"><i class="fa-solid fa-tags"></i></div><div class="stat-info"><span class="stat-label">Jenis</span><span class="stat-value" id="countJenis">0</span></div></div></div>
-        <div class="search-row slide-up slide-up-delay-3">
-            <div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input type="text" class="search-input" id="searchInput" placeholder="Cari judul, penulis..."><button class="search-clear-btn hidden" id="btnClearSearch" title="Hapus pencarian"><i class="fa-solid fa-xmark"></i></button></div>
-            <button class="filter-action-btn" id="btnFilterHome"><i class="fa-solid fa-arrow-down-short-wide"></i> Filter</button>
-        </div>
-        <div class="display-controls slide-up slide-up-delay-4">
-            <div class="limit-dropdown"><button class="limit-btn" id="btnLimit"><i class="fa-solid fa-eye"></i> Tampilkan <span id="limitText">12</span> <i class="fa-solid fa-chevron-down"></i></button><div class="limit-menu" id="limitMenu"><button class="limit-menu-item" data-value="12">12</button><button class="limit-menu-item" data-value="24">24</button><button class="limit-menu-item" data-value="48">48</button><button class="limit-menu-item" data-value="96">96</button><button class="limit-menu-item" data-value="all">Semua</button></div></div>
-            <div class="toggle-switch-group"><button class="toggle-unit active" id="viewGrid"><i class="fa-solid fa-grip-vertical"></i></button><button class="toggle-unit" id="viewList"><i class="fa-solid fa-list"></i></button></div>
-        </div>
+        <div class="search-row slide-up slide-up-delay-3"><div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input type="text" class="search-input" id="searchInput" placeholder="Cari judul, penulis..."><button class="search-clear-btn hidden" id="btnClearSearch" title="Hapus pencarian"><i class="fa-solid fa-xmark"></i></button></div><button class="filter-action-btn" id="btnFilterHome"><i class="fa-solid fa-arrow-down-short-wide"></i> Filter</button></div>
+        <div class="display-controls slide-up slide-up-delay-4"><div class="limit-dropdown"><button class="limit-btn" id="btnLimit"><i class="fa-solid fa-eye"></i> Tampilkan <span id="limitText">12</span> <i class="fa-solid fa-chevron-down"></i></button><div class="limit-menu" id="limitMenu"><button class="limit-menu-item" data-value="12">12</button><button class="limit-menu-item" data-value="24">24</button><button class="limit-menu-item" data-value="48">48</button><button class="limit-menu-item" data-value="96">96</button><button class="limit-menu-item" data-value="all">Semua</button></div></div><div class="toggle-switch-group"><button class="toggle-unit active" id="viewGrid"><i class="fa-solid fa-grip-vertical"></i></button><button class="toggle-unit" id="viewList"><i class="fa-solid fa-list"></i></button></div></div>
         <div class="books-layout-grid" id="booksGrid"><div class="loading-container" style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:12px;"><div class="loading-spinner"></div><p class="loading-text">Memuat koleksi...</p></div></div>
         <div class="books-layout-list hidden" id="booksList"></div>
         <div class="paginator-box"><span class="paginator-caption">Halaman ...</span><div class="paginator-row"><button class="nav-step-btn" id="btnAwal" disabled>Awal</button><button class="nav-step-btn" id="btnPrev" disabled><i class="fa-solid fa-angle-left"></i></button><button class="nav-step-btn active">1</button><button class="nav-step-btn" id="btnNext" disabled><i class="fa-solid fa-angle-right"></i></button><button class="nav-step-btn" id="btnAkhir" disabled>Akhir</button></div></div>
     `;
     showLoading('Memuat koleksi...');
     const result = await fetchBooks();
-    if (result) {
-        booksData = result.data;
-        allJenis = result.allJenis;
-        allBahasa = result.allBahasa;
-        totalPages = result.totalPages;
-        currentPage = result.currentPage;
-        setTimeout(() => { animateCounter('countKoleksi', result.total, 'Buku'); animateCounter('countJenis', allJenis.length, 'Jenis'); }, 300);
-    }
+    updateDataState(result);
+    setTimeout(() => { animateCounter('countKoleksi', result?.total || 0, 'Buku'); animateCounter('countJenis', allJenis.length, 'Jenis'); }, 300);
     refreshGrid(); updatePagination(); initHomeEvents();
 }
 
+// ==================== FETCH & RENDER ====================
 export async function fetchAndRender(search, jenis, bahasa, page, limit) {
     currentSearch = search; currentFilterJenis = jenis; currentFilterBahasa = bahasa;
     showLoading('Menerapkan filter...');
     const result = await fetchBooks(search, jenis, bahasa, page, limit);
-    if (result) { booksData = result.data; totalPages = result.totalPages; currentPage = result.currentPage; }
+    updateDataState(result);
     refreshGrid(); updatePagination();
 }
 
+// ==================== UPDATE STATE ====================
+function updateDataState(result) {
+    if (result) {
+        booksData = result.data;
+        allJenis = result.allJenis || [];
+        allBahasa = result.allBahasa || [];
+        totalPages = result.totalPages || 1;
+        currentPage = result.currentPage || 1;
+        updateFilterOptions();
+    }
+}
+
+// ==================== FILTER OPTIONS ====================
+function updateFilterOptions() {
+    const filterJenis = document.getElementById('filterJenis');
+    const filterBahasa = document.getElementById('filterBahasa');
+    
+    if (filterJenis) {
+        const selected = filterJenis.querySelector('.filter-option.selected')?.dataset.value || '';
+        filterJenis.innerHTML = '<button class="filter-option selected" data-value="">Semua</button>';
+        allJenis.forEach(j => { filterJenis.innerHTML += `<button class="filter-option" data-value="${j}">${j}</button>`; });
+        if (selected) {
+            const opt = filterJenis.querySelector(`[data-value="${selected}"]`);
+            if (opt) { filterJenis.querySelector('.filter-option.selected')?.classList.remove('selected'); opt.classList.add('selected'); }
+        }
+    }
+    
+    if (filterBahasa) {
+        const selected = filterBahasa.querySelector('.filter-option.selected')?.dataset.value || '';
+        filterBahasa.innerHTML = '<button class="filter-option selected" data-value="">Semua</button>';
+        allBahasa.forEach(b => { filterBahasa.innerHTML += `<button class="filter-option" data-value="${b}">${b}</button>`; });
+        if (selected) {
+            const opt = filterBahasa.querySelector(`[data-value="${selected}"]`);
+            if (opt) { filterBahasa.querySelector('.filter-option.selected')?.classList.remove('selected'); opt.classList.add('selected'); }
+        }
+    }
+    
+    document.querySelectorAll('.filter-options').forEach(group => {
+        group.querySelectorAll('.filter-option').forEach(opt => {
+            const newOpt = opt.cloneNode(true); opt.parentNode.replaceChild(newOpt, opt);
+            newOpt.addEventListener('click', function() { group.querySelectorAll('.filter-option').forEach(o => o.classList.remove('selected')); this.classList.add('selected'); });
+        });
+    });
+}
+
+// ==================== FILTER STATE ====================
 export function updateFilterIcon(active) {
     const fb = document.getElementById('btnFilterHome'); if (!fb) return;
     fb.style.color = active ? '#047857' : '#4b5563';
     fb.style.borderColor = active ? '#047857' : '#e5e7eb';
     fb.style.background = active ? '#d1fae5' : '#f8fafc';
 }
-
 export function getFilterState() { return { search: currentSearch, jenis: currentFilterJenis, bahasa: currentFilterBahasa, limit: currentLimit }; }
 export function setFilter(jenis, bahasa) { currentFilterJenis = jenis; currentFilterBahasa = bahasa; }
 
+// ==================== GRID & CARDS ====================
 function refreshGrid() {
     document.getElementById('booksGrid').innerHTML = renderBookCards('grid');
     document.getElementById('booksList').innerHTML = renderBookCards('list');
@@ -71,11 +108,10 @@ function updatePagination() {
     if (caption) caption.textContent = `Halaman ${currentPage} dari ${totalPages}`;
     const activeBtn = document.querySelector('.nav-step-btn.active');
     if (activeBtn) activeBtn.textContent = currentPage;
-    const btnAwal = document.getElementById('btnAwal'), btnPrev = document.getElementById('btnPrev'), btnNext = document.getElementById('btnNext'), btnAkhir = document.getElementById('btnAkhir');
-    if (btnAwal) btnAwal.disabled = currentPage === 1;
-    if (btnPrev) btnPrev.disabled = currentPage === 1;
-    if (btnNext) btnNext.disabled = currentPage === totalPages || totalPages === 0;
-    if (btnAkhir) btnAkhir.disabled = currentPage === totalPages || totalPages === 0;
+    document.getElementById('btnAwal').disabled = currentPage === 1;
+    document.getElementById('btnPrev').disabled = currentPage === 1;
+    document.getElementById('btnNext').disabled = currentPage === totalPages || totalPages === 0;
+    document.getElementById('btnAkhir').disabled = currentPage === totalPages || totalPages === 0;
 }
 
 function renderBookCards(type) {
@@ -87,16 +123,17 @@ function renderGridCard(book) {
     const colors = getCoverColors(book.id || 1);
     const label = getInitials(book.judul);
     const hasCover = book.cover && isGoogleDriveUrl(book.cover);
-    return `<div class="card-item" data-id="${book.id}" data-title="${book.judul}" data-penulis="${book.nama}" data-edisi="${book.edisi}" data-kategori="${book.jenis}" data-bahasa="${book.bahasa}" data-keywords="${book.kataKunci||''}" data-cover="${book.cover||''}"><div class="cover-art-container" style="background:${hasCover ? '#f3f4f6' : colors.background};"><${hasCover ? `img src="${book.cover}" alt="${book.judul}" class="cover-thumbnail" loading="lazy" onerror="this.parentElement.style.background='${colors.background}'; this.style.display='none';"` : `span class="cover-text-preview"`}>${hasCover ? '' : label}${hasCover ? '' : '</span>'}</div><div class="card-body"><div class="card-info"><span class="tag-badge">${book.jenis||'Buku'}</span><div class="item-main-title">${book.judul||'Tanpa Judul'}</div><div class="meta-text-line">${book.nama||'Tanpa Nama'}</div><div class="meta-text-line">${book.edisi||'-'}</div></div><button class="action-card-btn detail-trigger"><i class="fa-solid fa-circle-info"></i> Detail</button></div></div>`;
+    return `<div class="card-item" data-id="${book.id}" data-title="${book.judul}" data-penulis="${book.nama}" data-edisi="${book.edisi}" data-kategori="${book.jenis}" data-bahasa="${book.bahasa}" data-keywords="${book.kataKunci||''}" data-cover="${book.cover||''}" data-link="${book.fileBerkas||''}"><div class="cover-art-container" style="background:${hasCover?'#f3f4f6':colors.background};">${hasCover?`<img src="${book.cover}" alt="${book.judul}" class="cover-thumbnail" loading="lazy" onerror="this.parentElement.style.background='${colors.background}'; this.style.display='none';">`:`<span class="cover-text-preview">${label}</span>`}</div><div class="card-body"><div class="card-info"><span class="tag-badge">${book.jenis||'Buku'}</span><div class="item-main-title">${book.judul||'Tanpa Judul'}</div><div class="meta-text-line">${book.nama||'Tanpa Nama'}</div><div class="meta-text-line">${book.edisi||'-'}</div></div><button class="action-card-btn detail-trigger"><i class="fa-solid fa-circle-info"></i> Detail</button></div></div>`;
 }
 
 function renderListCard(book) {
     const colors = getCoverColors(book.id || 1);
     const label = getInitials(book.judul);
     const hasCover = book.cover && isGoogleDriveUrl(book.cover);
-    return `<div class="list-item" data-id="${book.id}" data-title="${book.judul}" data-penulis="${book.nama}" data-edisi="${book.edisi}" data-kategori="${book.jenis}" data-bahasa="${book.bahasa}" data-keywords="${book.kataKunci||''}" data-cover="${book.cover||''}"><div class="list-cover" style="background:${hasCover ? '#f3f4f6' : colors.background};">${hasCover ? `<img src="${book.cover}" alt="${book.judul}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;" loading="lazy">` : `<span>${label}</span>`}</div><div class="list-info"><span class="tag-badge">${book.jenis||'Buku'}</span><div class="item-main-title">${book.judul||'Tanpa Judul'}</div><div class="meta-text-line">${book.nama||'Tanpa Nama'}</div><div class="meta-text-line">${book.edisi||'-'}</div></div><div class="list-action"><button class="action-card-btn detail-trigger"><i class="fa-solid fa-circle-info"></i> Detail</button></div></div>`;
+    return `<div class="list-item" data-id="${book.id}" data-title="${book.judul}" data-penulis="${book.nama}" data-edisi="${book.edisi}" data-kategori="${book.jenis}" data-bahasa="${book.bahasa}" data-keywords="${book.kataKunci||''}" data-cover="${book.cover||''}" data-link="${book.fileBerkas||''}"><div class="list-cover" style="background:${hasCover?'#f3f4f6':colors.background};">${hasCover?`<img src="${book.cover}" alt="${book.judul}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;" loading="lazy">`:`<span>${label}</span>`}</div><div class="list-info"><span class="tag-badge">${book.jenis||'Buku'}</span><div class="item-main-title">${book.judul||'Tanpa Judul'}</div><div class="meta-text-line">${book.nama||'Tanpa Nama'}</div><div class="meta-text-line">${book.edisi||'-'}</div></div><div class="list-action"><button class="action-card-btn detail-trigger"><i class="fa-solid fa-circle-info"></i> Detail</button></div></div>`;
 }
 
+// ==================== CARD EVENTS ====================
 function bindCardEvents() {
     document.querySelectorAll('.detail-trigger').forEach(btn => {
         const nb = btn.cloneNode(true); btn.parentNode.replaceChild(nb, btn);
@@ -108,6 +145,9 @@ function bindCardEvents() {
             document.getElementById('detailBahasa').textContent = card.dataset.bahasa || '-';
             document.getElementById('detailKeywords').textContent = card.dataset.keywords || '-';
             const dc = document.getElementById('detailCover'); if (dc && card.dataset.cover) dc.innerHTML = `<img src="${card.dataset.cover}" alt="${card.dataset.title}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`;
+            // Set link baca
+            const btnBaca = document.getElementById('btnBaca');
+            if (btnBaca && card.dataset.link) { const nb2 = btnBaca.cloneNode(true); btnBaca.parentNode.replaceChild(nb2, btnBaca); nb2.addEventListener('click', () => window.open(card.dataset.link, '_blank')); }
             openModal('modalDetail');
         });
     });
@@ -117,17 +157,18 @@ function bindCardEvents() {
     });
 }
 
+// ==================== HOME EVENTS ====================
 function initHomeEvents() {
     document.getElementById('btnFilterHome')?.addEventListener('click', () => openModal('modalFilter'));
     const bl = document.getElementById('btnLimit'), lm = document.getElementById('limitMenu');
-    if (bl && lm) { bl.addEventListener('click', (e) => { e.stopPropagation(); lm.classList.toggle('open'); }); lm.querySelectorAll('.limit-menu-item').forEach(item => item.addEventListener('click', async function() { const v = this.dataset.value; currentLimit = v === 'all' ? 'all' : parseInt(v); document.getElementById('limitText').textContent = v === 'all' ? 'Semua' : v; showLoading('Memuat koleksi...'); const result = await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit); if (result) { booksData = result.data; totalPages = result.totalPages; currentPage = result.currentPage; } refreshGrid(); updatePagination(); lm.classList.remove('open'); })); document.addEventListener('click', (e) => { if (!lm.contains(e.target) && !bl.contains(e.target)) lm.classList.remove('open'); }); }
+    if (bl && lm) { bl.addEventListener('click', (e) => { e.stopPropagation(); lm.classList.toggle('open'); }); lm.querySelectorAll('.limit-menu-item').forEach(item => item.addEventListener('click', async function() { const v = this.dataset.value; currentLimit = v === 'all' ? 'all' : parseInt(v); document.getElementById('limitText').textContent = v === 'all' ? 'Semua' : v; showLoading('Memuat koleksi...'); updateDataState(await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit)); refreshGrid(); updatePagination(); lm.classList.remove('open'); })); document.addEventListener('click', (e) => { if (!lm.contains(e.target) && !bl.contains(e.target)) lm.classList.remove('open'); }); }
     bindCardEvents();
     document.getElementById('viewGrid')?.addEventListener('click', function() { this.classList.add('active'); document.getElementById('viewList').classList.remove('active'); document.getElementById('booksGrid').classList.remove('hidden'); document.getElementById('booksList').classList.add('hidden'); });
     document.getElementById('viewList')?.addEventListener('click', function() { this.classList.add('active'); document.getElementById('viewGrid').classList.remove('active'); document.getElementById('booksList').classList.remove('hidden'); document.getElementById('booksGrid').classList.add('hidden'); });
     const searchInput = document.getElementById('searchInput'), btnClear = document.getElementById('btnClearSearch');
-    if (searchInput && btnClear) { searchInput.addEventListener('input', debounce(async (e) => { currentSearch = e.target.value; showLoading('Memuat koleksi...'); const result = await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit); if (result) { booksData = result.data; totalPages = result.totalPages; currentPage = result.currentPage; } refreshGrid(); updatePagination(); }, 500)); searchInput.addEventListener('input', () => { btnClear.classList.toggle('hidden', searchInput.value.length === 0); }); btnClear.addEventListener('click', () => { searchInput.value = ''; btnClear.classList.add('hidden'); searchInput.dispatchEvent(new Event('input')); searchInput.focus(); }); }
-    document.getElementById('btnAwal')?.addEventListener('click', async () => { if (currentPage === 1) return; showLoading('Memuat koleksi...'); const result = await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit); if (result) { booksData = result.data; totalPages = result.totalPages; currentPage = result.currentPage; } refreshGrid(); updatePagination(); });
-    document.getElementById('btnPrev')?.addEventListener('click', async () => { if (currentPage <= 1) return; showLoading('Memuat koleksi...'); const result = await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage - 1, currentLimit === 'all' ? 999 : currentLimit); if (result) { booksData = result.data; totalPages = result.totalPages; currentPage = result.currentPage; } refreshGrid(); updatePagination(); });
-    document.getElementById('btnNext')?.addEventListener('click', async () => { if (currentPage >= totalPages) return; showLoading('Memuat koleksi...'); const result = await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage + 1, currentLimit === 'all' ? 999 : currentLimit); if (result) { booksData = result.data; totalPages = result.totalPages; currentPage = result.currentPage; } refreshGrid(); updatePagination(); });
-    document.getElementById('btnAkhir')?.addEventListener('click', async () => { if (currentPage === totalPages) return; showLoading('Memuat koleksi...'); const result = await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, totalPages, currentLimit === 'all' ? 999 : currentLimit); if (result) { booksData = result.data; totalPages = result.totalPages; currentPage = result.currentPage; } refreshGrid(); updatePagination(); });
+    if (searchInput && btnClear) { searchInput.addEventListener('input', debounce(async (e) => { currentSearch = e.target.value; showLoading('Memuat koleksi...'); updateDataState(await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit)); refreshGrid(); updatePagination(); }, 500)); searchInput.addEventListener('input', () => btnClear.classList.toggle('hidden', searchInput.value.length === 0)); btnClear.addEventListener('click', () => { searchInput.value = ''; btnClear.classList.add('hidden'); searchInput.dispatchEvent(new Event('input')); searchInput.focus(); }); }
+    document.getElementById('btnAwal')?.addEventListener('click', async () => { if (currentPage === 1) return; showLoading('Memuat koleksi...'); updateDataState(await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, 1, currentLimit === 'all' ? 999 : currentLimit)); refreshGrid(); updatePagination(); });
+    document.getElementById('btnPrev')?.addEventListener('click', async () => { if (currentPage <= 1) return; showLoading('Memuat koleksi...'); updateDataState(await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage - 1, currentLimit === 'all' ? 999 : currentLimit)); refreshGrid(); updatePagination(); });
+    document.getElementById('btnNext')?.addEventListener('click', async () => { if (currentPage >= totalPages) return; showLoading('Memuat koleksi...'); updateDataState(await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, currentPage + 1, currentLimit === 'all' ? 999 : currentLimit)); refreshGrid(); updatePagination(); });
+    document.getElementById('btnAkhir')?.addEventListener('click', async () => { if (currentPage === totalPages) return; showLoading('Memuat koleksi...'); updateDataState(await fetchBooks(currentSearch, currentFilterJenis, currentFilterBahasa, totalPages, currentLimit === 'all' ? 999 : currentLimit)); refreshGrid(); updatePagination(); });
 }
