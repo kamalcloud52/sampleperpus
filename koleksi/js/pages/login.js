@@ -48,7 +48,7 @@ export function renderLogin(main) {
             <div class="login-links">
                 <a href="#" class="login-link">Lupa kata sandi?</a>
                 <span class="login-divider">|</span>
-                <a href="#" class="login-link">Daftar akun baru</a>
+                <a href="#/register" class="login-link">Daftar akun baru</a>
             </div>
             
             <!-- Back to Home -->
