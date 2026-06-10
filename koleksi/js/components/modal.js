@@ -7,49 +7,42 @@ export function renderModal() {
     const container = document.getElementById('modalContainer');
     if (!container) return;
     container.innerHTML = `
-        <div class="modal-overlay" id="modalDetail"><div class="modal-sheet" id="modalSheetDetail"><div class="modal-handle"></div><button class="modal-close-btn" data-close="modalDetail"><i class="fa-solid fa-xmark"></i></button><div class="modal-cover" id="detailCover" style="background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#047857;"><i class="fa-solid fa-book-open"></i></div><h3 class="modal-title" id="detailTitle">Judul Buku</h3><div class="modal-info-row"><span>Jenis</span><span id="detailKategori">-</span></div><div class="modal-info-row"><span>Penulis</span><span id="detailPenulis">-</span></div><div class="modal-info-row"><span>Edisi</span><span id="detailEdisi">-</span></div><div class="modal-info-row"><span>Bahasa</span><span id="detailBahasa">-</span></div><div class="modal-info-row"><span>Kata Kunci</span><span id="detailKeywords">-</span></div><button class="modal-action-btn" id="btnBaca"><i class="fa-solid fa-book-open"></i> Baca Sekarang</button><button class="modal-action-btn" id="btnDownload" style="background:#065f46;margin-top:8px;"><i class="fa-solid fa-download"></i> Unduh PDF</button></div></div>
+        <div class="modal-overlay" id="modalDetail">
+            <div class="modal-sheet" id="modalSheetDetail">
+                <div class="modal-handle"></div>
+                <button class="modal-close-btn" data-close="modalDetail"><i class="fa-solid fa-xmark"></i></button>
+                <div class="modal-cover" id="detailCover" style="background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#047857;"><i class="fa-solid fa-book-open"></i></div>
+                <h3 class="modal-title" id="detailTitle">Judul Buku</h3>
+                <div class="modal-info-row"><span>Jenis</span><span id="detailKategori">-</span></div>
+                <div class="modal-info-row"><span>Penulis</span><span id="detailPenulis">-</span></div>
+                <div class="modal-info-row"><span>Edisi</span><span id="detailEdisi">-</span></div>
+                <div class="modal-info-row"><span>Bahasa</span><span id="detailBahasa">-</span></div>
+                <div class="modal-info-row"><span>Kata Kunci</span><span id="detailKeywords">-</span></div>
+                <div class="modal-actions-row">
+                    <button class="modal-action-btn modal-btn-baca" id="btnBaca"><i class="fa-solid fa-book-open"></i> Baca</button>
+                    <button class="modal-action-btn modal-btn-simpan" id="btnSimpan"><i class="fa-solid fa-bookmark"></i> Simpan</button>
+                </div>
+            </div>
+        </div>
         <div class="modal-overlay" id="modalProfil"><div class="modal-sheet" id="modalSheetProfil"><div class="modal-handle"></div><button class="modal-close-btn" data-close="modalProfil"><i class="fa-solid fa-xmark"></i></button><div class="profile-avatar"><i class="fa-solid fa-circle-user"></i></div><h3 class="modal-title text-center">Akun Saya</h3><div class="modal-info-row"><span>Nama</span><span id="profilNama">Ahmad Santri</span></div><div class="modal-info-row"><span>Kelas</span><span id="profilKelas">2 Aliyah</span></div><div class="modal-info-row"><span>No. Anggota</span><span id="profilNo">PIM-2024-0012</span></div><button class="modal-action-btn" style="background:#e5e7eb;color:#374151;margin-top:12px;" data-close="modalProfil"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button></div></div>
         <div class="modal-overlay" id="modalFilter"><div class="modal-sheet" id="modalSheetFilter"><div class="modal-handle"></div><button class="modal-close-btn" data-close="modalFilter"><i class="fa-solid fa-xmark"></i></button><h3 class="modal-title">Filter Koleksi</h3><div class="filter-group"><div class="filter-label">Jenis</div><div class="filter-options" id="filterJenis"><button class="filter-option selected" data-value="">Semua</button></div></div><div class="filter-group"><div class="filter-label">Bahasa</div><div class="filter-options" id="filterBahasa"><button class="filter-option selected" data-value="">Semua</button></div></div><button class="modal-action-btn" id="btnTerapkanFilter"><i class="fa-solid fa-check"></i> Terapkan Filter</button><button class="modal-action-btn" id="btnResetFilter" style="background:#6b7280;margin-top:8px;"><i class="fa-solid fa-rotate"></i> Reset Filter</button></div></div>
     `;
 }
 
 export function initModalEvents() {
-    // Geser handle untuk tutup modal
-    document.querySelectorAll('.modal-sheet').forEach(sheet => {
-        let startY = 0, currentY = 0, isDragging = false;
-        const handle = sheet.querySelector('.modal-handle');
-        if (!handle) return;
-        handle.addEventListener('touchstart', (e) => { startY = e.touches[0].clientY; isDragging = true; sheet.style.transition = 'none'; }, { passive: true });
-        handle.addEventListener('touchmove', (e) => { if (!isDragging) return; currentY = e.touches[0].clientY; const diff = currentY - startY; if (diff > 0) sheet.style.transform = `translateY(${diff}px)`; }, { passive: true });
-        handle.addEventListener('touchend', () => {
-            if (!isDragging) return; isDragging = false;
-            sheet.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)';
-            if (currentY - startY > 100) { const overlay = sheet.closest('.modal-overlay'); if (overlay) closeModal(overlay.id); }
-            else sheet.style.transform = 'translateY(0)';
-            startY = 0; currentY = 0;
-        });
-    });
+    document.querySelectorAll('.modal-sheet').forEach(sheet => { let startY = 0, currentY = 0, isDragging = false; const handle = sheet.querySelector('.modal-handle'); if (!handle) return; handle.addEventListener('touchstart', (e) => { startY = e.touches[0].clientY; isDragging = true; sheet.style.transition = 'none'; }, { passive: true }); handle.addEventListener('touchmove', (e) => { if (!isDragging) return; currentY = e.touches[0].clientY; const diff = currentY - startY; if (diff > 0) sheet.style.transform = `translateY(${diff}px)`; }, { passive: true }); handle.addEventListener('touchend', () => { if (!isDragging) return; isDragging = false; sheet.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)'; if (currentY - startY > 100) { const overlay = sheet.closest('.modal-overlay'); if (overlay) closeModal(overlay.id); } else sheet.style.transform = 'translateY(0)'; startY = 0; currentY = 0; }); });
+    document.querySelectorAll('.modal-overlay').forEach(overlay => { const newOverlay = overlay.cloneNode(true); overlay.parentNode.replaceChild(newOverlay, overlay); newOverlay.addEventListener('click', (e) => { if (e.target === newOverlay) closeModal(newOverlay.id); }); });
 
-    // Klik overlay tutup modal
-    document.querySelectorAll('.modal-overlay').forEach(overlay => {
-        const newOverlay = overlay.cloneNode(true);
-        overlay.parentNode.replaceChild(newOverlay, overlay);
-        newOverlay.addEventListener('click', (e) => { if (e.target === newOverlay) closeModal(newOverlay.id); });
-    });
-
-    // Baca & Download
+    // Baca
     const btnBaca = document.getElementById('btnBaca');
-    if (btnBaca) { const nb = btnBaca.cloneNode(true); btnBaca.parentNode.replaceChild(nb, btnBaca); nb.addEventListener('click', () => alert('Fitur baca akan segera hadir!')); }
-    const btnDownload = document.getElementById('btnDownload');
-    if (btnDownload) { const nb = btnDownload.cloneNode(true); btnDownload.parentNode.replaceChild(nb, btnDownload); nb.addEventListener('click', () => alert('Fitur unduh akan segera hadir!')); }
+    if (btnBaca) { const nb = btnBaca.cloneNode(true); btnBaca.parentNode.replaceChild(nb, btnBaca); nb.addEventListener('click', () => { const link = nb.dataset.link; if (link) window.open(link, '_blank'); else alert('Link tidak tersedia'); }); }
+
+    // Simpan
+    const btnSimpan = document.getElementById('btnSimpan');
+    if (btnSimpan) { const ns = btnSimpan.cloneNode(true); btnSimpan.parentNode.replaceChild(ns, btnSimpan); ns.addEventListener('click', function() { this.classList.toggle('saved'); this.innerHTML = this.classList.contains('saved') ? '<i class="fa-solid fa-bookmark"></i> Tersimpan' : '<i class="fa-solid fa-bookmark"></i> Simpan'; }); }
 
     // Filter options
-    document.querySelectorAll('.filter-options').forEach(group => {
-        group.querySelectorAll('.filter-option').forEach(opt => {
-            const newOpt = opt.cloneNode(true); opt.parentNode.replaceChild(newOpt, opt);
-            newOpt.addEventListener('click', function() { group.querySelectorAll('.filter-option').forEach(o => o.classList.remove('selected')); this.classList.add('selected'); });
-        });
-    });
+    document.querySelectorAll('.filter-options').forEach(group => { group.querySelectorAll('.filter-option').forEach(opt => { const newOpt = opt.cloneNode(true); opt.parentNode.replaceChild(newOpt, opt); newOpt.addEventListener('click', function() { group.querySelectorAll('.filter-option').forEach(o => o.classList.remove('selected')); this.classList.add('selected'); }); }); });
 
     // Terapkan Filter
     const btnTerapkan = document.getElementById('btnTerapkanFilter');
@@ -60,39 +53,8 @@ export function initModalEvents() {
     if (btnReset) { const nb = btnReset.cloneNode(true); btnReset.parentNode.replaceChild(nb, btnReset); nb.addEventListener('click', () => { const icon = nb.querySelector('.fa-rotate'); if (icon) { icon.classList.add('fa-spin'); setTimeout(() => icon.classList.remove('fa-spin'), 1000); } const { search, limit } = getFilterState(); setFilter('', ''); document.querySelectorAll('.filter-option').forEach(opt => opt.classList.remove('selected')); document.querySelectorAll('.filter-option:first-child').forEach(opt => opt.classList.add('selected')); closeModal('modalFilter'); fetchAndRender(search, '', '', 1, limit === 'all' ? 999 : limit).then(() => { updateFilterIcon(false); }); }); }
 }
 
-// Event delegation untuk semua close button (dipasang sekali di document)
-document.addEventListener('click', (e) => {
-    const closeBtn = e.target.closest('.modal-close-btn') || e.target.closest('[data-close]');
-    if (closeBtn) {
-        const modalId = closeBtn.dataset.close;
-        if (modalId) closeModal(modalId);
-    }
-});
+document.addEventListener('click', (e) => { const closeBtn = e.target.closest('.modal-close-btn') || e.target.closest('[data-close]'); if (closeBtn) { const modalId = closeBtn.dataset.close; if (modalId) closeModal(modalId); } });
 
-// ==================== MODAL OPEN/CLOSE ====================
-export function openModal(modalId) {
-    document.querySelectorAll('.modal-overlay.open').forEach(m => {
-        const sheet = m.querySelector('.modal-sheet'); if (sheet) sheet.style.transform = 'translateY(100%)';
-        m.classList.remove('open');
-    });
-    const modal = document.getElementById(modalId); if (!modal) return;
-    const sheet = modal.querySelector('.modal-sheet');
-    if (sheet) { sheet.style.transition = 'none'; sheet.style.transform = 'translateY(100%)'; }
-    modal.classList.add('open'); currentModal = modalId;
-    if (sheet) { sheet.offsetHeight; sheet.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)'; sheet.style.transform = 'translateY(0)'; }
-}
-
-export function closeModal(modalId) {
-    const modal = document.getElementById(modalId); if (!modal) return;
-    const sheet = modal.querySelector('.modal-sheet');
-    if (sheet) { sheet.style.transition = 'transform 0.3s cubic-bezier(0.55, 0, 1, 0.45)'; sheet.style.transform = 'translateY(100%)'; setTimeout(() => { modal.classList.remove('open'); if (currentModal === modalId) currentModal = null; }, 300); }
-    else { modal.classList.remove('open'); if (currentModal === modalId) currentModal = null; }
-}
-
-export function closeAllModals() {
-    document.querySelectorAll('.modal-overlay.open').forEach(m => {
-        const sheet = m.querySelector('.modal-sheet'); if (sheet) sheet.style.transform = 'translateY(100%)';
-        m.classList.remove('open');
-    });
-    currentModal = null;
-}
+export function openModal(modalId) { document.querySelectorAll('.modal-overlay.open').forEach(m => { const sheet = m.querySelector('.modal-sheet'); if (sheet) sheet.style.transform = 'translateY(100%)'; m.classList.remove('open'); }); const modal = document.getElementById(modalId); if (!modal) return; const sheet = modal.querySelector('.modal-sheet'); if (sheet) { sheet.style.transition = 'none'; sheet.style.transform = 'translateY(100%)'; } modal.classList.add('open'); currentModal = modalId; if (sheet) { sheet.offsetHeight; sheet.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)'; sheet.style.transform = 'translateY(0)'; } }
+export function closeModal(modalId) { const modal = document.getElementById(modalId); if (!modal) return; const sheet = modal.querySelector('.modal-sheet'); if (sheet) { sheet.style.transition = 'transform 0.3s cubic-bezier(0.55, 0, 1, 0.45)'; sheet.style.transform = 'translateY(100%)'; setTimeout(() => { modal.classList.remove('open'); if (currentModal === modalId) currentModal = null; }, 300); } else { modal.classList.remove('open'); if (currentModal === modalId) currentModal = null; } }
+export function closeAllModals() { document.querySelectorAll('.modal-overlay.open').forEach(m => { const sheet = m.querySelector('.modal-sheet'); if (sheet) sheet.style.transform = 'translateY(100%)'; m.classList.remove('open'); }); currentModal = null; }
