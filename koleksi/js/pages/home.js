@@ -63,21 +63,73 @@ function renderGridCard(book) { const colors = getCoverColors(book.id || 1); con
 function renderListCard(book) { const colors = getCoverColors(book.id || 1); const label = getInitials(book.judul); const hasCover = book.cover && isGoogleDriveUrl(book.cover); return `<div class="list-item" data-id="${book.id}" data-title="${book.judul}" data-penulis="${book.nama}" data-edisi="${book.edisi}" data-kategori="${book.jenis}" data-bahasa="${book.bahasa}" data-keywords="${book.kataKunci||''}" data-cover="${book.cover||''}" data-link="${book.fileBerkas||''}"><div class="list-cover" style="background:${hasCover?'#f3f4f6':colors.background};">${hasCover?`<img src="${book.cover}" alt="${book.judul}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;" loading="lazy">`:`<span>${label}</span>`}</div><div class="list-info"><span class="tag-badge">${book.jenis||'Buku'}</span><div class="item-main-title">${book.judul||'Tanpa Judul'}</div><div class="meta-text-line">${book.nama||'Tanpa Nama'}</div><div class="meta-text-line">${book.edisi||'-'}</div></div><div class="list-action"><button class="action-card-btn detail-trigger"><i class="fa-solid fa-circle-info"></i> Detail</button></div></div>`; }
 
 function bindCardEvents() {
+    // Hapus semua event listener lama dengan clone
     document.querySelectorAll('.detail-trigger').forEach(btn => {
-        const nb = btn.cloneNode(true); btn.parentNode.replaceChild(nb, btn);
-        nb.addEventListener('click', (e) => { e.stopPropagation(); const card = nb.closest('[data-id]'); if (!card) return;
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+    });
+    document.querySelectorAll('.card-item, .list-item').forEach(card => {
+        const newCard = card.cloneNode(true);
+        card.parentNode.replaceChild(newCard, card);
+    });
+
+    // Pasang event listener baru
+    document.querySelectorAll('.detail-trigger').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const card = btn.closest('[data-id]');
+            if (!card) return;
+            
+            // Set data di modal
             document.getElementById('detailTitle').textContent = card.dataset.title || '-';
             document.getElementById('detailPenulis').textContent = card.dataset.penulis || '-';
             document.getElementById('detailEdisi').textContent = card.dataset.edisi || '-';
             document.getElementById('detailKategori').textContent = card.dataset.kategori || '-';
             document.getElementById('detailBahasa').textContent = card.dataset.bahasa || '-';
             document.getElementById('detailKeywords').textContent = card.dataset.keywords || '-';
-            const dc = document.getElementById('detailCover'); if (dc && card.dataset.cover) dc.innerHTML = `<img src="${card.dataset.cover}" alt="${card.dataset.title}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`; else if (dc) dc.innerHTML = '<i class="fa-solid fa-book-open"></i>';
-            const btnBaca = document.getElementById('btnBaca'); if (btnBaca) { btnBaca.dataset.link = card.dataset.link || ''; }
+            
+            // Set cover
+            const dc = document.getElementById('detailCover');
+            if (dc) {
+                if (card.dataset.cover) {
+                    dc.innerHTML = `<img src="${card.dataset.cover}" alt="${card.dataset.title}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`;
+                } else {
+                    dc.innerHTML = '<i class="fa-solid fa-book-open"></i>';
+                }
+            }
+            
+            // Set link baca
+            const btnBaca = document.getElementById('btnBaca');
+            if (btnBaca) {
+                btnBaca.dataset.link = card.dataset.link || '';
+                const newBtnBaca = btnBaca.cloneNode(true);
+                btnBaca.parentNode.replaceChild(newBtnBaca, btnBaca);
+                newBtnBaca.addEventListener('click', () => {
+                    const link = newBtnBaca.dataset.link;
+                    if (link) window.open(link, '_blank');
+                    else alert('Link tidak tersedia');
+                });
+            }
+            
+            // Reset tombol simpan
+            const btnSimpan = document.getElementById('btnSimpan');
+            if (btnSimpan) {
+                btnSimpan.classList.remove('saved');
+                btnSimpan.innerHTML = '<i class="fa-solid fa-bookmark"></i> Simpan';
+            }
+            
+            // Buka modal
             openModal('modalDetail');
         });
     });
-    document.querySelectorAll('.card-item, .list-item').forEach(card => { const nc = card.cloneNode(true); card.parentNode.replaceChild(nc, card); nc.addEventListener('click', (e) => { if (e.target.closest('button')) return; nc.querySelector('.detail-trigger')?.click(); }); });
+
+    // Klik card juga buka detail
+    document.querySelectorAll('.card-item, .list-item').forEach(card => {
+        card.addEventListener('click', (e) => {
+            if (e.target.closest('button')) return;
+            card.querySelector('.detail-trigger')?.click();
+        });
+    });
 }
 
 function initHomeEvents() {
