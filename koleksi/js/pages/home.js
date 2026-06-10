@@ -14,7 +14,6 @@ let currentSearch = '';
 let currentFilterJenis = '';
 let currentFilterBahasa = '';
 
-// ==================== RENDER HOME ====================
 export async function renderHome(main) {
     main.innerHTML = `
         <div class="welcome-card slide-up slide-up-delay-1"><span class="welcome-tag">👋 Halo, Pembaca Hebat!</span><h1>Selamat Datang di Perpustakaan Digital PIM</h1><p>Temukan ribuan referensi dalam satu genggaman.</p></div>
@@ -32,7 +31,6 @@ export async function renderHome(main) {
     refreshGrid(); updatePagination(); initHomeEvents();
 }
 
-// ==================== FETCH & RENDER ====================
 export async function fetchAndRender(search, jenis, bahasa, page, limit) {
     currentSearch = search; currentFilterJenis = jenis; currentFilterBahasa = bahasa;
     showLoading('Menerapkan filter...');
@@ -41,99 +39,29 @@ export async function fetchAndRender(search, jenis, bahasa, page, limit) {
     refreshGrid(); updatePagination();
 }
 
-// ==================== UPDATE STATE ====================
 function updateDataState(result) {
-    if (result) {
-        booksData = result.data;
-        allJenis = result.allJenis || [];
-        allBahasa = result.allBahasa || [];
-        totalPages = result.totalPages || 1;
-        currentPage = result.currentPage || 1;
-        updateFilterOptions();
-    }
+    if (result) { booksData = result.data; allJenis = result.allJenis || []; allBahasa = result.allBahasa || []; totalPages = result.totalPages || 1; currentPage = result.currentPage || 1; updateFilterOptions(); }
 }
 
-// ==================== FILTER OPTIONS ====================
 function updateFilterOptions() {
-    const filterJenis = document.getElementById('filterJenis');
-    const filterBahasa = document.getElementById('filterBahasa');
-    
-    if (filterJenis) {
-        const selected = filterJenis.querySelector('.filter-option.selected')?.dataset.value || '';
-        filterJenis.innerHTML = '<button class="filter-option selected" data-value="">Semua</button>';
-        allJenis.forEach(j => { filterJenis.innerHTML += `<button class="filter-option" data-value="${j}">${j}</button>`; });
-        if (selected) {
-            const opt = filterJenis.querySelector(`[data-value="${selected}"]`);
-            if (opt) { filterJenis.querySelector('.filter-option.selected')?.classList.remove('selected'); opt.classList.add('selected'); }
-        }
-    }
-    
-    if (filterBahasa) {
-        const selected = filterBahasa.querySelector('.filter-option.selected')?.dataset.value || '';
-        filterBahasa.innerHTML = '<button class="filter-option selected" data-value="">Semua</button>';
-        allBahasa.forEach(b => { filterBahasa.innerHTML += `<button class="filter-option" data-value="${b}">${b}</button>`; });
-        if (selected) {
-            const opt = filterBahasa.querySelector(`[data-value="${selected}"]`);
-            if (opt) { filterBahasa.querySelector('.filter-option.selected')?.classList.remove('selected'); opt.classList.add('selected'); }
-        }
-    }
-    
-    document.querySelectorAll('.filter-options').forEach(group => {
-        group.querySelectorAll('.filter-option').forEach(opt => {
-            const newOpt = opt.cloneNode(true); opt.parentNode.replaceChild(newOpt, opt);
-            newOpt.addEventListener('click', function() { group.querySelectorAll('.filter-option').forEach(o => o.classList.remove('selected')); this.classList.add('selected'); });
-        });
-    });
+    const filterJenis = document.getElementById('filterJenis'); const filterBahasa = document.getElementById('filterBahasa');
+    if (filterJenis) { const selected = filterJenis.querySelector('.filter-option.selected')?.dataset.value || ''; filterJenis.innerHTML = '<button class="filter-option selected" data-value="">Semua</button>'; allJenis.forEach(j => { filterJenis.innerHTML += `<button class="filter-option" data-value="${j}">${j}</button>`; }); if (selected) { const opt = filterJenis.querySelector(`[data-value="${selected}"]`); if (opt) { filterJenis.querySelector('.filter-option.selected')?.classList.remove('selected'); opt.classList.add('selected'); } } }
+    if (filterBahasa) { const selected = filterBahasa.querySelector('.filter-option.selected')?.dataset.value || ''; filterBahasa.innerHTML = '<button class="filter-option selected" data-value="">Semua</button>'; allBahasa.forEach(b => { filterBahasa.innerHTML += `<button class="filter-option" data-value="${b}">${b}</button>`; }); if (selected) { const opt = filterBahasa.querySelector(`[data-value="${selected}"]`); if (opt) { filterBahasa.querySelector('.filter-option.selected')?.classList.remove('selected'); opt.classList.add('selected'); } } }
+    document.querySelectorAll('.filter-options').forEach(group => { group.querySelectorAll('.filter-option').forEach(opt => { const newOpt = opt.cloneNode(true); opt.parentNode.replaceChild(newOpt, opt); newOpt.addEventListener('click', function() { group.querySelectorAll('.filter-option').forEach(o => o.classList.remove('selected')); this.classList.add('selected'); }); }); });
 }
 
-// ==================== FILTER STATE ====================
-export function updateFilterIcon(active) {
-    const fb = document.getElementById('btnFilterHome'); if (!fb) return;
-    fb.style.color = active ? '#047857' : '#4b5563';
-    fb.style.borderColor = active ? '#047857' : '#e5e7eb';
-    fb.style.background = active ? '#d1fae5' : '#f8fafc';
-}
+export function updateFilterIcon(active) { const fb = document.getElementById('btnFilterHome'); if (!fb) return; fb.style.color = active ? '#047857' : '#4b5563'; fb.style.borderColor = active ? '#047857' : '#e5e7eb'; fb.style.background = active ? '#d1fae5' : '#f8fafc'; }
 export function getFilterState() { return { search: currentSearch, jenis: currentFilterJenis, bahasa: currentFilterBahasa, limit: currentLimit }; }
 export function setFilter(jenis, bahasa) { currentFilterJenis = jenis; currentFilterBahasa = bahasa; }
 
-// ==================== GRID & CARDS ====================
-function refreshGrid() {
-    document.getElementById('booksGrid').innerHTML = renderBookCards('grid');
-    document.getElementById('booksList').innerHTML = renderBookCards('list');
-    bindCardEvents();
-}
+function refreshGrid() { document.getElementById('booksGrid').innerHTML = renderBookCards('grid'); document.getElementById('booksList').innerHTML = renderBookCards('list'); bindCardEvents(); }
+function updatePagination() { const caption = document.querySelector('.paginator-caption'); if (caption) caption.textContent = `Halaman ${currentPage} dari ${totalPages}`; const activeBtn = document.querySelector('.nav-step-btn.active'); if (activeBtn) activeBtn.textContent = currentPage; document.getElementById('btnAwal').disabled = currentPage === 1; document.getElementById('btnPrev').disabled = currentPage === 1; document.getElementById('btnNext').disabled = currentPage === totalPages || totalPages === 0; document.getElementById('btnAkhir').disabled = currentPage === totalPages || totalPages === 0; }
 
-function updatePagination() {
-    const caption = document.querySelector('.paginator-caption');
-    if (caption) caption.textContent = `Halaman ${currentPage} dari ${totalPages}`;
-    const activeBtn = document.querySelector('.nav-step-btn.active');
-    if (activeBtn) activeBtn.textContent = currentPage;
-    document.getElementById('btnAwal').disabled = currentPage === 1;
-    document.getElementById('btnPrev').disabled = currentPage === 1;
-    document.getElementById('btnNext').disabled = currentPage === totalPages || totalPages === 0;
-    document.getElementById('btnAkhir').disabled = currentPage === totalPages || totalPages === 0;
-}
+function renderBookCards(type) { if (!booksData.length) return '<div class="empty-state" style="grid-column:1/-1;text-align:center;padding:40px;color:#9ca3af;"><i class="fa-solid fa-book-open" style="font-size:2rem;margin-bottom:8px;display:block;opacity:0.5;"></i>Tidak ada koleksi ditemukan</div>'; return booksData.map(book => type === 'grid' ? renderGridCard(book) : renderListCard(book)).join(''); }
 
-function renderBookCards(type) {
-    if (!booksData.length) return '<div class="empty-state" style="grid-column:1/-1;text-align:center;padding:40px;color:#9ca3af;"><i class="fa-solid fa-book-open" style="font-size:2rem;margin-bottom:8px;display:block;opacity:0.5;"></i>Tidak ada koleksi ditemukan</div>';
-    return booksData.map(book => type === 'grid' ? renderGridCard(book) : renderListCard(book)).join('');
-}
+function renderGridCard(book) { const colors = getCoverColors(book.id || 1); const label = getInitials(book.judul); const hasCover = book.cover && isGoogleDriveUrl(book.cover); return `<div class="card-item" data-id="${book.id}" data-title="${book.judul}" data-penulis="${book.nama}" data-edisi="${book.edisi}" data-kategori="${book.jenis}" data-bahasa="${book.bahasa}" data-keywords="${book.kataKunci||''}" data-cover="${book.cover||''}" data-link="${book.fileBerkas||''}"><div class="cover-art-container" style="background:${hasCover?'#f3f4f6':colors.background};">${hasCover?`<img src="${book.cover}" alt="${book.judul}" class="cover-thumbnail" loading="lazy" onerror="this.parentElement.style.background='${colors.background}'; this.style.display='none';">`:`<span class="cover-text-preview">${label}</span>`}</div><div class="card-body"><div class="card-info"><span class="tag-badge">${book.jenis||'Buku'}</span><div class="item-main-title">${book.judul||'Tanpa Judul'}</div><div class="meta-text-line">${book.nama||'Tanpa Nama'}</div><div class="meta-text-line">${book.edisi||'-'}</div></div><button class="action-card-btn detail-trigger"><i class="fa-solid fa-circle-info"></i> Detail</button></div></div>`; }
+function renderListCard(book) { const colors = getCoverColors(book.id || 1); const label = getInitials(book.judul); const hasCover = book.cover && isGoogleDriveUrl(book.cover); return `<div class="list-item" data-id="${book.id}" data-title="${book.judul}" data-penulis="${book.nama}" data-edisi="${book.edisi}" data-kategori="${book.jenis}" data-bahasa="${book.bahasa}" data-keywords="${book.kataKunci||''}" data-cover="${book.cover||''}" data-link="${book.fileBerkas||''}"><div class="list-cover" style="background:${hasCover?'#f3f4f6':colors.background};">${hasCover?`<img src="${book.cover}" alt="${book.judul}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;" loading="lazy">`:`<span>${label}</span>`}</div><div class="list-info"><span class="tag-badge">${book.jenis||'Buku'}</span><div class="item-main-title">${book.judul||'Tanpa Judul'}</div><div class="meta-text-line">${book.nama||'Tanpa Nama'}</div><div class="meta-text-line">${book.edisi||'-'}</div></div><div class="list-action"><button class="action-card-btn detail-trigger"><i class="fa-solid fa-circle-info"></i> Detail</button></div></div>`; }
 
-function renderGridCard(book) {
-    const colors = getCoverColors(book.id || 1);
-    const label = getInitials(book.judul);
-    const hasCover = book.cover && isGoogleDriveUrl(book.cover);
-    return `<div class="card-item" data-id="${book.id}" data-title="${book.judul}" data-penulis="${book.nama}" data-edisi="${book.edisi}" data-kategori="${book.jenis}" data-bahasa="${book.bahasa}" data-keywords="${book.kataKunci||''}" data-cover="${book.cover||''}" data-link="${book.fileBerkas||''}"><div class="cover-art-container" style="background:${hasCover?'#f3f4f6':colors.background};">${hasCover?`<img src="${book.cover}" alt="${book.judul}" class="cover-thumbnail" loading="lazy" onerror="this.parentElement.style.background='${colors.background}'; this.style.display='none';">`:`<span class="cover-text-preview">${label}</span>`}</div><div class="card-body"><div class="card-info"><span class="tag-badge">${book.jenis||'Buku'}</span><div class="item-main-title">${book.judul||'Tanpa Judul'}</div><div class="meta-text-line">${book.nama||'Tanpa Nama'}</div><div class="meta-text-line">${book.edisi||'-'}</div></div><button class="action-card-btn detail-trigger"><i class="fa-solid fa-circle-info"></i> Detail</button></div></div>`;
-}
-
-function renderListCard(book) {
-    const colors = getCoverColors(book.id || 1);
-    const label = getInitials(book.judul);
-    const hasCover = book.cover && isGoogleDriveUrl(book.cover);
-    return `<div class="list-item" data-id="${book.id}" data-title="${book.judul}" data-penulis="${book.nama}" data-edisi="${book.edisi}" data-kategori="${book.jenis}" data-bahasa="${book.bahasa}" data-keywords="${book.kataKunci||''}" data-cover="${book.cover||''}" data-link="${book.fileBerkas||''}"><div class="list-cover" style="background:${hasCover?'#f3f4f6':colors.background};">${hasCover?`<img src="${book.cover}" alt="${book.judul}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;" loading="lazy">`:`<span>${label}</span>`}</div><div class="list-info"><span class="tag-badge">${book.jenis||'Buku'}</span><div class="item-main-title">${book.judul||'Tanpa Judul'}</div><div class="meta-text-line">${book.nama||'Tanpa Nama'}</div><div class="meta-text-line">${book.edisi||'-'}</div></div><div class="list-action"><button class="action-card-btn detail-trigger"><i class="fa-solid fa-circle-info"></i> Detail</button></div></div>`;
-}
-
-// ==================== CARD EVENTS ====================
 function bindCardEvents() {
     document.querySelectorAll('.detail-trigger').forEach(btn => {
         const nb = btn.cloneNode(true); btn.parentNode.replaceChild(nb, btn);
@@ -144,20 +72,14 @@ function bindCardEvents() {
             document.getElementById('detailKategori').textContent = card.dataset.kategori || '-';
             document.getElementById('detailBahasa').textContent = card.dataset.bahasa || '-';
             document.getElementById('detailKeywords').textContent = card.dataset.keywords || '-';
-            const dc = document.getElementById('detailCover'); if (dc && card.dataset.cover) dc.innerHTML = `<img src="${card.dataset.cover}" alt="${card.dataset.title}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`;
-            // Set link baca
-            const btnBaca = document.getElementById('btnBaca');
-            if (btnBaca && card.dataset.link) { const nb2 = btnBaca.cloneNode(true); btnBaca.parentNode.replaceChild(nb2, btnBaca); nb2.addEventListener('click', () => window.open(card.dataset.link, '_blank')); }
+            const dc = document.getElementById('detailCover'); if (dc && card.dataset.cover) dc.innerHTML = `<img src="${card.dataset.cover}" alt="${card.dataset.title}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`; else if (dc) dc.innerHTML = '<i class="fa-solid fa-book-open"></i>';
+            const btnBaca = document.getElementById('btnBaca'); if (btnBaca) { btnBaca.dataset.link = card.dataset.link || ''; }
             openModal('modalDetail');
         });
     });
-    document.querySelectorAll('.card-item, .list-item').forEach(card => {
-        const nc = card.cloneNode(true); card.parentNode.replaceChild(nc, card);
-        nc.addEventListener('click', (e) => { if (e.target.closest('button')) return; nc.querySelector('.detail-trigger')?.click(); });
-    });
+    document.querySelectorAll('.card-item, .list-item').forEach(card => { const nc = card.cloneNode(true); card.parentNode.replaceChild(nc, card); nc.addEventListener('click', (e) => { if (e.target.closest('button')) return; nc.querySelector('.detail-trigger')?.click(); }); });
 }
 
-// ==================== HOME EVENTS ====================
 function initHomeEvents() {
     document.getElementById('btnFilterHome')?.addEventListener('click', () => openModal('modalFilter'));
     const bl = document.getElementById('btnLimit'), lm = document.getElementById('limitMenu');
