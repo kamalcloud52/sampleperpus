@@ -505,6 +505,31 @@ footer { text-align: center; padding: 18px; font-size: 0.72rem; color: var(--tex
     80% { transform: translateX(4px); }
 }
 
+/* ==================== MODAL ACTION BUTTONS ==================== */
+.modal-actions-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.modal-btn-baca {
+    flex: 2;
+    background: var(--primary);
+}
+
+.modal-btn-simpan {
+    flex: 1;
+    background: #f59e0b;
+}
+
+.modal-btn-simpan:hover {
+    background: #d97706;
+}
+
+.modal-btn-simpan.saved {
+    background: #047857;
+}
+
 /* ==================== UTILITY ==================== */
 .hidden { display: none !important; }
 .text-center { text-align: center; }
