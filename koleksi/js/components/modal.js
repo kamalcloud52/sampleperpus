@@ -72,14 +72,6 @@ export function renderModal() {
 }
 
 export function initModalEvents() {
-    // Geser handle untuk tutup modal (tetap dipertahankan meski handle disembunyikan)
-    document.querySelectorAll('.modal-sheet').forEach(sheet => {
-        let startY = 0, currentY = 0, isDragging = false;
-        sheet.addEventListener('touchstart', (e) => { startY = e.touches[0].clientY; isDragging = true; sheet.style.transition = 'none'; }, { passive: true });
-        sheet.addEventListener('touchmove', (e) => { if (!isDragging) return; currentY = e.touches[0].clientY; const diff = currentY - startY; if (diff > 0) sheet.style.transform = `translateY(${diff}px)`; }, { passive: true });
-        sheet.addEventListener('touchend', () => { if (!isDragging) return; isDragging = false; sheet.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)'; if (currentY - startY > 100) { const overlay = sheet.closest('.modal-overlay'); if (overlay) closeModal(overlay.id); } else sheet.style.transform = 'translateY(0)'; startY = 0; currentY = 0; });
-    });
-
     // Klik overlay tutup modal
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
         const newOverlay = overlay.cloneNode(true);
@@ -109,6 +101,65 @@ export function initModalEvents() {
 
 document.addEventListener('click', (e) => { const closeBtn = e.target.closest('.modal-close-btn') || e.target.closest('[data-close]'); if (closeBtn) { const modalId = closeBtn.dataset.close; if (modalId) closeModal(modalId); } });
 
-export function openModal(modalId) { document.querySelectorAll('.modal-overlay.open').forEach(m => { const sheet = m.querySelector('.modal-sheet'); if (sheet) { sheet.style.transform = 'scale(0.9)'; sheet.style.opacity = '0'; } m.classList.remove('open'); }); const modal = document.getElementById(modalId); if (!modal) return; modal.classList.add('open'); currentModal = modalId; }
-export function closeModal(modalId) { const modal = document.getElementById(modalId); if (!modal) return; const sheet = modal.querySelector('.modal-sheet'); if (sheet) { sheet.style.transform = 'scale(0.9)'; sheet.style.opacity = '0'; setTimeout(() => { modal.classList.remove('open'); if (currentModal === modalId) currentModal = null; }, 300); } else { modal.classList.remove('open'); if (currentModal === modalId) currentModal = null; } }
-export function closeAllModals() { document.querySelectorAll('.modal-overlay.open').forEach(m => { const sheet = m.querySelector('.modal-sheet'); if (sheet) { sheet.style.transform = 'scale(0.9)'; sheet.style.opacity = '0'; } m.classList.remove('open'); }); currentModal = null; }
+// ==================== MODAL OPEN/CLOSE ====================
+export function openModal(modalId) {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => {
+        const sheet = m.querySelector('.modal-sheet');
+        if (sheet) {
+            sheet.style.transform = 'scale(0.9)';
+            sheet.style.opacity = '0';
+        }
+        m.classList.remove('open');
+    });
+
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+
+    const sheet = modal.querySelector('.modal-sheet');
+    if (sheet) {
+        sheet.style.transition = 'none';
+        sheet.style.transform = 'scale(0.9)';
+        sheet.style.opacity = '0';
+    }
+
+    modal.classList.add('open');
+    currentModal = modalId;
+
+    if (sheet) {
+        sheet.offsetHeight;
+        sheet.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease';
+        sheet.style.transform = 'scale(1)';
+        sheet.style.opacity = '1';
+    }
+}
+
+export function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+
+    const sheet = modal.querySelector('.modal-sheet');
+    if (sheet) {
+        sheet.style.transition = 'transform 0.25s cubic-bezier(0.55, 0, 1, 0.45), opacity 0.2s ease';
+        sheet.style.transform = 'scale(0.9)';
+        sheet.style.opacity = '0';
+        setTimeout(() => {
+            modal.classList.remove('open');
+            if (currentModal === modalId) currentModal = null;
+        }, 250);
+    } else {
+        modal.classList.remove('open');
+        if (currentModal === modalId) currentModal = null;
+    }
+}
+
+export function closeAllModals() {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => {
+        const sheet = m.querySelector('.modal-sheet');
+        if (sheet) {
+            sheet.style.transform = 'scale(0.9)';
+            sheet.style.opacity = '0';
+        }
+        m.classList.remove('open');
+    });
+    currentModal = null;
+}
