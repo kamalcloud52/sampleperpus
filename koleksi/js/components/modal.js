@@ -10,11 +10,11 @@ export function renderModal() {
         <div class="modal-overlay" id="modalDetail">
             <div class="modal-sheet">
                 <div class="modal-header">
-                    <h3 class="modal-title" id="detailTitle">Judul Buku</h3>
                     <button class="modal-close-btn" data-close="modalDetail"><i class="fa-solid fa-xmark"></i></button>
                 </div>
                 <div class="modal-body">
                     <div class="modal-cover" id="detailCover" style="background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#047857;"><i class="fa-solid fa-book-open"></i></div>
+                    <h3 class="modal-title" id="detailTitle">Judul Buku</h3>
                     <div class="modal-info-row"><span>Jenis</span><span id="detailKategori">-</span></div>
                     <div class="modal-info-row"><span>Penulis</span><span id="detailPenulis">-</span></div>
                     <div class="modal-info-row"><span>Edisi</span><span id="detailEdisi">-</span></div>
@@ -32,11 +32,11 @@ export function renderModal() {
         <div class="modal-overlay" id="modalProfil">
             <div class="modal-sheet">
                 <div class="modal-header">
-                    <h3 class="modal-title">Akun Saya</h3>
                     <button class="modal-close-btn" data-close="modalProfil"><i class="fa-solid fa-xmark"></i></button>
                 </div>
                 <div class="modal-body">
                     <div class="profile-avatar"><i class="fa-solid fa-circle-user"></i></div>
+                    <h3 class="modal-title">Akun Saya</h3>
                     <div class="modal-info-row"><span>Nama</span><span id="profilNama">Ahmad Santri</span></div>
                     <div class="modal-info-row"><span>Kelas</span><span id="profilKelas">2 Aliyah</span></div>
                     <div class="modal-info-row"><span>No. Anggota</span><span id="profilNo">PIM-2024-0012</span></div>
@@ -49,10 +49,10 @@ export function renderModal() {
         <div class="modal-overlay" id="modalFilter">
             <div class="modal-sheet">
                 <div class="modal-header">
-                    <h3 class="modal-title">Filter Koleksi</h3>
                     <button class="modal-close-btn" data-close="modalFilter"><i class="fa-solid fa-xmark"></i></button>
                 </div>
                 <div class="modal-body">
+                    <h3 class="modal-title">Filter Koleksi</h3>
                     <div class="filter-group">
                         <div class="filter-label">Jenis</div>
                         <div class="filter-options" id="filterJenis"><button class="filter-option selected" data-value="">Semua</button></div>
@@ -105,61 +105,21 @@ document.addEventListener('click', (e) => { const closeBtn = e.target.closest('.
 export function openModal(modalId) {
     document.querySelectorAll('.modal-overlay.open').forEach(m => {
         const sheet = m.querySelector('.modal-sheet');
-        if (sheet) {
-            sheet.style.transform = 'scale(0.9)';
-            sheet.style.opacity = '0';
-        }
+        if (sheet) { sheet.style.transform = 'scale(0.9)'; sheet.style.opacity = '0'; }
         m.classList.remove('open');
     });
-
-    const modal = document.getElementById(modalId);
-    if (!modal) return;
-
+    const modal = document.getElementById(modalId); if (!modal) return;
     const sheet = modal.querySelector('.modal-sheet');
-    if (sheet) {
-        sheet.style.transition = 'none';
-        sheet.style.transform = 'scale(0.9)';
-        sheet.style.opacity = '0';
-    }
-
-    modal.classList.add('open');
-    currentModal = modalId;
-
-    if (sheet) {
-        sheet.offsetHeight;
-        sheet.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease';
-        sheet.style.transform = 'scale(1)';
-        sheet.style.opacity = '1';
-    }
+    if (sheet) { sheet.style.transition = 'none'; sheet.style.transform = 'scale(0.9)'; sheet.style.opacity = '0'; }
+    modal.classList.add('open'); currentModal = modalId;
+    if (sheet) { sheet.offsetHeight; sheet.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease'; sheet.style.transform = 'scale(1)'; sheet.style.opacity = '1'; }
 }
 
 export function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (!modal) return;
-
+    const modal = document.getElementById(modalId); if (!modal) return;
     const sheet = modal.querySelector('.modal-sheet');
-    if (sheet) {
-        sheet.style.transition = 'transform 0.25s cubic-bezier(0.55, 0, 1, 0.45), opacity 0.2s ease';
-        sheet.style.transform = 'scale(0.9)';
-        sheet.style.opacity = '0';
-        setTimeout(() => {
-            modal.classList.remove('open');
-            if (currentModal === modalId) currentModal = null;
-        }, 250);
-    } else {
-        modal.classList.remove('open');
-        if (currentModal === modalId) currentModal = null;
-    }
+    if (sheet) { sheet.style.transition = 'transform 0.25s cubic-bezier(0.55, 0, 1, 0.45), opacity 0.2s ease'; sheet.style.transform = 'scale(0.9)'; sheet.style.opacity = '0'; setTimeout(() => { modal.classList.remove('open'); if (currentModal === modalId) currentModal = null; }, 250); }
+    else { modal.classList.remove('open'); if (currentModal === modalId) currentModal = null; }
 }
 
-export function closeAllModals() {
-    document.querySelectorAll('.modal-overlay.open').forEach(m => {
-        const sheet = m.querySelector('.modal-sheet');
-        if (sheet) {
-            sheet.style.transform = 'scale(0.9)';
-            sheet.style.opacity = '0';
-        }
-        m.classList.remove('open');
-    });
-    currentModal = null;
-}
+export function closeAllModals() { document.querySelectorAll('.modal-overlay.open').forEach(m => { const sheet = m.querySelector('.modal-sheet'); if (sheet) { sheet.style.transform = 'scale(0.9)'; sheet.style.opacity = '0'; } m.classList.remove('open'); }); currentModal = null; }
